@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<parameters>
+	<!--Name of the topology to visualize-->
+	<topology>topologyTest</topology>
+	<!--Type of stream variation (refer to StreamSim generator for type->variation code matching)-->
+	<stream_type>1</stream_type>
+	<!--Parameters to get a connection to the monitoring database-->
+	<db_host>localhost</db_host>
+	<db_name>dbTest</db_name>
+	<db_user>user</db_user>
+	<db_password>password</db_password>
+	<!--Structure of the topology to compute values like network traffic-->
+	<edges>
+		<edge source="A" destination="B"></edge>
+		<edge source="B" destination="C"></edge>
+		<edge source="C" destination="D"></edge>
+		<edge source="C" destination="E"></edge>
+		<edge source="E" destination="F"></edge>
+	</edges>
+</parameters>
