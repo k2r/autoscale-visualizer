@@ -17,57 +17,57 @@ public interface ISource {
 	 * 
 	 * @return
 	 */
-	public HashMap<Integer, Double> getTopologyInput();
+	public HashMap<String, HashMap<Integer, Double>> getTopologyInput();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public HashMap<Integer, Double> getTopologyThroughput();
+	public HashMap<String, HashMap<Integer, Double>> getTopologyThroughput();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public HashMap<Integer, Double> getTopologyLosses();
+	public HashMap<String, HashMap<Integer, Double>> getTopologyLosses();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public HashMap<Integer, Double> getTopologyLatency();
+	public HashMap<String, HashMap<Integer, Double>> getTopologyLatency();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public HashMap<Integer, Double> getTopologyNbExecutors();
+	public HashMap<String, HashMap<Integer, Double>> getTopologyNbExecutors();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public HashMap<Integer, Double> getTopologyNbSupervisors();
-	
-	/**
-	 * 
-	 * @param structure
-	 * @return
-	 */
-	public HashMap<Integer, Double> getTopologyNbWorkers();
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public HashMap<Integer, Double> getTopologyStatus();
+	public HashMap<String, HashMap<Integer, Double>> getTopologyNbSupervisors();
 	
 	/**
 	 * 
 	 * @param structure
 	 * @return
 	 */
-	public HashMap<Integer, Double> getTopologyTraffic(IStructure structure);
+	public HashMap<String, HashMap<Integer, Double>> getTopologyNbWorkers();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public HashMap<String, HashMap<Integer, Double>> getTopologyStatus();
+	
+	/**
+	 * 
+	 * @param structure
+	 * @return
+	 */
+	public HashMap<String, HashMap<Integer, Double>> getTopologyTraffic(IStructure structure);
 	
 	/**
 	 * 
@@ -75,40 +75,40 @@ public interface ISource {
 	 * @param structure
 	 * @return
 	 */
-	public HashMap<Integer, Double> getBoltInput(String component, IStructure structure);
+	public HashMap<String, HashMap<Integer, Double>> getBoltInput(String component, IStructure structure);
 	
 	/**
 	 * 
 	 * @param component
 	 * @return
 	 */
-	public HashMap<Integer, Double> getBoltExecuted(String component);
+	public HashMap<String, HashMap<Integer, Double>> getBoltExecuted(String component);
 	
 	/**
 	 * 
 	 * @param component
 	 * @return
 	 */
-	public HashMap<Integer, Double> getBoltOutputs(String component);
+	public HashMap<String, HashMap<Integer, Double>> getBoltOutputs(String component);
 	
 	/**
 	 * 
 	 * @param component
 	 * @return
 	 */
-	public HashMap<Integer, Double> getBoltLatency(String component);
+	public HashMap<String, HashMap<Integer, Double>> getBoltLatency(String component);
 	
 	/**
 	 * 
 	 * @param component
 	 * @return
 	 */
-	public HashMap<Integer, Double> getBoltProcessingRate(String component);
+	public HashMap<String, HashMap<Integer, Double>> getBoltProcessingRate(String component);
 
 	/**
 	 * 
 	 * @param component
 	 * @return
 	 */
-	public HashMap<Integer, Double> getBoltEPR(String component);
+	public HashMap<String, HashMap<Integer, Double>> getBoltEPR(String component);
 }

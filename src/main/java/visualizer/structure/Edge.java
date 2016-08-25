@@ -50,4 +50,9 @@ public class Edge {
 		Edge edge = (Edge) o;
 		return (edge.getSource().equalsIgnoreCase(this.getSource()) && edge.getDestination().equalsIgnoreCase(this.getDestination()));
 	}
+	
+	@Override
+	public String toString(){
+		return "[" + this.getSource() + "-->" + this.getDestination() + "]";
+	}
 }

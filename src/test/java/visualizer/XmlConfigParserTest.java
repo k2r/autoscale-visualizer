@@ -22,6 +22,7 @@ import visualizer.structure.Edge;
  */
 public class XmlConfigParserTest {
 
+	
 	/**
 	 * Test method for {@link visualizer.config.XmlConfigParser#getFilename()}.
 	 * @throws IOException 
@@ -36,7 +37,20 @@ public class XmlConfigParserTest {
 	}
 
 	/**
-	 * Test method for {@link visualizer.config.XmlConfigParser#getTopology()}.
+	 * Test method for {@link visualizer.config.XmlConfigParser#getCommand()}.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
+	 */
+	@Test
+	public void testGetCommand() throws ParserConfigurationException, SAXException, IOException {
+		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
+		parser.initParameters();
+		assertEquals("ANALYZE", parser.getFilename());
+	}
+	
+	/**
+	 * Test method for {@link visualizer.config.XmlConfigParser#getTopology1()}.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
@@ -45,11 +59,12 @@ public class XmlConfigParserTest {
 	public void testGetTopology() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		assertEquals("topologyTest", parser.getTopology());
+		assertEquals("topologyTest1", parser.getTopology1());
+		assertEquals("topologyTest2", parser.getTopology2());
 	}
 
 	/**
-	 * Test method for {@link visualizer.config.XmlConfigParser#getStreamType()}.
+	 * Test method for {@link visualizer.config.XmlConfigParser#getStreamType1()}.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
@@ -58,7 +73,8 @@ public class XmlConfigParserTest {
 	public void testGetStreamType() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		assertEquals(1, parser.getStreamType(), 0);
+		assertEquals(1, parser.getStreamType1(), 0);
+		assertEquals(1, parser.getStreamType2(), 0);
 	}
 
 	/**
@@ -114,7 +130,7 @@ public class XmlConfigParserTest {
 	}
 
 	/**
-	 * Test method for {@link visualizer.config.XmlConfigParser#getEdges()}.
+	 * Test method for {@link visualizer.config.XmlConfigParser#getEdges1()}.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
@@ -131,7 +147,8 @@ public class XmlConfigParserTest {
 		expectedEdges.add(new Edge("C", "E"));
 		expectedEdges.add(new Edge("E", "F"));
 		
-		assertEquals(expectedEdges, parser.getEdges());
+		assertEquals(expectedEdges, parser.getEdges1());
+		assertEquals(expectedEdges, parser.getEdges2());
 	}
 
 }
