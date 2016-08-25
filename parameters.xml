@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <parameters>
+	<!--Two possible commands:
+		ANALYZE : it retrieves monitoring from the database for the given topology1
+		COMPARE : after the analysis of two topologies, it creates comparison charts between topologies 1 and 2 and duplicate datasets
+	-->
+	<command>ANALYZE</command>
 	<!--Name of the topology to visualize-->
-	<topology>topologyTest</topology>
+	<topology1>linearAutoscale</topology1>
 	<!--Type of stream variation (refer to StreamSim generator for type->variation code matching)-->
-	<stream_type>1</stream_type>
+	<stream_type1>1</stream_type1>
+	
+	<!--Structure of the topology to compute values like network traffic-->
+	<edges1>
+		<edge1 source="A" destination="B"></edge1>
+		<edge1 source="B" destination="C"></edge1>
+		<edge1 source="C" destination="D"></edge1>
+		<edge1 source="C" destination="E"></edge1>
+		<edge1 source="E" destination="F"></edge1>
+	</edges1>
+	
+	<!--To fulfill only for comparison with topology1-->
+	<topology2>topologyTest2</topology2>
+	<stream_type2>1</stream_type2>
+	<edges2>
+		<edge2 source="A" destination="B"></edge2>
+		<edge2 source="B" destination="C"></edge2>
+		<edge2 source="C" destination="D"></edge2>
+		<edge2 source="C" destination="E"></edge2>
+		<edge2 source="E" destination="F"></edge2>
+	</edges2>
+	
 	<!--Parameters to get a connection to the monitoring database-->
 	<db_host>localhost</db_host>
-	<db_name>dbTest</db_name>
-	<db_user>user</db_user>
-	<db_password>password</db_password>
-	<!--Structure of the topology to compute values like network traffic-->
-	<edges>
-		<edge source="A" destination="B"></edge>
-		<edge source="B" destination="C"></edge>
-		<edge source="C" destination="D"></edge>
-		<edge source="C" destination="E"></edge>
-		<edge source="E" destination="F"></edge>
-	</edges>
+	<db_name>benchmarks</db_name>
+	<db_user>root</db_user>
+	<db_password></db_password>
 </parameters>

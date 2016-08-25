@@ -1,5 +1,8 @@
 Manifest-Version: 1.0
 Built-By: Roland
+Class-Path: lib/mysql-connector-java-5.1.6.jar lib/jfreechart-1.0.19.j
+ ar lib/jcommon-1.0.23.jar
 Build-Jdk: 1.8.0_101
 Created-By: Maven Integration for Eclipse
+Main-Class: visualizer.Main
 

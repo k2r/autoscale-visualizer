@@ -5,6 +5,8 @@ package visualizer;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,6 +24,8 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import visualizer.config.XmlConfigParser;
+import visualizer.draw.JFreePainter;
+import visualizer.source.FileSource;
 import visualizer.source.JdbcSource;
 import visualizer.structure.TopologyStructure;
 
@@ -29,8 +33,17 @@ import visualizer.structure.TopologyStructure;
  * @author Roland
  *
  */
-public class JdbcSourceTest {
+public class FileSourceTest {
 
+	public static void delete(File f) throws IOException {
+		if (f.isDirectory()) {
+			for (File c : f.listFiles())
+				delete(c);
+		}
+		if (!f.delete())
+			throw new FileNotFoundException("Failed to delete file: " + f);
+	}
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -135,6 +148,55 @@ public class JdbcSourceTest {
 				e.printStackTrace();
 			}
 		}
+		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
+		parser.initParameters();
+		TopologyStructure structure1 = new TopologyStructure(parser.getEdges1());
+		
+		
+		JdbcSource jdbcSource1 = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter1 = new JFreePainter("topologyTest1", 1, jdbcSource1);
+		painter1.drawTopologyInput();
+		painter1.drawTopologyThroughput();
+		painter1.drawTopologyLosses();
+		painter1.drawTopologyLatency();
+		painter1.drawTopologyNbExecutors();
+		painter1.drawTopologyNbSupervisors();
+		painter1.drawTopologyNbWorkers();
+		painter1.drawTopologyStatus();
+		painter1.drawTopologyTraffic(structure1);
+		ArrayList<String> bolts1 = structure1.getBolts();
+		for(String bolt : bolts1){
+			painter1.drawBoltInput(bolt, structure1);
+			painter1.drawBoltExecuted(bolt);
+			painter1.drawBoltOutputs(bolt);
+			painter1.drawBoltLatency(bolt);
+			painter1.drawBoltProcRate(bolt);
+			painter1.drawBoltEPR(bolt);
+		}
+		
+		JdbcSource jdbcSource2 = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		TopologyStructure structure2 = new TopologyStructure(parser.getEdges2());
+		
+		JFreePainter painter2 = new JFreePainter("topologyTest2", 1, jdbcSource2);
+		painter2.drawTopologyInput();
+		painter2.drawTopologyThroughput();
+		painter2.drawTopologyLosses();
+		painter2.drawTopologyLatency();
+		painter2.drawTopologyNbExecutors();
+		painter2.drawTopologyNbSupervisors();
+		painter2.drawTopologyNbWorkers();
+		painter2.drawTopologyStatus();
+		painter2.drawTopologyTraffic(structure2);
+		ArrayList<String> bolts2 = structure2.getBolts();
+		for(String bolt : bolts2){
+			painter2.drawBoltInput(bolt, structure2);
+			painter2.drawBoltExecuted(bolt);
+			painter2.drawBoltOutputs(bolt);
+			painter2.drawBoltLatency(bolt);
+			painter2.drawBoltProcRate(bolt);
+			painter2.drawBoltEPR(bolt);
+		}
+		
 	}
 
 	/**
@@ -165,175 +227,175 @@ public class JdbcSourceTest {
 				e.printStackTrace();
 			}
 		}
+		
+		File file1 = new File("topologyTest1_linear_increase");
+		File file2 = new File("topologyTest2_linear_increase");
+		FileSourceTest.delete(file1);
+		FileSourceTest.delete(file2);
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyInput()}.
+	 * Test method for {@link visualizer.source.FileSource#getTopologyInput()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testGetTopologyInput() throws ClassNotFoundException, SQLException{
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetTopologyInput() throws ClassNotFoundException, SQLException {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 10.0);
 		expected.put(2, 10.0);
 		expected.put(3, 15.0);
 		
-		assertEquals(expected, source.getTopologyInput().get("topologyTest"));
+		assertEquals(expected, source.getTopologyInput().get("topologyTest1"));
+		assertEquals(expected, source.getTopologyInput().get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyThroughput()}.
+	 * Test method for {@link visualizer.source.FileSource#getTopologyThroughput()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
 	@Test
 	public void testGetTopologyThroughput() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 5.0);
 		expected.put(2, 5.0);
 		expected.put(3, 2.0);
 		
-		assertEquals(expected, source.getTopologyThroughput().get("topologyTest"));
+		assertEquals(expected, source.getTopologyThroughput().get("topologyTest1"));
+		assertEquals(expected, source.getTopologyThroughput().get("topologyTest2"));
+		
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyLosses()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getTopologyLosses()}.
 	 */
 	@Test
-	public void testGetTopologyLosses() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetTopologyLosses() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 0.0);
 		expected.put(2, 5.0);
 		expected.put(3, 1.0);
 		
-		assertEquals(expected, source.getTopologyLosses().get("topologyTest"));
+		assertEquals(expected, source.getTopologyLosses().get("topologyTest1"));
+		assertEquals(expected, source.getTopologyLosses().get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyLatency()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getTopologyLatency()}.
 	 */
 	@Test
-	public void testGetTopologyLatency() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetTopologyLatency() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 10.0);
 		expected.put(2, 22.0);
 		expected.put(3, 8.0);
 		
-		assertEquals(expected, source.getTopologyLatency().get("topologyTest"));
+		assertEquals(expected, source.getTopologyLatency().get("topologyTest1"));
+		assertEquals(expected, source.getTopologyLatency().get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyNbExecutors()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getTopologyNbExecutors()}.
 	 */
 	@Test
-	public void testGetTopologyNbExecutors() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetTopologyNbExecutors() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 6.0);
 		expected.put(2, 7.0);
 		expected.put(3, 8.0);
 		
-		assertEquals(expected, source.getTopologyNbExecutors().get("topologyTest"));
+		assertEquals(expected, source.getTopologyNbExecutors().get("topologyTest1"));
+		assertEquals(expected, source.getTopologyNbExecutors().get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyNbSupervisors()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getTopologyNbSupervisors()}.
 	 */
 	@Test
-	public void testGetTopologyNbSupervisors() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetTopologyNbSupervisors() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 3.0);
 		expected.put(2, 3.0);
 		expected.put(3, 4.0);
 		
-		assertEquals(expected, source.getTopologyNbSupervisors().get("topologyTest"));
+		assertEquals(expected, source.getTopologyNbSupervisors().get("topologyTest1"));
+		assertEquals(expected, source.getTopologyNbSupervisors().get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyNbWorkers()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getTopologyNbWorkers()}.
 	 */
 	@Test
-	public void testGetTopologyNbWorkers() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetTopologyNbWorkers() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 5.0);
 		expected.put(2, 6.0);
 		expected.put(3, 7.0);
 		
-		assertEquals(expected, source.getTopologyNbWorkers().get("topologyTest"));
+		assertEquals(expected, source.getTopologyNbWorkers().get("topologyTest1"));
+		assertEquals(expected, source.getTopologyNbWorkers().get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyStatus()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getTopologyStatus()}.
 	 */
 	@Test
-	public void testGetTopologyStatus() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetTopologyStatus() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 2.0);
 		expected.put(2, 0.0);
 		expected.put(3, 1.0);
 		
-		assertEquals(expected, source.getTopologyStatus().get("topologyTest"));
+		assertEquals(expected, source.getTopologyStatus().get("topologyTest1"));
+		assertEquals(expected, source.getTopologyStatus().get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyTraffic(visualizer.structure.IStructure)}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getTopologyTraffic(visualizer.structure.IStructure)}.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testGetTopologyTraffic() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
+	public void testGetTopologyTraffic() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		TopologyStructure structure1 = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure2 = new TopologyStructure(parser.getEdges2());
+		
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 13.0);
 		expected.put(2, 25.0);
 		expected.put(3, 24.0);
 		
-		assertEquals(expected, source.getTopologyTraffic(structure).get("topologyTest"));
+		assertEquals(expected, source.getTopologyTraffic(structure1).get("topologyTest1"));
+		assertEquals(expected, source.getTopologyTraffic(structure2).get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltInput(java.lang.String, visualizer.structure.IStructure)}.
+	 * Test method for {@link visualizer.source.FileSource#getBoltInput(java.lang.String, visualizer.structure.IStructure)}.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
 	 */
 	@Test
-	public void testGetBoltInput() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
+	public void testGetBoltInput() throws ParserConfigurationException, SAXException, IOException {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		TopologyStructure structure1 = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure2 = new TopologyStructure(parser.getEdges2());
+		
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 10.0);
 		expectedB.put(2, 10.0);
@@ -344,88 +406,84 @@ public class JdbcSourceTest {
 		expectedC.put(2, 20.0);
 		expectedC.put(3, 4.0);
 		
-		assertEquals(expectedB, source.getBoltInput("B", structure).get("topologyTest"));
-		assertEquals(expectedC, source.getBoltInput("C", structure).get("topologyTest"));
+		assertEquals(expectedB, source.getBoltInput("B", structure1).get("topologyTest1"));
+		assertEquals(expectedC, source.getBoltInput("C", structure1).get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltInput("B", structure2).get("topologyTest2"));
+		assertEquals(expectedC, source.getBoltInput("C", structure2).get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltExecuted(java.lang.String)}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getBoltExecuted(java.lang.String)}.
 	 */
 	@Test
-	public void testGetBoltExecuted() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetBoltExecuted() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 10.0);
 		expectedB.put(2, 35.0);
 		expectedB.put(3, 5.0);
 		
-		assertEquals(expectedB, source.getBoltExecuted("B").get("topologyTest"));
+		assertEquals(expectedB, source.getBoltExecuted("B").get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltExecuted("B").get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltOutputs(java.lang.String)}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getBoltOutputs(java.lang.String)}.
 	 */
 	@Test
-	public void testGetBoltOutputs() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetBoltOutputs() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 8.0);
 		expectedB.put(2, 20.0);
 		expectedB.put(3, 4.0);
 		
-		assertEquals(expectedB, source.getBoltOutputs("B").get("topologyTest"));
+		assertEquals(expectedB, source.getBoltOutputs("B").get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltOutputs("B").get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltLatency(java.lang.String)}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getBoltLatency(java.lang.String)}.
 	 */
 	@Test
-	public void testGetBoltLatency() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetBoltLatency() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 3.0);
 		expectedB.put(2, 3.5);
 		expectedB.put(3, 4.25);
 		
-		assertEquals(expectedB, source.getBoltLatency("B").get("topologyTest"));
+		assertEquals(expectedB, source.getBoltLatency("B").get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltLatency("B").get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltProcessingRate(java.lang.String)}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getBoltProcessingRate(java.lang.String)}.
 	 */
 	@Test
-	public void testGetBoltProcessingRate() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetBoltProcessingRate() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 3330.0);
 		expectedB.put(2, 3330.0);
 		expectedB.put(3, 1100.0);
 		
-		assertEquals(expectedB, source.getBoltProcessingRate("B").get("topologyTest"));
+		assertEquals(expectedB, source.getBoltProcessingRate("B").get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltProcessingRate("B").get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltEPR(java.lang.String)}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
+	 * Test method for {@link visualizer.source.FileSource#getBoltEPR(java.lang.String)}.
 	 */
 	@Test
-	public void testGetBoltEPR() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+	public void testGetBoltEPR() {
+		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 0.8);
 		expectedB.put(2, 0.0);
 		expectedB.put(3, 1.5);
 		
-		assertEquals(expectedB, source.getBoltEPR("B").get("topologyTest"));
+		assertEquals(expectedB, source.getBoltEPR("B").get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltEPR("B").get("topologyTest2"));
 	}
-
 }

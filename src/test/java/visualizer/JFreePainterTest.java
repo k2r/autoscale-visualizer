@@ -3,7 +3,10 @@
  */
 package visualizer;
 
-import static org.junit.Assert.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+
+//import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -12,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -22,6 +24,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import visualizer.config.XmlConfigParser;
+import visualizer.draw.JFreePainter;
 import visualizer.source.JdbcSource;
 import visualizer.structure.TopologyStructure;
 
@@ -29,7 +32,16 @@ import visualizer.structure.TopologyStructure;
  * @author Roland
  *
  */
-public class JdbcSourceTest {
+public class JFreePainterTest {
+	
+	public static void delete(File f) throws IOException {
+		if (f.isDirectory()) {
+			for (File c : f.listFiles())
+				delete(c);
+		}
+		if (!f.delete())
+			throw new FileNotFoundException("Failed to delete file: " + f);
+	}
 
 	/**
 	 * @throws java.lang.Exception
@@ -165,10 +177,109 @@ public class JdbcSourceTest {
 				e.printStackTrace();
 			}
 		}
+		
+		File file1 = new File("topologyTest_linear_increase");
+		FileSourceTest.delete(file1);
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyInput()}.
+	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyInput()}.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testDrawTopologyInput() throws ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		painter.drawTopologyInput();
+	}
+
+	/**
+	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyThroughput()}.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testDrawTopologyThroughput() throws ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		painter.drawTopologyThroughput();;
+	}
+
+	/**
+	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyLosses()}.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testDrawTopologyLosses() throws ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		painter.drawTopologyLosses();
+	}
+
+	/**
+	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyLatency()}.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testDrawTopologyLatency() throws ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		painter.drawTopologyLatency();
+	}
+
+	/**
+	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyNbExecutors()}.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testDrawTopologyNbExecutors() throws ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		painter.drawTopologyNbExecutors();
+	}
+
+	/**
+	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyNbSupervisors()}.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testDrawTopologyNbSupervisors() throws ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		painter.drawTopologyNbSupervisors();
+	}
+
+	/**
+	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyNbWorkers()}.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testDrawTopologyNbWorkers() throws ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		painter.drawTopologyNbWorkers();
+	}
+
+	/**
+	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyStatus()}.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testDrawTopologyStatus() throws ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		painter.drawTopologyStatus();
+	}
+
+	/**
+	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyTraffic(visualizer.structure.IStructure)}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 * @throws IOException 
@@ -176,152 +287,18 @@ public class JdbcSourceTest {
 	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testGetTopologyInput() throws ClassNotFoundException, SQLException{
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expected = new HashMap<>();
-		expected.put(1, 10.0);
-		expected.put(2, 10.0);
-		expected.put(3, 15.0);
-		
-		assertEquals(expected, source.getTopologyInput().get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyThroughput()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	@Test
-	public void testGetTopologyThroughput() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expected = new HashMap<>();
-		expected.put(1, 5.0);
-		expected.put(2, 5.0);
-		expected.put(3, 2.0);
-		
-		assertEquals(expected, source.getTopologyThroughput().get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyLosses()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	@Test
-	public void testGetTopologyLosses() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expected = new HashMap<>();
-		expected.put(1, 0.0);
-		expected.put(2, 5.0);
-		expected.put(3, 1.0);
-		
-		assertEquals(expected, source.getTopologyLosses().get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyLatency()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	@Test
-	public void testGetTopologyLatency() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expected = new HashMap<>();
-		expected.put(1, 10.0);
-		expected.put(2, 22.0);
-		expected.put(3, 8.0);
-		
-		assertEquals(expected, source.getTopologyLatency().get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyNbExecutors()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	@Test
-	public void testGetTopologyNbExecutors() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expected = new HashMap<>();
-		expected.put(1, 6.0);
-		expected.put(2, 7.0);
-		expected.put(3, 8.0);
-		
-		assertEquals(expected, source.getTopologyNbExecutors().get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyNbSupervisors()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	@Test
-	public void testGetTopologyNbSupervisors() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expected = new HashMap<>();
-		expected.put(1, 3.0);
-		expected.put(2, 3.0);
-		expected.put(3, 4.0);
-		
-		assertEquals(expected, source.getTopologyNbSupervisors().get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyNbWorkers()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	@Test
-	public void testGetTopologyNbWorkers() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expected = new HashMap<>();
-		expected.put(1, 5.0);
-		expected.put(2, 6.0);
-		expected.put(3, 7.0);
-		
-		assertEquals(expected, source.getTopologyNbWorkers().get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyStatus()}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	@Test
-	public void testGetTopologyStatus() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expected = new HashMap<>();
-		expected.put(1, 2.0);
-		expected.put(2, 0.0);
-		expected.put(3, 1.0);
-		
-		assertEquals(expected, source.getTopologyStatus().get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyTraffic(visualizer.structure.IStructure)}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
-	 */
-	@Test
-	public void testGetTopologyTraffic() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
+	public void testDrawTopologyTraffic() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
 		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expected = new HashMap<>();
-		expected.put(1, 13.0);
-		expected.put(2, 25.0);
-		expected.put(3, 24.0);
 		
-		assertEquals(expected, source.getTopologyTraffic(structure).get("topologyTest"));
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		painter.drawTopologyTraffic(structure);
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltInput(java.lang.String, visualizer.structure.IStructure)}.
+	 * Test method for {@link visualizer.draw.JFreePainter#drawBoltInput(java.lang.String, visualizer.structure.IStructure)}.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
@@ -329,103 +306,121 @@ public class JdbcSourceTest {
 	 * @throws ClassNotFoundException 
 	 */
 	@Test
-	public void testGetBoltInput() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
+	public void testDrawBoltInput() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
 		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedB = new HashMap<>();
-		expectedB.put(1, 10.0);
-		expectedB.put(2, 10.0);
-		expectedB.put(3, 15.0);
-		
-		HashMap<Integer, Double> expectedC = new HashMap<>();
-		expectedC.put(1, 8.0);
-		expectedC.put(2, 20.0);
-		expectedC.put(3, 4.0);
-		
-		assertEquals(expectedB, source.getBoltInput("B", structure).get("topologyTest"));
-		assertEquals(expectedC, source.getBoltInput("C", structure).get("topologyTest"));
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		for(String bolt : structure.getBolts()){
+			painter.drawBoltInput(bolt, structure);
+		}
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltExecuted(java.lang.String)}.
+	 * Test method for {@link visualizer.draw.JFreePainter#drawBoltExecuted(java.lang.String)}.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
 	@Test
-	public void testGetBoltExecuted() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedB = new HashMap<>();
-		expectedB.put(1, 10.0);
-		expectedB.put(2, 35.0);
-		expectedB.put(3, 5.0);
+	public void testDrawBoltExecuted() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
+		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
+		parser.initParameters();
+		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
 		
-		assertEquals(expectedB, source.getBoltExecuted("B").get("topologyTest"));
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		for(String bolt : structure.getBolts()){
+			painter.drawBoltExecuted(bolt);
+		}
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltOutputs(java.lang.String)}.
+	 * Test method for {@link visualizer.draw.JFreePainter#drawBoltOutputs(java.lang.String)}.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
 	@Test
-	public void testGetBoltOutputs() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedB = new HashMap<>();
-		expectedB.put(1, 8.0);
-		expectedB.put(2, 20.0);
-		expectedB.put(3, 4.0);
+	public void testDrawBoltOutputs() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
+		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
+		parser.initParameters();
+		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
 		
-		assertEquals(expectedB, source.getBoltOutputs("B").get("topologyTest"));
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		for(String bolt : structure.getBolts()){
+			painter.drawBoltOutputs(bolt);
+		}
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltLatency(java.lang.String)}.
+	 * Test method for {@link visualizer.draw.JFreePainter#drawBoltLatency(java.lang.String)}.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
 	@Test
-	public void testGetBoltLatency() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedB = new HashMap<>();
-		expectedB.put(1, 3.0);
-		expectedB.put(2, 3.5);
-		expectedB.put(3, 4.25);
+	public void testDrawBoltLatency() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
+		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
+		parser.initParameters();
+		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
 		
-		assertEquals(expectedB, source.getBoltLatency("B").get("topologyTest"));
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		for(String bolt : structure.getBolts()){
+			painter.drawBoltLatency(bolt);
+		}
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltProcessingRate(java.lang.String)}.
+	 * Test method for {@link visualizer.draw.JFreePainter#drawBoltProcRate(java.lang.String)}.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
 	@Test
-	public void testGetBoltProcessingRate() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedB = new HashMap<>();
-		expectedB.put(1, 3330.0);
-		expectedB.put(2, 3330.0);
-		expectedB.put(3, 1100.0);
+	public void testDrawBoltProcRate() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
+		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
+		parser.initParameters();
+		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
 		
-		assertEquals(expectedB, source.getBoltProcessingRate("B").get("topologyTest"));
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		for(String bolt : structure.getBolts()){
+			painter.drawBoltProcRate(bolt);
+		}
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltEPR(java.lang.String)}.
+	 * Test method for {@link visualizer.draw.JFreePainter#drawBoltEPR(java.lang.String)}.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
 	@Test
-	public void testGetBoltEPR() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedB = new HashMap<>();
-		expectedB.put(1, 0.8);
-		expectedB.put(2, 0.0);
-		expectedB.put(3, 1.5);
+	public void testDrawBoltEPR() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
+		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
+		parser.initParameters();
+		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
 		
-		assertEquals(expectedB, source.getBoltEPR("B").get("topologyTest"));
+		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		for(String bolt : structure.getBolts()){
+			painter.drawBoltEPR(bolt);
+		}
 	}
 
 }
