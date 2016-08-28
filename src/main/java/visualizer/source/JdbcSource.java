@@ -484,9 +484,11 @@ public class JdbcSource implements ISource {
 							HashMap<String, Double> bolthostOutput = boltOutputPerHost.get(timestamp);
 							HashMap<String, Double> childHostOuput = childOutputPerHost.get(timestamp);
 							Set<String> boltHosts = bolthostOutput.keySet();
-							for(String host : boltHosts){
-								if(!childHostOuput.containsKey(host)){
-									traffic += bolthostOutput.get(host);
+							if(childHostOuput != null){
+								for(String host : boltHosts){
+									if(!childHostOuput.containsKey(host)){
+										traffic += bolthostOutput.get(host);
+									}
 								}
 							}
 							if(!dataSet.containsKey(timestamp)){
@@ -592,9 +594,11 @@ public class JdbcSource implements ISource {
 							HashMap<String, Double> bolthostOutput = spoutOutputPerHost.get(timestamp);
 							HashMap<String, Double> childHostOuput = childOutputPerHost.get(timestamp);
 							Set<String> boltHosts = bolthostOutput.keySet();
-							for(String host : boltHosts){
-								if(!childHostOuput.containsKey(host)){
-									traffic += bolthostOutput.get(host);
+							if(childHostOuput != null){
+								for(String host : boltHosts){
+									if(!childHostOuput.containsKey(host)){
+										traffic += bolthostOutput.get(host);
+									}
 								}
 							}
 							if(!dataSet.containsKey(timestamp)){

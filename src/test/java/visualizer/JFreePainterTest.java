@@ -77,6 +77,9 @@ public class JFreePainterTest {
 		String queryF31 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host3', '10', 'topologyTest', 'F', '14', '15', '5', '5', '0', '0', '20', '0')";
 		String queryF32 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host4', '10', 'topologyTest', 'F', '16', '16', '5', '5', '0', '0', '20', '0')";
 		
+		String queryA4 = "INSERT INTO all_time_spouts_stats VALUES('4', 'host1', '10', 'topologyTest', 'A', '1', '1', '35', '15', '12', '2', '6', '1', '8')";
+		String queryB4 = "INSERT INTO all_time_bolts_stats VALUES('4', 'host1', '20', 'topologyTest', 'B', '2', '4', '35', '5', '40', '4', '4.25', '0.8')";
+		
 		String queryStatus1 = "INSERT INTO topologies_status VALUES('1', 'topologyTest', 'ACTIVE')";
 		String queryStatus2 = "INSERT INTO topologies_status VALUES('2', 'topologyTest', 'DEACTIVATED')";
 		String queryStatus3 = "INSERT INTO topologies_status VALUES('3', 'topologyTest', 'REBALANCING')";
@@ -120,6 +123,8 @@ public class JFreePainterTest {
 		queries.add(queryE3);
 		queries.add(queryF31);
 		queries.add(queryF32);
+		queries.add(queryA4);
+		queries.add(queryB4);
 		queries.add(queryStatus1);
 		queries.add(queryStatus2);
 		queries.add(queryStatus3);
