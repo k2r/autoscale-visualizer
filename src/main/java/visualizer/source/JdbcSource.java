@@ -687,16 +687,17 @@ public class JdbcSource implements ISource {
 	public HashMap<String, HashMap<Integer, Double>> getTopologyRebalancing() {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		HashMap<Integer, Double> dataSet = new HashMap<>();
-		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_CURRENT + ", " + COL_NEW +
-				" FROM " + TABLE_SCALE; 
+		String query = "SELECT " + COL_TIMESTAMP + ", SUM(" + COL_CURRENT + "), SUM(" + COL_NEW + ") " + 
+				" FROM " + TABLE_SCALE + 
+				" GROUP BY " + COL_TIMESTAMP; 
 		Statement statement;
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
 			while(result.next()){
 				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
-				Integer currentP = result.getInt(COL_CURRENT);
-				Integer newP = result.getInt(COL_NEW);
+				Integer currentP = result.getInt("SUM(" + COL_CURRENT + ")");
+				Integer newP = result.getInt("SUM(" + COL_NEW + ")");
 				Double rebalance =  1.0 * newP - currentP;
 				dataSet.put(timestamp, rebalance);
 			}
