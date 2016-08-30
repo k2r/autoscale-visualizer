@@ -56,10 +56,11 @@ public class Main {
 					painter.drawTopologyNbExecutors();
 					painter.drawTopologyNbSupervisors();
 					painter.drawTopologyNbWorkers();
-					painter.drawTopologyStatus();
+					//painter.drawTopologyStatus();
 					painter.drawTopologyTraffic(structure);
-					ArrayList<String> bolts1 = structure.getBolts();
-					for(String bolt : bolts1){
+					painter.drawTopologyRebalancing();
+					ArrayList<String> bolts = structure.getBolts();
+					for(String bolt : bolts){
 						painter.drawBoltInput(bolt, structure);
 						painter.drawBoltExecuted(bolt);
 						painter.drawBoltOutputs(bolt);
@@ -88,10 +89,11 @@ public class Main {
 				painter.drawTopologyNbExecutors();
 				painter.drawTopologyNbSupervisors();
 				painter.drawTopologyNbWorkers();
-				painter.drawTopologyStatus();
+				//painter.drawTopologyStatus();
 				painter.drawTopologyTraffic(structure);
-				ArrayList<String> bolts1 = structure.getBolts();
-				for(String bolt : bolts1){
+				painter.drawTopologyRebalancing();
+				ArrayList<String> bolts = structure.getBolts();
+				for(String bolt : bolts){
 					painter.drawBoltInput(bolt, structure);
 					painter.drawBoltExecuted(bolt);
 					painter.drawBoltOutputs(bolt);
