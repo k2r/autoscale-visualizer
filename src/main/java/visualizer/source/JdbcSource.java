@@ -23,11 +23,13 @@ public class JdbcSource implements ISource {
 
 	private String topology;
 	private final Connection connection;
+	private int referenceTimestamp;
 	
 	private final static String TABLE_SPOUT = "all_time_spouts_stats";
 	private final static String TABLE_BOLT = "all_time_bolts_stats";
 	private final static String TABLE_STATUS = "topologies_status";
 	private final static String TABLE_EPR = "operators_epr";
+	private final static String TABLE_SCALE = "scales";
 	
 	private final static String COL_TIMESTAMP = "timestamp";
 	private final static String COL_HOST = "host";
@@ -44,6 +46,9 @@ public class JdbcSource implements ISource {
 	private final static String COL_EPR = "epr";
 	private final static String COL_PROC_RATE = "processing_rate";
 	private final static String COL_STATUS = "status";
+	private final static String COL_CURRENT = "current_parallelism";
+	private final static String COL_NEW = "new_parallelism";
+	
 	
 	private static final Logger logger = Logger.getLogger("JdbcSource");
 	
@@ -53,6 +58,18 @@ public class JdbcSource implements ISource {
 		String dbUrl = "jdbc:mysql://"+ dbHost +"/" + dbName;
 		Class.forName(jdbcDriver);
 		this.connection = DriverManager.getConnection(dbUrl, dbUser, dbPwd);
+		String query = "SELECT " + COL_TIMESTAMP + " FROM " + TABLE_SPOUT;
+		Statement statement;
+		try {
+			statement = this.connection.createStatement();
+			ResultSet result = statement.executeQuery(query);
+			this.referenceTimestamp = 0;
+			if(result.first()){
+				this.referenceTimestamp = result.getInt(COL_TIMESTAMP) - 1;
+			}
+		}catch (SQLException e) {
+			logger.severe("Unable to recover the reference timestamp because " + e);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -69,15 +86,9 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double topInput = result.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
-				dataSet.put(timestamp, topInput);
-			}
+			
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double topInput = result.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
 				dataSet.put(timestamp, topInput);
 			}
@@ -102,15 +113,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double topThroughput = result.getDouble("SUM(" + COL_UPDT_THROUGHPUT + ")");
-				dataSet.put(timestamp, topThroughput);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double topThroughput = result.getDouble("SUM(" + COL_UPDT_THROUGHPUT + ")");
 				dataSet.put(timestamp, topThroughput);
 			}
@@ -135,15 +139,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double topLoss = result.getDouble("SUM(" + COL_UPDT_LOSS + ")");
-				dataSet.put(timestamp, topLoss);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double topLoss = result.getDouble("SUM(" + COL_UPDT_LOSS + ")");
 				dataSet.put(timestamp, topLoss);
 			}
@@ -168,15 +165,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double topLatency = result.getDouble("MAX(" + COL_AVG_COMPLETE_LATENCY + ")");
-				dataSet.put(timestamp, topLatency);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double topLatency = result.getDouble("MAX(" + COL_AVG_COMPLETE_LATENCY + ")");
 				dataSet.put(timestamp, topLatency);
 			}
@@ -201,15 +191,8 @@ public class JdbcSource implements ISource {
 		try {
 			statementSpout = this.connection.createStatement();
 			ResultSet resultSpout = statementSpout.executeQuery(querySpout);
-			Integer reference = 0;
-			if(resultSpout.first()){
-				reference = resultSpout.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = resultSpout.getInt(COL_TIMESTAMP) - reference;
-				Double nbExecutors = resultSpout.getDouble("COUNT(DISTINCT " + COL_START_TASK + ")");
-				dataSet.put(timestamp, nbExecutors);
-			}
 			while(resultSpout.next()){
-				Integer timestamp = resultSpout.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = resultSpout.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double nbExecutors = resultSpout.getDouble("COUNT(DISTINCT " + COL_START_TASK + ")");
 				dataSet.put(timestamp, nbExecutors);
 			}
@@ -223,19 +206,8 @@ public class JdbcSource implements ISource {
 		try {
 			statementBolt = this.connection.createStatement();
 			ResultSet resultBolt = statementBolt.executeQuery(queryBolt);
-			Integer reference = 0;
-			if(resultBolt.first()){
-				reference = resultBolt.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = resultBolt.getInt(COL_TIMESTAMP) - reference;
-				Double nbExecutors = resultBolt.getDouble("COUNT(DISTINCT " + COL_START_TASK + ")");
-				if(dataSet.containsKey(timestamp)){
-					nbExecutors += dataSet.get(timestamp);
-					dataSet.remove(timestamp);
-				}
-				dataSet.put(timestamp, nbExecutors);
-			}
 			while(resultBolt.next()){
-				Integer timestamp = resultBolt.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = resultBolt.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double nbExecutors = resultBolt.getDouble("COUNT(DISTINCT " + COL_START_TASK + ")");
 				if(dataSet.containsKey(timestamp)){
 					nbExecutors += dataSet.get(timestamp);
@@ -270,15 +242,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double nbSupervisors = result.getDouble("COUNT(DISTINCT C." + COL_HOST + ")");
-				dataSet.put(timestamp, nbSupervisors);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double nbSupervisors = result.getDouble("COUNT(DISTINCT C." + COL_HOST + ")");
 				dataSet.put(timestamp, nbSupervisors);
 			}
@@ -312,15 +277,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double nbWorkers = result.getDouble("nbWorkers");
-				dataSet.put(timestamp, nbWorkers);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double nbWorkers = result.getDouble("nbWorkers");
 				dataSet.put(timestamp, nbWorkers);
 			}
@@ -345,28 +303,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				String topStatus = result.getString(COL_STATUS);
-				Double code = -2.0;
-				if(topStatus.equalsIgnoreCase("ACTIVE")){
-					code = 2.0;
-				}
-				if(topStatus.equalsIgnoreCase("REBALANCING")){
-					code = 1.0;
-				}
-				if(topStatus.equalsIgnoreCase("DEACTIVATED")){
-					code = 0.0;
-				}
-				if(topStatus.equalsIgnoreCase("KILLED")){
-					code = -1.0;
-				}
-				dataSet.put(timestamp, code);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				String topStatus = result.getString(COL_STATUS);
 				Double code = -2.0;
 				if(topStatus.equalsIgnoreCase("ACTIVE")){
@@ -408,24 +346,8 @@ public class JdbcSource implements ISource {
 				statementBolt = this.connection.createStatement();
 				ResultSet resultBolt = statementBolt.executeQuery(queryBolt);
 				HashMap<Integer, HashMap<String, Double>> boltOutputPerHost = new HashMap<>();
-				Integer reference = 0;
-				if(resultBolt.first()){
-					reference = resultBolt.getInt(COL_TIMESTAMP) - 1;
-					Integer timestamp = resultBolt.getInt(COL_TIMESTAMP) - reference;
-					String host = resultBolt.getString(COL_HOST);
-					Double output = resultBolt.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
-					if(!boltOutputPerHost.containsKey(timestamp)){
-						HashMap<String, Double> hostOutput = new HashMap<>();
-						hostOutput.put(host, output);
-						boltOutputPerHost.put(timestamp, hostOutput);
-					}
-					HashMap<String, Double> hostOutput = boltOutputPerHost.get(timestamp);
-					hostOutput.put(host, output);
-					boltOutputPerHost.remove(timestamp);
-					boltOutputPerHost.put(timestamp, hostOutput);
-				}
 				while(resultBolt.next()){
-					Integer timestamp = resultBolt.getInt(COL_TIMESTAMP) - reference;
+					Integer timestamp = resultBolt.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 					String host = resultBolt.getString(COL_HOST);
 					Double output = resultBolt.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
 					if(!boltOutputPerHost.containsKey(timestamp)){
@@ -449,24 +371,8 @@ public class JdbcSource implements ISource {
 						statementChild = this.connection.createStatement();
 						ResultSet resultChild = statementChild.executeQuery(queryChild);
 						HashMap<Integer, HashMap<String, Double>> childOutputPerHost = new HashMap<>();
-						Integer referenceChild = 0;
-						if(resultChild.first()){
-							referenceChild = resultChild.getInt(COL_TIMESTAMP) - 1;
-							Integer timestamp = resultChild.getInt(COL_TIMESTAMP) - referenceChild;
-							String host = resultChild.getString(COL_HOST);
-							Double output = resultChild.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
-							if(!childOutputPerHost.containsKey(timestamp)){
-								HashMap<String, Double> hostOutput = new HashMap<>();
-								hostOutput.put(host, output);
-								childOutputPerHost.put(timestamp, hostOutput);
-							}
-							HashMap<String, Double> hostOutput = childOutputPerHost.get(timestamp);
-							hostOutput.put(host, output);
-							childOutputPerHost.remove(timestamp);
-							childOutputPerHost.put(timestamp, hostOutput);
-						}
 						while(resultChild.next()){
-							Integer timestamp = resultChild.getInt(COL_TIMESTAMP) - referenceChild;
+							Integer timestamp = resultChild.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 							String host = resultChild.getString(COL_HOST);
 							Double output = resultChild.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
 							if(!childOutputPerHost.containsKey(timestamp)){
@@ -518,24 +424,8 @@ public class JdbcSource implements ISource {
 				statementSpout = this.connection.createStatement();
 				ResultSet resultSpout = statementSpout.executeQuery(querySpout);
 				HashMap<Integer, HashMap<String, Double>> spoutOutputPerHost = new HashMap<>();
-				Integer reference = 0;
-				if(resultSpout.first()){
-					reference = resultSpout.getInt(COL_TIMESTAMP) - 1;
-					Integer timestamp = resultSpout.getInt(COL_TIMESTAMP) - reference;
-					String host = resultSpout.getString(COL_HOST);
-					Double output = resultSpout.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
-					if(!spoutOutputPerHost.containsKey(timestamp)){
-						HashMap<String, Double> hostOutput = new HashMap<>();
-						hostOutput.put(host, output);
-						spoutOutputPerHost.put(timestamp, hostOutput);
-					}
-					HashMap<String, Double> hostOutput = spoutOutputPerHost.get(timestamp);
-					hostOutput.put(host, output);
-					spoutOutputPerHost.remove(timestamp);
-					spoutOutputPerHost.put(timestamp, hostOutput);
-				}
 				while(resultSpout.next()){
-					Integer timestamp = resultSpout.getInt(COL_TIMESTAMP) - reference;
+					Integer timestamp = resultSpout.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 					String host = resultSpout.getString(COL_HOST);
 					Double output = resultSpout.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
 					if(!spoutOutputPerHost.containsKey(timestamp)){
@@ -559,24 +449,8 @@ public class JdbcSource implements ISource {
 						statementChild = this.connection.createStatement();
 						ResultSet resultChild = statementChild.executeQuery(queryChild);
 						HashMap<Integer, HashMap<String, Double>> childOutputPerHost = new HashMap<>();
-						Integer referenceChild = 0;
-						if(resultChild.first()){
-							referenceChild = resultChild.getInt(COL_TIMESTAMP) - 1;
-							Integer timestamp = resultChild.getInt(COL_TIMESTAMP) - referenceChild;
-							String host = resultChild.getString(COL_HOST);
-							Double output = resultChild.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
-							if(!childOutputPerHost.containsKey(timestamp)){
-								HashMap<String, Double> hostOutput = new HashMap<>();
-								hostOutput.put(host, output);
-								childOutputPerHost.put(timestamp, hostOutput);
-							}
-							HashMap<String, Double> hostOutput = childOutputPerHost.get(timestamp);
-							hostOutput.put(host, output);
-							childOutputPerHost.remove(timestamp);
-							childOutputPerHost.put(timestamp, hostOutput);
-						}
 						while(resultChild.next()){
-							Integer timestamp = resultChild.getInt(COL_TIMESTAMP) - referenceChild;
+							Integer timestamp = resultChild.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 							String host = resultChild.getString(COL_HOST);
 							Double output = resultChild.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
 							if(!childOutputPerHost.containsKey(timestamp)){
@@ -638,19 +512,8 @@ public class JdbcSource implements ISource {
 			try {
 				statementBolt = this.connection.createStatement();
 				ResultSet result = statementBolt.executeQuery(queryBolt);
-				Integer reference = 0;
-				if(result.first()){
-					reference = result.getInt(COL_TIMESTAMP) - 1;
-					Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-					Double parentBoltNbOutput = result.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
-					if(dataSet.containsKey(timestamp)){
-						parentBoltNbOutput += dataSet.get(timestamp);
-						dataSet.remove(timestamp);
-					}
-					dataSet.put(timestamp, parentBoltNbOutput);
-				}
 				while(result.next()){
-					Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+					Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 					Double parentBoltNbOutput = result.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
 					if(dataSet.containsKey(timestamp)){
 						parentBoltNbOutput += dataSet.get(timestamp);
@@ -670,19 +533,8 @@ public class JdbcSource implements ISource {
 			try {
 				statementSpout = this.connection.createStatement();
 				ResultSet result = statementSpout.executeQuery(querySpout);
-				Integer reference = 0;
-				if(result.first()){
-					reference = result.getInt(COL_TIMESTAMP) - 1;
-					Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-					Double parentSpoutNbOutput = result.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
-					if(dataSet.containsKey(timestamp)){
-						parentSpoutNbOutput += dataSet.get(timestamp);
-						dataSet.remove(timestamp);
-					}
-					dataSet.put(timestamp, parentSpoutNbOutput);
-				}
 				while(result.next()){
-					Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+					Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 					Double parentSpoutNbOutput = result.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
 					if(dataSet.containsKey(timestamp)){
 						parentSpoutNbOutput += dataSet.get(timestamp);
@@ -713,15 +565,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double boltNbExecuted = result.getDouble("SUM(" + COL_UPDT_EXEC + ")");
-				dataSet.put(timestamp, boltNbExecuted);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double boltNbExecuted = result.getDouble("SUM(" + COL_UPDT_EXEC + ")");
 				dataSet.put(timestamp, boltNbExecuted);
 			}
@@ -747,15 +592,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double boltNbOutput = result.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
-				dataSet.put(timestamp, boltNbOutput);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double boltNbOutput = result.getDouble("SUM(" + COL_UPDT_OUTPUT + ")");
 				dataSet.put(timestamp, boltNbOutput);
 			}
@@ -781,15 +619,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double boltAvgLatency = result.getDouble("MAX(" + COL_AVG_LATENCY + ")");
-				dataSet.put(timestamp, boltAvgLatency);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double boltAvgLatency = result.getDouble("MAX(" + COL_AVG_LATENCY + ")");
 				dataSet.put(timestamp, boltAvgLatency);
 			}
@@ -814,15 +645,8 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double boltProcRate = result.getDouble(COL_PROC_RATE);
-				dataSet.put(timestamp, boltProcRate);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double boltProcRate = result.getDouble(COL_PROC_RATE);
 				dataSet.put(timestamp, boltProcRate);
 			}
@@ -847,20 +671,37 @@ public class JdbcSource implements ISource {
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
-			Integer reference = 0;
-			if(result.first()){
-				reference = result.getInt(COL_TIMESTAMP) - 1;
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
-				Double boltEPR = result.getDouble(COL_EPR);
-				dataSet.put(timestamp, boltEPR);
-			}
 			while(result.next()){
-				Integer timestamp = result.getInt(COL_TIMESTAMP) - reference;
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				Double boltEPR = result.getDouble(COL_EPR);
 				dataSet.put(timestamp, boltEPR);
 			}
 		} catch (SQLException e) {
 			logger.severe("Unable to recover the epr value for bolt " + component + " because " + e);
+		}
+		alldata.put(this.topology, dataSet);
+		return alldata;
+	}
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getTopologyRebalancing() {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		HashMap<Integer, Double> dataSet = new HashMap<>();
+		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_CURRENT + ", " + COL_NEW +
+				" FROM " + TABLE_SCALE; 
+		Statement statement;
+		try {
+			statement = this.connection.createStatement();
+			ResultSet result = statement.executeQuery(query);
+			while(result.next()){
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
+				Integer currentP = result.getInt(COL_CURRENT);
+				Integer newP = result.getInt(COL_NEW);
+				Double rebalance =  1.0 * newP - currentP;
+				dataSet.put(timestamp, rebalance);
+			}
+		} catch (SQLException e) {
+			logger.severe("Unable to recover scaling actions for the topology because " + e);
 		}
 		alldata.put(this.topology, dataSet);
 		return alldata;

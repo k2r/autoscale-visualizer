@@ -59,6 +59,11 @@ public interface IPainter {
 	
 	/**
 	 * 
+	 */
+	public void drawTopologyRebalancing();
+	
+	/**
+	 * 
 	 * @param component
 	 * @param structure
 	 */

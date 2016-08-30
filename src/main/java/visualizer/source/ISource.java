@@ -41,6 +41,12 @@ public interface ISource {
 	 * 
 	 * @return
 	 */
+	public HashMap<String, HashMap<Integer, Double>> getTopologyRebalancing();
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public HashMap<String, HashMap<Integer, Double>> getTopologyNbExecutors();
 	
 	/**

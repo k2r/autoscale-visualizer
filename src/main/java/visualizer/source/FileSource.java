@@ -43,6 +43,7 @@ public class FileSource implements ISource {
 	private static final String TOPOLOGY_NBWORK = "topology_nb_workers";
 	private static final String TOPOLOGY_STATUS = "topology_status";
 	private static final String TOPOLOGY_TRAFFIC = "topology_traffic";
+	private static final String TOPOLOGY_REBALANCING = "topology_rebalancing";
 	private static final String BOLT_INPUT = "bolt_input";
 	private static final String BOLT_EXEC = "bolt_processed";
 	private static final String BOLT_OUTPUT = "bolt_output";
@@ -690,4 +691,39 @@ public class FileSource implements ISource {
 		return alldata;
 	}
 
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getTopologyRebalancing() {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		Path topology1Scales = Paths.get(this.datasetDirectory1 + "/" + TOPO_DIR 
+				+ "/" + TOPOLOGY_REBALANCING + "_" + this.rootDirectory1 + ".csv");
+		if(Files.exists(topology1Scales)){
+			try {
+				HashMap<Integer, Double> dataset1 = new HashMap<>();
+				ArrayList<String> data1 = (ArrayList<String>) Files.readAllLines(topology1Scales, Charset.defaultCharset());
+				for(int i = 1; i < data1.size(); i++){
+					String[] line = data1.get(i).split(";");
+					dataset1.put(Integer.parseInt(line[0]), Double.parseDouble(line[1]));
+				}
+				alldata.put(this.topology1, dataset1);
+			} catch (IOException e) {
+				logger.severe("Unable to retrieve "+ this.topology1 + " scaling actions because " + e);
+			}
+		}
+		Path topology2Scales = Paths.get(this.datasetDirectory2 + "/" + TOPO_DIR 
+				+ "/" + TOPOLOGY_REBALANCING + "_" + this.rootDirectory2 + ".csv");
+		if(Files.exists(topology2Scales)){
+			try {
+				HashMap<Integer, Double> dataset2 = new HashMap<>();
+				ArrayList<String> data2 = (ArrayList<String>) Files.readAllLines(topology2Scales, Charset.defaultCharset());
+				for(int i = 1; i < data2.size(); i++){
+					String[] line = data2.get(i).split(";");
+					dataset2.put(Integer.parseInt(line[0]), Double.parseDouble(line[1]));
+				}
+				alldata.put(this.topology2, dataset2);
+			} catch (IOException e) {
+				logger.severe("Unable to retrieve "+ this.topology2 + " scaling actions because " + e);
+			}
+		}
+		return alldata;
+	}
 }

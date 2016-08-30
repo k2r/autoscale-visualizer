@@ -46,6 +46,7 @@ public class JFreePainter implements IPainter {
 	private static final String TOPOLOGY_NBWORK = "topology_nb_workers";
 	private static final String TOPOLOGY_STATUS = "topology_status";
 	private static final String TOPOLOGY_TRAFFIC = "topology_traffic";
+	private static final String TOPOLOGY_REBALANCING = "topology_rebalancing";
 	private static final String BOLT_INPUT = "bolt_input";
 	private static final String BOLT_EXEC = "bolt_processed";
 	private static final String BOLT_OUTPUT = "bolt_output";
@@ -810,6 +811,47 @@ public class JFreePainter implements IPainter {
 				Files.write(path, records, Charset.defaultCharset(), StandardOpenOption.WRITE);
 			} catch (IOException e) {
 				logger.severe("Unable to save the chart of " + component + " epr because " + e);
+			}
+		}
+	}
+
+	@Override
+	public void drawTopologyRebalancing() {
+		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getTopologyRebalancing();
+		ArrayList<String> records = new ArrayList<>();
+	
+		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
+		
+		for(String topology : dataset.keySet()){
+			HashMap<Integer, Double> data = dataset.get(topology);
+			final XYSeries serie = new XYSeries(topology);
+			records.add("timestamp;scaling action");
+			for(Integer timestamp : data.keySet()){
+				Double value = data.get(timestamp);
+				records.add(timestamp + ";" + value);
+				serie.add(timestamp, value);
+			}
+			dataToPlot.addSeries(serie);
+		}
+		
+		if(Files.exists(Paths.get(this.getChartDirectory()))){
+			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " rebalancing", "timestamp (in s)", "Topology rebalancing", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
+			int width = 640;
+			int height = 480;
+			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_REBALANCING + "_" + this.getRootDirectory() + ".png");
+			try {
+				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
+			} catch (IOException e) {
+				logger.severe("Unable to save the chart of the topology rebalancing because " + e);
+			}
+		}
+		if(Files.exists(Paths.get(this.getDatasetDirectory()))){
+			try {
+				Path path = Paths.get(this.getDatasetDirectory() + "/topology/" + TOPOLOGY_REBALANCING + "_" + this.getRootDirectory() + ".csv");
+				Files.createFile(path);
+				Files.write(path, records, Charset.defaultCharset(), StandardOpenOption.WRITE);
+			} catch (IOException e) {
+				logger.severe("Unable to save the topology rebalancing because " + e);
 			}
 		}
 	}
