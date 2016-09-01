@@ -835,7 +835,7 @@ public class JFreePainter implements IPainter {
 		}
 		
 		if(Files.exists(Paths.get(this.getChartDirectory()))){
-			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " rebalancing", "timestamp (in s)", "Topology rebalancing", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
+			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " rebalancing", "timestamp (in s)", "Number of executors added/deleted", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_REBALANCING + "_" + this.getRootDirectory() + ".png");
