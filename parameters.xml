@@ -6,29 +6,25 @@
 	-->
 	<command>ANALYZE</command>
 	<!--Name of the topology to visualize-->
-	<topology1>linearAutoscale</topology1>
+	<topology>topologyTest1</topology>
 	<!--Type of stream variation (refer to StreamSim generator for type->variation code matching)-->
-	<stream_type1>1</stream_type1>
+	<stream_type>1</stream_type>
 	
 	<!--Structure of the topology to compute values like network traffic-->
-	<edges1>
-		<edge1 source="A" destination="B"></edge1>
-		<edge1 source="B" destination="C"></edge1>
-		<edge1 source="C" destination="D"></edge1>
-		<edge1 source="C" destination="E"></edge1>
-		<edge1 source="E" destination="F"></edge1>
-	</edges1>
+	<edges>
+		<edge source="A" destination="B"></edge>
+		<edge source="B" destination="C"></edge>
+		<edge source="C" destination="D"></edge>
+		<edge source="C" destination="E"></edge>
+		<edge source="E" destination="F"></edge>
+	</edges>
 	
-	<!--To fulfill only for comparison with topology1-->
-	<topology2>topologyTest2</topology2>
-	<stream_type2>1</stream_type2>
-	<edges2>
-		<edge2 source="A" destination="B"></edge2>
-		<edge2 source="B" destination="C"></edge2>
-		<edge2 source="C" destination="D"></edge2>
-		<edge2 source="C" destination="E"></edge2>
-		<edge2 source="E" destination="F"></edge2>
-	</edges2>
+	<!--To fulfill (and optionnal add other topology/stream type pairs) only for comparison with first topology-->
+	<topology>topologyTest2</topology>
+	<stream_type>1</stream_type>
+	
+	<topology>topologyTest3</topology>
+	<stream_type>1</stream_type>
 	
 	<!--Parameters to get a connection to the monitoring database-->
 	<db_host>localhost</db_host>

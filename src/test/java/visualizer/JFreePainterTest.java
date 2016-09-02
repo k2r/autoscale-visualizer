@@ -295,7 +295,7 @@ public class JFreePainterTest {
 	public void testDrawTopologyTraffic() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
@@ -314,7 +314,7 @@ public class JFreePainterTest {
 	public void testDrawBoltInput() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
@@ -335,7 +335,7 @@ public class JFreePainterTest {
 	public void testDrawBoltExecuted() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
@@ -356,7 +356,7 @@ public class JFreePainterTest {
 	public void testDrawBoltOutputs() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
@@ -377,7 +377,7 @@ public class JFreePainterTest {
 	public void testDrawBoltLatency() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
@@ -398,7 +398,7 @@ public class JFreePainterTest {
 	public void testDrawBoltProcRate() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
@@ -419,7 +419,7 @@ public class JFreePainterTest {
 	public void testDrawBoltEPR() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		JFreePainter painter = new JFreePainter("topologyTest", 1, source);

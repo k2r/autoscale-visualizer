@@ -32,7 +32,7 @@ public class TopologyStructureTest {
 	public void testGetComponents() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		ArrayList<String> expectedComponents = new ArrayList<>();
 		expectedComponents.add("A");
 		expectedComponents.add("B");
@@ -54,7 +54,7 @@ public class TopologyStructureTest {
 	public void testGetSpouts() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		ArrayList<String> expectedSpouts = new ArrayList<>();
 		expectedSpouts.add("A");
 		
@@ -71,7 +71,7 @@ public class TopologyStructureTest {
 	public void testGetBolts() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		ArrayList<String> expectedBolts = new ArrayList<>();
 		expectedBolts.add("B");
 		expectedBolts.add("C");
@@ -92,7 +92,7 @@ public class TopologyStructureTest {
 	public void testGetParents() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		ArrayList<String> expectedParentsA = new ArrayList<>();
 		ArrayList<String> expectedParentsB = new ArrayList<>();
 		expectedParentsB.add("A");
@@ -123,7 +123,7 @@ public class TopologyStructureTest {
 	public void testGetChildren() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		ArrayList<String> expectedChildrenA = new ArrayList<>();
 		expectedChildrenA.add("B");
 		ArrayList<String> expectedChildrenB = new ArrayList<>();

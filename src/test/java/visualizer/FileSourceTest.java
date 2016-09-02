@@ -150,7 +150,7 @@ public class FileSourceTest {
 		}
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure1 = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		
 		JdbcSource jdbcSource1 = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
@@ -163,10 +163,10 @@ public class FileSourceTest {
 		painter1.drawTopologyNbSupervisors();
 		painter1.drawTopologyNbWorkers();
 		painter1.drawTopologyStatus();
-		painter1.drawTopologyTraffic(structure1);
-		ArrayList<String> bolts1 = structure1.getBolts();
+		painter1.drawTopologyTraffic(structure);
+		ArrayList<String> bolts1 = structure.getBolts();
 		for(String bolt : bolts1){
-			painter1.drawBoltInput(bolt, structure1);
+			painter1.drawBoltInput(bolt, structure);
 			painter1.drawBoltExecuted(bolt);
 			painter1.drawBoltOutputs(bolt);
 			painter1.drawBoltLatency(bolt);
@@ -175,7 +175,6 @@ public class FileSourceTest {
 		}
 		
 		JdbcSource jdbcSource2 = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		TopologyStructure structure2 = new TopologyStructure(parser.getEdges2());
 		
 		JFreePainter painter2 = new JFreePainter("topologyTest2", 1, jdbcSource2);
 		painter2.drawTopologyInput();
@@ -186,10 +185,10 @@ public class FileSourceTest {
 		painter2.drawTopologyNbSupervisors();
 		painter2.drawTopologyNbWorkers();
 		painter2.drawTopologyStatus();
-		painter2.drawTopologyTraffic(structure2);
-		ArrayList<String> bolts2 = structure2.getBolts();
+		painter2.drawTopologyTraffic(structure);
+		ArrayList<String> bolts2 = structure.getBolts();
 		for(String bolt : bolts2){
-			painter2.drawBoltInput(bolt, structure2);
+			painter2.drawBoltInput(bolt, structure);
 			painter2.drawBoltExecuted(bolt);
 			painter2.drawBoltOutputs(bolt);
 			painter2.drawBoltLatency(bolt);
@@ -241,7 +240,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetTopologyInput() throws ClassNotFoundException, SQLException {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 10.0);
 		expected.put(2, 10.0);
@@ -258,7 +264,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetTopologyThroughput() throws ClassNotFoundException, SQLException {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 5.0);
 		expected.put(2, 5.0);
@@ -274,7 +287,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetTopologyLosses() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 0.0);
 		expected.put(2, 5.0);
@@ -289,7 +309,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetTopologyLatency() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 10.0);
 		expected.put(2, 22.0);
@@ -304,7 +331,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetTopologyNbExecutors() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 6.0);
 		expected.put(2, 7.0);
@@ -319,7 +353,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetTopologyNbSupervisors() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 3.0);
 		expected.put(2, 3.0);
@@ -334,7 +375,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetTopologyNbWorkers() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 5.0);
 		expected.put(2, 6.0);
@@ -349,7 +397,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetTopologyStatus() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 2.0);
 		expected.put(2, 0.0);
@@ -369,17 +424,23 @@ public class FileSourceTest {
 	public void testGetTopologyTraffic() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure1 = new TopologyStructure(parser.getEdges1());
-		TopologyStructure structure2 = new TopologyStructure(parser.getEdges2());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 13.0);
 		expected.put(2, 25.0);
 		expected.put(3, 24.0);
 		
-		assertEquals(expected, source.getTopologyTraffic(structure1).get("topologyTest1"));
-		assertEquals(expected, source.getTopologyTraffic(structure2).get("topologyTest2"));
+		assertEquals(expected, source.getTopologyTraffic(structure).get("topologyTest1"));
+		assertEquals(expected, source.getTopologyTraffic(structure).get("topologyTest2"));
 	}
 
 	/**
@@ -390,11 +451,17 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetBoltInput() throws ParserConfigurationException, SAXException, IOException {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure1 = new TopologyStructure(parser.getEdges1());
-		TopologyStructure structure2 = new TopologyStructure(parser.getEdges2());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 10.0);
@@ -406,10 +473,10 @@ public class FileSourceTest {
 		expectedC.put(2, 20.0);
 		expectedC.put(3, 4.0);
 		
-		assertEquals(expectedB, source.getBoltInput("B", structure1).get("topologyTest1"));
-		assertEquals(expectedC, source.getBoltInput("C", structure1).get("topologyTest1"));
-		assertEquals(expectedB, source.getBoltInput("B", structure2).get("topologyTest2"));
-		assertEquals(expectedC, source.getBoltInput("C", structure2).get("topologyTest2"));
+		assertEquals(expectedB, source.getBoltInput("B", structure).get("topologyTest1"));
+		assertEquals(expectedC, source.getBoltInput("C", structure).get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltInput("B", structure).get("topologyTest2"));
+		assertEquals(expectedC, source.getBoltInput("C", structure).get("topologyTest2"));
 	}
 
 	/**
@@ -417,7 +484,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetBoltExecuted() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 10.0);
 		expectedB.put(2, 35.0);
@@ -432,7 +506,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetBoltOutputs() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 8.0);
 		expectedB.put(2, 20.0);
@@ -447,7 +528,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetBoltLatency() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 3.0);
 		expectedB.put(2, 3.5);
@@ -462,7 +550,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetBoltProcessingRate() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 3330.0);
 		expectedB.put(2, 3330.0);
@@ -477,7 +572,14 @@ public class FileSourceTest {
 	 */
 	@Test
 	public void testGetBoltEPR() {
-		FileSource source = new FileSource("topologyTest1", 1, "topologyTest2", 1);
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 0.8);
 		expectedB.put(2, 0.0);

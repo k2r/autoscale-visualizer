@@ -310,7 +310,7 @@ public class JdbcSourceTest {
 	public void testGetTopologyTraffic() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 13.0);
@@ -332,7 +332,7 @@ public class JdbcSourceTest {
 	public void testGetBoltInput() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges1());
+		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 10.0);
