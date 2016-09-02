@@ -37,8 +37,8 @@ public class Main {
 			parser.initParameters();
 			String command = parser.getCommand();
 			if(command.equalsIgnoreCase("ANALYZE")){
-				String topology = parser.getTopology1();
-				Integer varCode = parser.getStreamType1();
+				String topology = parser.getTopologies().get(0);
+				Integer varCode = parser.getStreamTypes().get(0);
 				String dbHost = parser.getDb_host();
 				String dbName = parser.getDb_name();
 				String dbUser = parser.getDb_user();
@@ -46,7 +46,7 @@ public class Main {
 				
 				try {
 					JdbcSource jdbcSource = new JdbcSource(dbHost, dbName, dbUser, dbPwd, topology);
-					IStructure structure = new TopologyStructure(parser.getEdges1());
+					IStructure structure = new TopologyStructure(parser.getEdges());
 					JFreePainter painter = new JFreePainter(topology, varCode, jdbcSource);
 					
 					painter.drawTopologyInput();
@@ -74,14 +74,15 @@ public class Main {
 				}
 			}
 			if(command.equalsIgnoreCase("COMPARE")){
-				String topology1 = parser.getTopology1();
-				String topology2 = parser.getTopology2();
-				String topology = topology1 + "_vs_" + topology2;
-				Integer varCode1 = parser.getStreamType1();
-				Integer varCode2 = parser.getStreamType2();
-				FileSource source = new FileSource(topology1, varCode1, topology2, varCode2);
-				IStructure structure = new TopologyStructure(parser.getEdges1());
-				JFreePainter painter = new JFreePainter(topology, varCode1, source);
+				ArrayList<String> topologies = parser.getTopologies();
+				String topologyName = "Comparison of topologies ";
+				for(String topology : topologies){
+					topologyName += topology + " ";
+				}
+				ArrayList<Integer> varCodes = parser.getStreamTypes();
+				FileSource source = new FileSource(topologies, varCodes);
+				IStructure structure = new TopologyStructure(parser.getEdges());
+				JFreePainter painter = new JFreePainter(topologyName, varCodes.get(0), source);
 				painter.drawTopologyInput();
 				painter.drawTopologyThroughput();
 				painter.drawTopologyLosses();

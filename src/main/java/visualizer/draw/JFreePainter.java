@@ -817,6 +817,7 @@ public class JFreePainter implements IPainter {
 
 	@Override
 	public void drawTopologyRebalancing() {
+		//TODO turn the chart into a bar chart
 		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getTopologyRebalancing();
 		ArrayList<String> records = new ArrayList<>();
 	

@@ -46,11 +46,11 @@ public class XmlConfigParserTest {
 	public void testGetCommand() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		assertEquals("ANALYZE", parser.getFilename());
+		assertEquals("ANALYZE", parser.getCommand());
 	}
 	
 	/**
-	 * Test method for {@link visualizer.config.XmlConfigParser#getTopology1()}.
+	 * Test method for {@link visualizer.config.XmlConfigParser#getTopologies()}.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
@@ -59,12 +59,13 @@ public class XmlConfigParserTest {
 	public void testGetTopology() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		assertEquals("topologyTest1", parser.getTopology1());
-		assertEquals("topologyTest2", parser.getTopology2());
+		assertEquals("topologyTest1", parser.getTopologies().get(0));
+		assertEquals("topologyTest2", parser.getTopologies().get(1));
+		assertEquals("topologyTest3", parser.getTopologies().get(2));
 	}
 
 	/**
-	 * Test method for {@link visualizer.config.XmlConfigParser#getStreamType1()}.
+	 * Test method for {@link visualizer.config.XmlConfigParser#getStreamTypes()}.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
@@ -73,8 +74,8 @@ public class XmlConfigParserTest {
 	public void testGetStreamType() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		assertEquals(1, parser.getStreamType1(), 0);
-		assertEquals(1, parser.getStreamType2(), 0);
+		assertEquals(1, parser.getStreamTypes().get(0), 0);
+		assertEquals(1, parser.getStreamTypes().get(0), 0);
 	}
 
 	/**
@@ -100,7 +101,7 @@ public class XmlConfigParserTest {
 	public void testGetDb_name() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		assertEquals("dbTest", parser.getDb_name());
+		assertEquals("benchmarks", parser.getDb_name());
 	}
 
 	/**
@@ -113,7 +114,7 @@ public class XmlConfigParserTest {
 	public void testGetDb_user() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		assertEquals("user", parser.getDb_user());
+		assertEquals("root", parser.getDb_user());
 	}
 
 	/**
@@ -126,11 +127,11 @@ public class XmlConfigParserTest {
 	public void testGetDb_pwd() throws ParserConfigurationException, SAXException, IOException {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
-		assertEquals("password", parser.getDb_pwd());
+		assertEquals("", parser.getDb_pwd());
 	}
 
 	/**
-	 * Test method for {@link visualizer.config.XmlConfigParser#getEdges1()}.
+	 * Test method for {@link visualizer.config.XmlConfigParser#getEdges()}.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
@@ -147,8 +148,7 @@ public class XmlConfigParserTest {
 		expectedEdges.add(new Edge("C", "E"));
 		expectedEdges.add(new Edge("E", "F"));
 		
-		assertEquals(expectedEdges, parser.getEdges1());
-		assertEquals(expectedEdges, parser.getEdges2());
+		assertEquals(expectedEdges, parser.getEdges());
 	}
 
 }

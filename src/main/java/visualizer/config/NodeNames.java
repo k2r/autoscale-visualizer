@@ -11,18 +11,14 @@ public enum NodeNames {
 	
 	PARAM("parameters"),
 	COMMAND("command"),
-	TOPOLOGY1("topology1"),
-	STREAMTYPE1("stream_type1"),
-	TOPOLOGY2("topology2"),
-	STREAMTYPE2("stream_type2"),
+	TOPOLOGY("topology"),
+	STREAMTYPE("stream_type"),
 	DBHOST("db_host"),
 	DBNAME("db_name"),
 	DBUSER("db_user"),
 	DBPWD("db_password"),
-	EDGES1("edges1"),
-	EDGES2("edges2"),
-	EDGE1("edge1"),
-	EDGE2("edge2"),
+	EDGES("edges"),
+	EDGE("edge"),
 	SOURCE("source"),
 	DEST("destination");
 	
