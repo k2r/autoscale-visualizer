@@ -58,7 +58,7 @@ public class Main {
 					painter.drawTopologyNbWorkers();
 					//painter.drawTopologyStatus();
 					painter.drawTopologyTraffic(structure);
-					painter.drawTopologyRebalancing();
+					painter.drawTopologyRebalancing(structure);
 					ArrayList<String> bolts = structure.getBolts();
 					for(String bolt : bolts){
 						painter.drawBoltInput(bolt, structure);
@@ -92,7 +92,7 @@ public class Main {
 				painter.drawTopologyNbWorkers();
 				//painter.drawTopologyStatus();
 				painter.drawTopologyTraffic(structure);
-				painter.drawTopologyRebalancing();
+				painter.drawTopologyRebalancing(structure);
 				ArrayList<String> bolts = structure.getBolts();
 				for(String bolt : bolts){
 					painter.drawBoltInput(bolt, structure);

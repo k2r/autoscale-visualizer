@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -18,6 +19,9 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -177,10 +181,20 @@ public class JFreePainter implements IPainter {
 			dataToPlot.addSeries(serie);
 		}
 		
+		
 		if(Files.exists(Paths.get(this.getChartDirectory()))){
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " input stream", "timestamp (in s)", "Number of incoming tuples", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_INPUT + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -225,6 +239,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " thoughput", "timestamp (in s)", "Number of outcoming tuples", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_THROUGHPUT + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -269,6 +292,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " losses", "timestamp (in s)", "Number of replayed tuples", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_LOSSES + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -313,6 +345,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " latency", "timestamp (in s)", "Average complete latency (in ms)", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_LATENCY + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -357,6 +398,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " number of executors", "timestamp (in s)", "Number of executors", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_NBEXEC + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -401,6 +451,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " number of supervisors", "timestamp (in s)", "Number of supervisors", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_NBSUPER + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -445,6 +504,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " number of workers", "timestamp (in s)", "Number of workers", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_NBWORK + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -489,6 +557,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " status", "timestamp (in s)", "Topology status", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_STATUS + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -533,6 +610,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " network traffic", "timestamp (in s)", "Network traffic (in tuples)", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_TRAFFIC + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -577,6 +663,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + "." + component + " inputs", "timestamp (in s)", "Number of incoming tuples", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory()  + "/bolts/" + component + "_" + BOLT_INPUT + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -621,6 +716,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + "." + component + " processed", "timestamp (in s)", "Number of processed tuples", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory()  + "/bolts/" + component + "_" + BOLT_EXEC + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -665,6 +769,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + "." + component + " outputs", "timestamp (in s)", "Number of emitted tuples", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory()  + "/bolts/" + component + "_" + BOLT_OUTPUT + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -709,6 +822,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + "." + component + " latency", "timestamp (in s)", "Average latency per tuple (in ms)", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory()  + "/bolts/" + component + "_" + BOLT_LATENCY + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -753,6 +875,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + "." + component + " processing rate", "timestamp (in s)", "Average processing rate (in tuples per window)", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory()  + "/bolts/" + component + "_" + BOLT_PROCRATE + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -797,6 +928,15 @@ public class JFreePainter implements IPainter {
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + "." + component + " epr", "timestamp (in s)", "epr", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, true);
+			}
+			plot.setRenderer(renderer);
+			
 			File chart = new File(this.getChartDirectory()  + "/bolts/" + component + "_" + BOLT_EPR + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
@@ -816,32 +956,37 @@ public class JFreePainter implements IPainter {
 	}
 
 	@Override
-	public void drawTopologyRebalancing() {
-		//TODO turn the chart into a bar chart
-		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getTopologyRebalancing();
+	public void drawTopologyRebalancing(IStructure structure) {
+		HashMap<String, HashMap<Integer, HashMap<String, Double>>> dataset = this.source.getTopologyRebalancing(structure);
 		ArrayList<String> records = new ArrayList<>();
 	
-		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
-		
+		final DefaultCategoryDataset dataToPlot = new DefaultCategoryDataset();
 		for(String topology : dataset.keySet()){
-			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
-			records.add("timestamp;scaling action");
+			HashMap<Integer, HashMap<String, Double>> data = dataset.get(topology);
+			ArrayList<Integer> orderedTimestamps = new ArrayList<>();
 			for(Integer timestamp : data.keySet()){
-				Double value = data.get(timestamp);
-				records.add(timestamp + ";" + value);
-				serie.add(timestamp, value);
+				orderedTimestamps.add(timestamp);
 			}
-			dataToPlot.addSeries(serie);
+			Collections.sort(orderedTimestamps);
+			records.add("timestamp;actions");
+			for(Integer timestamp : orderedTimestamps){
+				HashMap<String, Double> actions = data.get(timestamp);
+				String actionsDescriptor = "";
+				for(String bolt : actions.keySet()){
+					Double nbExecutors = actions.get(bolt);
+					dataToPlot.addValue(nbExecutors, bolt, timestamp);
+					actionsDescriptor += bolt + "@" + nbExecutors + ":";
+				}
+				records.add(timestamp + ";" + actionsDescriptor);
+			}
 		}
-		
 		if(Files.exists(Paths.get(this.getChartDirectory()))){
-			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " rebalancing", "timestamp (in s)", "Number of executors added/deleted", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
+			JFreeChart barChart = ChartFactory.createStackedBarChart(this.getTopology() + " rebalancing", "timestamp (in s)", "Number of executors added/deleted", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_REBALANCING + "_" + this.getRootDirectory() + ".png");
 			try {
-				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
+				ChartUtilities.saveChartAsPNG(chart, barChart, width, height);
 			} catch (IOException e) {
 				logger.severe("Unable to save the chart of the topology rebalancing because " + e);
 			}

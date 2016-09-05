@@ -488,19 +488,28 @@ public class FileSource implements ISource {
 	}
 
 	@Override
-	public HashMap<String, HashMap<Integer, Double>> getTopologyRebalancing() {
-		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+	public HashMap<String, HashMap<Integer, HashMap<String, Double>>> getTopologyRebalancing(IStructure structure) {
+		HashMap<String, HashMap<Integer, HashMap<String, Double>>> alldata = new HashMap<>();
 		int nbTopologies = topologies.size();
 		for(int i = 0; i < nbTopologies; i++){
 			Path topologyScales = Paths.get(this.datasetDirectories.get(i) + "/" + TOPO_DIR 
 					+ "/" + TOPOLOGY_REBALANCING + "_" + this.rootDirectories.get(i) + ".csv");
 			if(Files.exists(topologyScales)){
 				try {
-					HashMap<Integer, Double> dataset = new HashMap<>();
+					HashMap<Integer, HashMap<String, Double>> dataset = new HashMap<>();
 					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(topologyScales, Charset.defaultCharset());
 					for(int j = 1; j < data.size(); j++){
 						String[] line = data.get(j).split(";");
-						dataset.put(Integer.parseInt(line[0]), Double.parseDouble(line[1]));
+						String[] actions = line[1].split(":");
+						int nbActions = actions.length;
+						HashMap<String, Double> timestampInfo = new HashMap<>();
+						for(int k = 0; k < nbActions; k++){
+							String[] action = actions[k].split("@");
+							String bolt = action[0];
+							Double nbExecutors = Double.parseDouble(action[1]);
+							timestampInfo.put(bolt, nbExecutors);
+						}
+						dataset.put(Integer.parseInt(line[0]), timestampInfo);
 					}
 					alldata.put(this.topologies.get(i), dataset);
 				} catch (IOException e) {
