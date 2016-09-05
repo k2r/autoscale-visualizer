@@ -37,12 +37,11 @@ public interface ISource {
 	 */
 	public HashMap<String, HashMap<Integer, Double>> getTopologyLatency();
 	
-	//TODO change the signature of this method into HashMap<String (topology) <HashMap <Integer (timestamp) <HashMap <String (component), Double (Number of executors)>>>
 	/**
 	 * 
 	 * @return
 	 */
-	public HashMap<String, HashMap<Integer, Double>> getTopologyRebalancing();
+	public HashMap<String, HashMap<Integer, HashMap<String, Double>>> getTopologyRebalancing(IStructure structure);
 	
 	/**
 	 * 

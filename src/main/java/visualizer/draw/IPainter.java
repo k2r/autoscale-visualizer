@@ -60,7 +60,7 @@ public interface IPainter {
 	/**
 	 * 
 	 */
-	public void drawTopologyRebalancing();
+	public void drawTopologyRebalancing(IStructure structure);
 	
 	/**
 	 * 

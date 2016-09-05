@@ -389,11 +389,15 @@ public class JdbcSource implements ISource {
 							Double traffic = 0.0;
 							HashMap<String, Double> bolthostOutput = boltOutputPerHost.get(timestamp);
 							HashMap<String, Double> childHostOuput = childOutputPerHost.get(timestamp);
+							//Let define to how many supervisors the bolt must distribute tuples
 							Set<String> boltHosts = bolthostOutput.keySet();
 							if(childHostOuput != null){
+								Integer childParalDegree = childHostOuput.keySet().size();
 								for(String host : boltHosts){
-									if(!childHostOuput.containsKey(host)){
-										traffic += bolthostOutput.get(host);
+									traffic += bolthostOutput.get(host);
+									if(childHostOuput.containsKey(host)){
+										traffic = traffic - (bolthostOutput.get(host) / childParalDegree);
+										
 									}
 								}
 							}
@@ -684,22 +688,38 @@ public class JdbcSource implements ISource {
 	}
 
 	@Override
-	public HashMap<String, HashMap<Integer, Double>> getTopologyRebalancing() {
-		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
-		HashMap<Integer, Double> dataSet = new HashMap<>();
-		String query = "SELECT " + COL_TIMESTAMP + ", SUM(" + COL_CURRENT + "), SUM(" + COL_NEW + ") " + 
+	public HashMap<String, HashMap<Integer, HashMap<String, Double>>> getTopologyRebalancing(IStructure structure) {
+		HashMap<String, HashMap<Integer, HashMap<String ,Double>>> alldata = new HashMap<>();
+		HashMap<Integer, HashMap<String, Double>> dataSet = new HashMap<>();
+		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_COMPONENT + ", SUM(" + COL_CURRENT + "), SUM(" + COL_NEW + ") " + 
 				" FROM " + TABLE_SCALE + 
-				" GROUP BY " + COL_TIMESTAMP; 
+				" GROUP BY " + COL_TIMESTAMP + ", " + COL_COMPONENT; 
 		Statement statement;
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
 			while(result.next()){
 				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
+				String component = result.getString(COL_COMPONENT);
 				Integer currentP = result.getInt("SUM(" + COL_CURRENT + ")");
 				Integer newP = result.getInt("SUM(" + COL_NEW + ")");
 				Double rebalance =  1.0 * newP - currentP;
-				dataSet.put(timestamp, rebalance);
+				HashMap<String, Double> timestampInfo = dataSet.get(timestamp);
+				if(timestampInfo == null){
+					timestampInfo = new HashMap<>();
+				}
+				timestampInfo.put(component, rebalance);
+				dataSet.put(timestamp, timestampInfo);
+			}
+			ArrayList<String> bolts = structure.getBolts();
+			for(Integer timestamp : dataSet.keySet()){
+				HashMap<String, Double> timestampInfo = dataSet.get(timestamp);
+				for(String bolt : bolts){
+					if(!timestampInfo.containsKey(bolt)){
+						timestampInfo.put(bolt, 0.0);
+					}
+				}
+				dataSet.put(timestamp, timestampInfo);
 			}
 		} catch (SQLException e) {
 			logger.severe("Unable to recover scaling actions for the topology because " + e);
