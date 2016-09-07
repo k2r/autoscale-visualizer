@@ -183,7 +183,7 @@ public class JFreePainter implements IPainter {
 		
 		
 		if(Files.exists(Paths.get(this.getChartDirectory()))){
-			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " input stream", "timestamp (in s)", "Number of incoming tuples", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
+			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " input stream", "timestamp (in s)", "Number of emitted tuples", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
 			
