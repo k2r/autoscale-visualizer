@@ -57,6 +57,8 @@ public class JFreePainter implements IPainter {
 	private static final String BOLT_LATENCY = "bolt_latency";
 	private static final String BOLT_PROCRATE = "bolt_processing_rate";
 	private static final String BOLT_EPR = "bolt_epr";
+	private static final boolean DRAWSHAPES = true;
+	private static final boolean DRAWLINES = true;
 	
 	private static final Logger logger = Logger.getLogger("JFreePainter");
 	
@@ -191,7 +193,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -244,7 +247,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -297,7 +301,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -350,7 +355,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -403,7 +409,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -456,7 +463,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -509,7 +517,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -562,7 +571,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -615,7 +625,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -668,7 +679,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -721,7 +733,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -774,7 +787,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -827,7 +841,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -880,7 +895,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
@@ -933,7 +949,8 @@ public class JFreePainter implements IPainter {
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = dataToPlot.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesShapesVisible(i, true);
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
 			}
 			plot.setRenderer(renderer);
 			
