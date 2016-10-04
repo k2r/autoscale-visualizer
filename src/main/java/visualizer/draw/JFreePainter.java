@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -21,7 +20,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -51,12 +49,14 @@ public class JFreePainter implements IPainter {
 	private static final String TOPOLOGY_STATUS = "topology_status";
 	private static final String TOPOLOGY_TRAFFIC = "topology_traffic";
 	private static final String TOPOLOGY_REBALANCING = "topology_rebalancing";
+	private static final String TOPOLOGY_LOAD = "topology_load";
 	private static final String BOLT_INPUT = "bolt_input";
 	private static final String BOLT_EXEC = "bolt_processed";
 	private static final String BOLT_OUTPUT = "bolt_output";
 	private static final String BOLT_LATENCY = "bolt_latency";
 	private static final String BOLT_PROCRATE = "bolt_processing_rate";
-	private static final String BOLT_EPR = "bolt_epr";
+	private static final String BOLT_CR = "bolt_cr";
+	private static final String BOLT_PL = "bolt_pl";
 	private static final boolean DRAWSHAPES = true;
 	private static final boolean DRAWLINES = true;
 	
@@ -922,8 +922,8 @@ public class JFreePainter implements IPainter {
 	 * @see visualizer.draw.IPainter#drawBoltEPR(java.lang.String)
 	 */
 	@Override
-	public void drawBoltEPR(String component) {
-		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getBoltEPR(component);
+	public void drawBoltCR(String component) {
+		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getBoltCR(component);
 		ArrayList<String> records = new ArrayList<>();
 	
 		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
@@ -931,7 +931,7 @@ public class JFreePainter implements IPainter {
 		for(String topology : dataset.keySet()){
 			HashMap<Integer, Double> data = dataset.get(topology);
 			final XYSeries serie = new XYSeries(topology + "." + component);
-			records.add("timestamp;epr");
+			records.add("timestamp;cr");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
 				records.add(timestamp + ";" + value);
@@ -941,7 +941,7 @@ public class JFreePainter implements IPainter {
 		}
 		
 		if(Files.exists(Paths.get(this.getChartDirectory()))){
-			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + "." + component + " epr", "timestamp (in s)", "epr", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
+			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + "." + component + " congestion risk", "timestamp (in s)", "congestion risk", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
 			
@@ -954,56 +954,54 @@ public class JFreePainter implements IPainter {
 			}
 			plot.setRenderer(renderer);
 			
-			File chart = new File(this.getChartDirectory()  + "/bolts/" + component + "_" + BOLT_EPR + "_" + this.getRootDirectory() + ".png");
+			File chart = new File(this.getChartDirectory()  + "/bolts/" + component + "_" + BOLT_CR + "_" + this.getRootDirectory() + ".png");
 			try {
 				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
 			} catch (IOException e) {
-				logger.severe("Unable to save the chart of " + component + " epr because " + e);
+				logger.severe("Unable to save the chart of " + component + " cr because " + e);
 			}
 		}
 		if(Files.exists(Paths.get(this.getDatasetDirectory()))){
 			try {
-				Path path = Paths.get(this.getDatasetDirectory()  + "/bolts/" + component + "_" + BOLT_EPR + "_" + this.getRootDirectory() + ".csv");
+				Path path = Paths.get(this.getDatasetDirectory()  + "/bolts/" + component + "_" + BOLT_CR + "_" + this.getRootDirectory() + ".csv");
 				Files.createFile(path);
 				Files.write(path, records, Charset.defaultCharset(), StandardOpenOption.WRITE);
 			} catch (IOException e) {
-				logger.severe("Unable to save the chart of " + component + " epr because " + e);
+				logger.severe("Unable to save the chart of " + component + " cr because " + e);
 			}
 		}
 	}
 
 	@Override
 	public void drawTopologyRebalancing(IStructure structure) {
-		HashMap<String, HashMap<Integer, HashMap<String, Double>>> dataset = this.source.getTopologyRebalancing(structure);
+		HashMap<String, HashMap<String, HashMap<Integer, Double>>> dataset = this.source.getTopologyRebalancing(structure);
 		ArrayList<String> records = new ArrayList<>();
 	
-		final DefaultCategoryDataset dataToPlot = new DefaultCategoryDataset();
+		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
+		
 		for(String topology : dataset.keySet()){
-			HashMap<Integer, HashMap<String, Double>> data = dataset.get(topology);
-			ArrayList<Integer> orderedTimestamps = new ArrayList<>();
-			for(Integer timestamp : data.keySet()){
-				orderedTimestamps.add(timestamp);
-			}
-			Collections.sort(orderedTimestamps);
+			HashMap<String, HashMap<Integer, Double>> boltData = dataset.get(topology);
+			
 			records.add("timestamp;actions");
-			for(Integer timestamp : orderedTimestamps){
-				HashMap<String, Double> actions = data.get(timestamp);
-				String actionsDescriptor = "";
-				for(String bolt : actions.keySet()){
-					Double nbExecutors = actions.get(bolt);
-					dataToPlot.addValue(nbExecutors, bolt, timestamp);
-					actionsDescriptor += bolt + "@" + nbExecutors + ":";
+			for(String bolt : boltData.keySet()){
+				XYSeries serie = new XYSeries(topology + "." + bolt);
+				HashMap<Integer, Double> actions = boltData.get(bolt);
+				for(Integer timestamp : actions.keySet()){
+					Double nbExecutors = actions.get(timestamp);
+					serie.add(timestamp, nbExecutors);
+					String boltExecutors = bolt + "@" + nbExecutors + ":";
+					records.add(timestamp + ";" + boltExecutors);
 				}
-				records.add(timestamp + ";" + actionsDescriptor);
+				dataToPlot.addSeries(serie);
 			}
 		}
 		if(Files.exists(Paths.get(this.getChartDirectory()))){
-			JFreeChart barChart = ChartFactory.createStackedBarChart(this.getTopology() + " rebalancing", "timestamp (in s)", "Number of executors added/deleted", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
+			JFreeChart xyChart = ChartFactory.createXYLineChart(this.getTopology() + " rebalancing", "timestamp (in s)", "Number of executors", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
 			int width = 640;
 			int height = 480;
 			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_REBALANCING + "_" + this.getRootDirectory() + ".png");
 			try {
-				ChartUtilities.saveChartAsPNG(chart, barChart, width, height);
+				ChartUtilities.saveChartAsPNG(chart, xyChart, width, height);
 			} catch (IOException e) {
 				logger.severe("Unable to save the chart of the topology rebalancing because " + e);
 			}
@@ -1015,6 +1013,108 @@ public class JFreePainter implements IPainter {
 				Files.write(path, records, Charset.defaultCharset(), StandardOpenOption.WRITE);
 			} catch (IOException e) {
 				logger.severe("Unable to save the topology rebalancing because " + e);
+			}
+		}
+	}
+
+	@Override
+	public void drawBoltPL(String component) {
+		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getBoltPL(component);
+		ArrayList<String> records = new ArrayList<>();
+	
+		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
+		
+		for(String topology : dataset.keySet()){
+			HashMap<Integer, Double> data = dataset.get(topology);
+			final XYSeries serie = new XYSeries(topology + "." + component);
+			records.add("timestamp;pl");
+			for(Integer timestamp : data.keySet()){
+				Double value = data.get(timestamp);
+				records.add(timestamp + ";" + value);
+				serie.add(timestamp, value);
+			}
+			dataToPlot.addSeries(serie);
+		}
+		
+		if(Files.exists(Paths.get(this.getChartDirectory()))){
+			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + "." + component + " processing load", "timestamp (in s)", "load", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
+			int width = 640;
+			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
+			}
+			plot.setRenderer(renderer);
+			
+			File chart = new File(this.getChartDirectory()  + "/bolts/" + component + "_" + BOLT_PL + "_" + this.getRootDirectory() + ".png");
+			try {
+				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
+			} catch (IOException e) {
+				logger.severe("Unable to save the chart of " + component + " processing load because " + e);
+			}
+		}
+		if(Files.exists(Paths.get(this.getDatasetDirectory()))){
+			try {
+				Path path = Paths.get(this.getDatasetDirectory()  + "/bolts/" + component + "_" + BOLT_PL + "_" + this.getRootDirectory() + ".csv");
+				Files.createFile(path);
+				Files.write(path, records, Charset.defaultCharset(), StandardOpenOption.WRITE);
+			} catch (IOException e) {
+				logger.severe("Unable to save the chart of " + component + " processing load because " + e);
+			}
+		}
+	}
+
+	@Override
+	public void drawTopologyLoad() {
+		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getTopologyLoads();
+		ArrayList<String> records = new ArrayList<>();
+	
+		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
+		
+		for(String topology : dataset.keySet()){
+			HashMap<Integer, Double> data = dataset.get(topology);
+			final XYSeries serie = new XYSeries(topology);
+			records.add("timestamp;loads");
+			for(Integer timestamp : data.keySet()){
+				Double value = data.get(timestamp);
+				records.add(timestamp + ";" + value);
+				serie.add(timestamp, value);
+			}
+			dataToPlot.addSeries(serie);
+		}
+		
+		if(Files.exists(Paths.get(this.getChartDirectory()))){
+			JFreeChart xylineChart = ChartFactory.createXYLineChart(this.getTopology() + " loads", "timestamp (in s)", "Topology loads", dataToPlot, PlotOrientation.VERTICAL, true, true, true);
+			int width = 640;
+			int height = 480;
+			
+			final XYPlot plot = xylineChart.getXYPlot();
+			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+			int nbSeries = dataToPlot.getSeriesCount();
+			for(int i = 0; i < nbSeries; i++){
+				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
+				renderer.setSeriesLinesVisible(i, DRAWLINES);
+			}
+			plot.setRenderer(renderer);
+			
+			File chart = new File(this.getChartDirectory() + "/topology/" + TOPOLOGY_LOAD + "_" + this.getRootDirectory() + ".png");
+			try {
+				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
+			} catch (IOException e) {
+				logger.severe("Unable to save the chart of the topology loads because " + e);
+			}
+		}
+		if(Files.exists(Paths.get(this.getDatasetDirectory()))){
+			try {
+				Path path = Paths.get(this.getDatasetDirectory() + "/topology/" + TOPOLOGY_LOAD + "_" + this.getRootDirectory() + ".csv");
+				Files.createFile(path);
+				Files.write(path, records, Charset.defaultCharset(), StandardOpenOption.WRITE);
+			} catch (IOException e) {
+				logger.severe("Unable to save the topology loads because " + e);
 			}
 		}
 	}

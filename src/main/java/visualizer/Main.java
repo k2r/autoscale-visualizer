@@ -59,14 +59,16 @@ public class Main {
 					//painter.drawTopologyStatus();
 					painter.drawTopologyTraffic(structure);
 					painter.drawTopologyRebalancing(structure);
+					painter.drawTopologyLoad();
 					ArrayList<String> bolts = structure.getBolts();
 					for(String bolt : bolts){
 						painter.drawBoltInput(bolt, structure);
 						painter.drawBoltExecuted(bolt);
 						painter.drawBoltOutputs(bolt);
 						painter.drawBoltLatency(bolt);
-						painter.drawBoltProcRate(bolt);
-						painter.drawBoltEPR(bolt);
+						//painter.drawBoltProcRate(bolt);
+						painter.drawBoltCR(bolt);
+						painter.drawBoltPL(bolt);
 					}
 					System.out.println("Benchmark extracted and prepared for visualization!");
 				} catch (ClassNotFoundException | SQLException e) {
@@ -93,14 +95,16 @@ public class Main {
 				//painter.drawTopologyStatus();
 				painter.drawTopologyTraffic(structure);
 				painter.drawTopologyRebalancing(structure);
+				painter.drawTopologyLoad();
 				ArrayList<String> bolts = structure.getBolts();
 				for(String bolt : bolts){
 					painter.drawBoltInput(bolt, structure);
 					painter.drawBoltExecuted(bolt);
 					painter.drawBoltOutputs(bolt);
 					painter.drawBoltLatency(bolt);
-					painter.drawBoltProcRate(bolt);
-					painter.drawBoltEPR(bolt);
+					//painter.drawBoltProcRate(bolt);
+					painter.drawBoltCR(bolt);
+					painter.drawBoltPL(bolt);
 				}
 				System.out.println("Benchmarks comparison prepared for visualization!");
 			}

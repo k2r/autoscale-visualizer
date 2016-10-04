@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+//import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -28,8 +29,9 @@ public class JdbcSource implements ISource {
 	private final static String TABLE_SPOUT = "all_time_spouts_stats";
 	private final static String TABLE_BOLT = "all_time_bolts_stats";
 	private final static String TABLE_STATUS = "topologies_status";
-	private final static String TABLE_EPR = "operators_epr";
-	private final static String TABLE_SCALE = "scales";
+	private final static String TABLE_CR = "operators_cr";
+	private final static String TABLE_PL = "operators_pl";
+	//private final static String TABLE_SCALE = "scales";
 	
 	private final static String COL_TIMESTAMP = "timestamp";
 	private final static String COL_HOST = "host";
@@ -43,11 +45,13 @@ public class JdbcSource implements ISource {
 	private final static String COL_UPDT_LOSS = "update_losses";
 	private final static String COL_AVG_LATENCY = "execute_ms_avg";
 	private final static String COL_AVG_COMPLETE_LATENCY = "complete_ms_avg";
-	private final static String COL_EPR = "epr";
+	private final static String COL_CR = "cr";
+	private final static String COL_PL = "pl";
+	private final static String COL_LOAD = "incoming_load";
 	private final static String COL_PROC_RATE = "processing_rate";
 	private final static String COL_STATUS = "status";
-	private final static String COL_CURRENT = "current_parallelism";
-	private final static String COL_NEW = "new_parallelism";
+	//private final static String COL_CURRENT = "current_parallelism";
+	//private final static String COL_NEW = "new_parallelism";
 	
 	
 	private static final Logger logger = Logger.getLogger("JdbcSource");
@@ -643,7 +647,7 @@ public class JdbcSource implements ISource {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		HashMap<Integer, Double> dataSet = new HashMap<>();
 		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_PROC_RATE +
-				" FROM " + TABLE_EPR + 
+				" FROM " + TABLE_CR + 
 				" WHERE " + COL_COMPONENT + " = '" + component + "'";
 		Statement statement;
 		try {
@@ -662,14 +666,14 @@ public class JdbcSource implements ISource {
 	}
 
 	/* (non-Javadoc)
-	 * @see visualizer.source.ISource#getBoltEPR(java.lang.String)
+	 * @see visualizer.source.ISource#getBoltCR(java.lang.String)
 	 */
 	@Override
-	public HashMap<String, HashMap<Integer, Double>> getBoltEPR(String component) {
+	public HashMap<String, HashMap<Integer, Double>> getBoltCR(String component) {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		HashMap<Integer, Double> dataSet = new HashMap<>();
-		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_EPR +
-				" FROM " + TABLE_EPR + 
+		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_CR +
+				" FROM " + TABLE_CR + 
 				" WHERE " + COL_COMPONENT + " = '" + component + "'"; 
 		Statement statement;
 		try {
@@ -677,54 +681,146 @@ public class JdbcSource implements ISource {
 			ResultSet result = statement.executeQuery(query);
 			while(result.next()){
 				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
-				Double boltEPR = result.getDouble(COL_EPR);
-				dataSet.put(timestamp, boltEPR);
+				Double boltCR = result.getDouble(COL_CR);
+				dataSet.put(timestamp, boltCR);
 			}
 		} catch (SQLException e) {
-			logger.severe("Unable to recover the epr value for bolt " + component + " because " + e);
+			logger.severe("Unable to recover the congestion risk value for bolt " + component + " because " + e);
 		}
 		alldata.put(this.topology, dataSet);
 		return alldata;
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see visualizer.source.ISource#getBoltPL(java.lang.String)
+	 */
 	@Override
-	public HashMap<String, HashMap<Integer, HashMap<String, Double>>> getTopologyRebalancing(IStructure structure) {
-		HashMap<String, HashMap<Integer, HashMap<String ,Double>>> alldata = new HashMap<>();
-		HashMap<Integer, HashMap<String, Double>> dataSet = new HashMap<>();
-		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_COMPONENT + ", SUM(" + COL_CURRENT + "), SUM(" + COL_NEW + ") " + 
-				" FROM " + TABLE_SCALE + 
-				" GROUP BY " + COL_TIMESTAMP + ", " + COL_COMPONENT; 
+	public HashMap<String, HashMap<Integer, Double>> getBoltPL(String component) {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		HashMap<Integer, Double> dataSet = new HashMap<>();
+		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_PL +
+				" FROM " + TABLE_PL + 
+				" WHERE " + COL_COMPONENT + " = '" + component + "'"; 
 		Statement statement;
 		try {
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
 			while(result.next()){
 				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
+				Double boltPL = result.getDouble(COL_PL);
+				dataSet.put(timestamp, boltPL);
+			}
+		} catch (SQLException e) {
+			logger.severe("Unable to recover the processing load value for bolt " + component + " because " + e);
+		}
+		alldata.put(this.topology, dataSet);
+		return alldata;
+	}
+
+	@Override
+	public HashMap<String, HashMap<String, HashMap<Integer, Double>>> getTopologyRebalancing(IStructure structure) {
+		HashMap<String, HashMap<String, HashMap<Integer,Double>>> alldata = new HashMap<>();
+		HashMap<String, HashMap<Integer, Double>> dataSet = new HashMap<>();
+		
+		ArrayList<String> bolts = structure.getBolts();
+		for(String bolt : bolts){
+			String queryExecutors = "SELECT " + COL_TIMESTAMP + ", COUNT(DISTINCT " + COL_START_TASK + ") AS nbExecutors" +
+					" FROM " + TABLE_BOLT +
+					" WHERE " + COL_COMPONENT + " = '" + bolt + "' " + 
+					" GROUP BY " + COL_TIMESTAMP;
+			Statement statementExecutors;
+			try{
+				statementExecutors = this.connection.createStatement();
+				ResultSet result = statementExecutors.executeQuery(queryExecutors);
+				HashMap<Integer, Double> componentInfo = dataSet.get(bolt);
+				if(componentInfo == null){
+					componentInfo = new HashMap<>();
+				}
+				while(result.next()){
+					Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
+					Integer nbExecutors = result.getInt("nbExecutors");
+					componentInfo.put(timestamp, nbExecutors.doubleValue());
+				}
+				dataSet.put(bolt, componentInfo);
+			}catch (SQLException e) {
+				logger.severe("Unable to recover scaling actions for the topology because " + e);
+			}
+		}
+		
+		/*HashMap<Integer, HashMap<String, Double>> rebalancing = new HashMap<>();
+		String queryRebalancing = "SELECT " + COL_TIMESTAMP + ", " + COL_COMPONENT + ", SUM(" + COL_CURRENT + "), SUM(" + COL_NEW + ") " + 
+				" FROM " + TABLE_SCALE + 
+				" GROUP BY " + COL_TIMESTAMP + ", " + COL_COMPONENT; 
+		Statement statementRebalancing;
+		try {
+			statementRebalancing = this.connection.createStatement();
+			ResultSet result = statementRebalancing.executeQuery(queryRebalancing);
+			while(result.next()){
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
 				String component = result.getString(COL_COMPONENT);
 				Integer currentP = result.getInt("SUM(" + COL_CURRENT + ")");
 				Integer newP = result.getInt("SUM(" + COL_NEW + ")");
 				Double rebalance =  1.0 * newP - currentP;
-				HashMap<String, Double> timestampInfo = dataSet.get(timestamp);
+				HashMap<String, Double> timestampInfo = rebalancing.get(timestamp);
 				if(timestampInfo == null){
 					timestampInfo = new HashMap<>();
 				}
 				timestampInfo.put(component, rebalance);
-				dataSet.put(timestamp, timestampInfo);
+				rebalancing.put(timestamp, timestampInfo);
 			}
-			ArrayList<String> bolts = structure.getBolts();
-			for(Integer timestamp : dataSet.keySet()){
-				HashMap<String, Double> timestampInfo = dataSet.get(timestamp);
+			for(Integer timestamp : rebalancing.keySet()){
+				HashMap<String, Double> timestampInfo = rebalancing.get(timestamp);
 				for(String bolt : bolts){
 					if(!timestampInfo.containsKey(bolt)){
 						timestampInfo.put(bolt, 0.0);
 					}
 				}
-				dataSet.put(timestamp, timestampInfo);
+				rebalancing.put(timestamp, timestampInfo);
 			}
 		} catch (SQLException e) {
 			logger.severe("Unable to recover scaling actions for the topology because " + e);
 		}
-		alldata.put(this.topology, dataSet);
+		
+		HashMap<Integer, HashMap<String, Double>> dataSet = new HashMap<>();
+		ArrayList<Integer> orderedTimestamp = new ArrayList<>();
+		for(Integer timestamp : nbExecutorsPerComponent.keySet()){
+			orderedTimestamp.add(timestamp);
+		}
+		Collections.sort(orderedTimestamp);
+		Integer init = orderedTimestamp.get(0); 
+		dataSet.put(init, nbExecutorsPerComponent.get(init));
+		for(Integer timestamp : rebalancing.keySet()){
+			if(orderedTimestamp.contains(timestamp)){
+				Integer index = orderedTimestamp.indexOf(timestamp);
+				Integer effectiveIndex = Math.min(index + 2, nbExecutorsPerComponent.size() - 1);
+				HashMap<String, Double> relevantExecutors = nbExecutorsPerComponent.get(orderedTimestamp.get(effectiveIndex));
+				dataSet.put(timestamp, relevantExecutors);
+			}
+		}*/
+ 		alldata.put(this.topology, dataSet);
+		return alldata;
+	}
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getTopologyLoads() {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		HashMap<Integer, Double> dataSet = new HashMap<>();
+		String query = "SELECT " + COL_TIMESTAMP + ", AVG(" + COL_LOAD + ") AS avgLoad" +
+				" FROM " + TABLE_PL + 
+				" GROUP BY " + COL_TIMESTAMP + "," + COL_TOPOLOGY;
+		Statement statement;
+		try {
+			statement = this.connection.createStatement();
+			ResultSet result = statement.executeQuery(query);
+			while(result.next()){
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
+				Double avgLoad = result.getDouble("avgLoad");
+				dataSet.put(timestamp, avgLoad);
+			}
+			alldata.put(this.topology, dataSet);
+		}catch(SQLException e) {
+			logger.severe("Unable to recover global load for the topology because " + e);
+		}
 		return alldata;
 	}
 }
