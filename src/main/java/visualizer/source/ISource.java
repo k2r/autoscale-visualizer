@@ -41,7 +41,7 @@ public interface ISource {
 	 * 
 	 * @return
 	 */
-	public HashMap<String, HashMap<Integer, HashMap<String, Double>>> getTopologyRebalancing(IStructure structure);
+	public HashMap<String, HashMap<String, HashMap<Integer, Double>>> getTopologyRebalancing(IStructure structure);
 	
 	/**
 	 * 
@@ -74,6 +74,12 @@ public interface ISource {
 	 * @return
 	 */
 	public HashMap<String, HashMap<Integer, Double>> getTopologyTraffic(IStructure structure);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public HashMap<String, HashMap<Integer, Double>> getTopologyLoads();
 	
 	/**
 	 * 
@@ -116,5 +122,12 @@ public interface ISource {
 	 * @param component
 	 * @return
 	 */
-	public HashMap<String, HashMap<Integer, Double>> getBoltEPR(String component);
+	public HashMap<String, HashMap<Integer, Double>> getBoltCR(String component);
+	
+	/**
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public HashMap<String, HashMap<Integer, Double>> getBoltPL(String component);
 }

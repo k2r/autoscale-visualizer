@@ -37,12 +37,14 @@ public class FileSource implements ISource {
 	private static final String TOPOLOGY_STATUS = "topology_status";
 	private static final String TOPOLOGY_TRAFFIC = "topology_traffic";
 	private static final String TOPOLOGY_REBALANCING = "topology_rebalancing";
+	private static final String TOPOLOGY_LOAD = "topology_load";
 	private static final String BOLT_INPUT = "bolt_input";
 	private static final String BOLT_EXEC = "bolt_processed";
 	private static final String BOLT_OUTPUT = "bolt_output";
 	private static final String BOLT_LATENCY = "bolt_latency";
 	private static final String BOLT_PROCRATE = "bolt_processing_rate";
-	private static final String BOLT_EPR = "bolt_epr";
+	private static final String BOLT_CR = "bolt_cr";
+	private static final String BOLT_PL = "bolt_pl";
 	
 	private static final Logger logger = Logger.getLogger("FileSource");
 	
@@ -464,23 +466,23 @@ public class FileSource implements ISource {
 	 * @see visualizer.source.ISource#getBoltEPR(java.lang.String)
 	 */
 	@Override
-	public HashMap<String, HashMap<Integer, Double>> getBoltEPR(String component) {
+	public HashMap<String, HashMap<Integer, Double>> getBoltCR(String component) {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		int nbTopologies = topologies.size();
 		for(int i = 0; i < nbTopologies; i++){
-			Path boltEPR = Paths.get(this.datasetDirectories.get(i) + "/" + BOLT_DIR + "/" 
-					 + component + "_" + BOLT_EPR + "_" + this.rootDirectories.get(i) + ".csv");
-			if(Files.exists(boltEPR)){
+			Path boltCR = Paths.get(this.datasetDirectories.get(i) + "/" + BOLT_DIR + "/" 
+					 + component + "_" + BOLT_CR + "_" + this.rootDirectories.get(i) + ".csv");
+			if(Files.exists(boltCR)){
 				try {
 					HashMap<Integer, Double> dataset = new HashMap<>();
-					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(boltEPR, Charset.defaultCharset());
+					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(boltCR, Charset.defaultCharset());
 					for(int j = 1; j < data.size(); j++){
 						String[] line = data.get(j).split(";");
 						dataset.put(Integer.parseInt(line[0]), Double.parseDouble(line[1]));
 					}
 					alldata.put(this.topologies.get(i), dataset);
 				} catch (IOException e) {
-					logger.severe("Unable to retrieve " + this.topologies.get(i) + "." + component + " epr because " + e);
+					logger.severe("Unable to retrieve " + this.topologies.get(i) + "." + component + " cr because " + e);
 				}
 			}
 		}
@@ -488,32 +490,90 @@ public class FileSource implements ISource {
 	}
 
 	@Override
-	public HashMap<String, HashMap<Integer, HashMap<String, Double>>> getTopologyRebalancing(IStructure structure) {
-		HashMap<String, HashMap<Integer, HashMap<String, Double>>> alldata = new HashMap<>();
+	public HashMap<String, HashMap<String, HashMap<Integer, Double>>> getTopologyRebalancing(IStructure structure) {
+		HashMap<String, HashMap<String, HashMap<Integer, Double>>> alldata = new HashMap<>();
 		int nbTopologies = topologies.size();
 		for(int i = 0; i < nbTopologies; i++){
 			Path topologyScales = Paths.get(this.datasetDirectories.get(i) + "/" + TOPO_DIR 
 					+ "/" + TOPOLOGY_REBALANCING + "_" + this.rootDirectories.get(i) + ".csv");
 			if(Files.exists(topologyScales)){
 				try {
-					HashMap<Integer, HashMap<String, Double>> dataset = new HashMap<>();
+					HashMap<String, HashMap<Integer, Double>> dataset = new HashMap<>();
 					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(topologyScales, Charset.defaultCharset());
-					for(int j = 1; j < data.size(); j++){
-						String[] line = data.get(j).split(";");
-						String[] actions = line[1].split(":");
-						int nbActions = actions.length;
-						HashMap<String, Double> timestampInfo = new HashMap<>();
-						for(int k = 0; k < nbActions; k++){
-							String[] action = actions[k].split("@");
-							String bolt = action[0];
-							Double nbExecutors = Double.parseDouble(action[1]);
-							timestampInfo.put(bolt, nbExecutors);
+
+					ArrayList<String> bolts = structure.getBolts();
+					for(String bolt : bolts){
+						HashMap<Integer, Double> componentInfo = new HashMap<>();
+						for(int j = 1; j < data.size(); j++){
+							String[] line = data.get(j).split(";");
+							Integer timestamp = Integer.parseInt(line[0]);
+							String[] actions = line[1].split(":");
+							int nbActions = actions.length;
+
+							for(int k = 0; k < nbActions; k++){
+								String[] action = actions[k].split("@");
+								String component = action[0];
+								Double nbExecutors = Double.parseDouble(action[1]);
+								if(component.equalsIgnoreCase(bolt)){
+									componentInfo.put(timestamp, nbExecutors);
+								}
+							}
 						}
-						dataset.put(Integer.parseInt(line[0]), timestampInfo);
+						dataset.put(bolt, componentInfo);
 					}
 					alldata.put(this.topologies.get(i), dataset);
 				} catch (IOException e) {
 					logger.severe("Unable to retrieve "+ this.topologies.get(i) + " scaling actions because " + e);
+				}
+			}
+		}
+		return alldata;
+	}
+
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getBoltPL(String component) {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		int nbTopologies = topologies.size();
+		for(int i = 0; i < nbTopologies; i++){
+			Path boltPL = Paths.get(this.datasetDirectories.get(i) + "/" + BOLT_DIR + "/" 
+					 + component + "_" + BOLT_PL + "_" + this.rootDirectories.get(i) + ".csv");
+			if(Files.exists(boltPL)){
+				try {
+					HashMap<Integer, Double> dataset = new HashMap<>();
+					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(boltPL, Charset.defaultCharset());
+					for(int j = 1; j < data.size(); j++){
+						String[] line = data.get(j).split(";");
+						dataset.put(Integer.parseInt(line[0]), Double.parseDouble(line[1]));
+					}
+					alldata.put(this.topologies.get(i), dataset);
+				} catch (IOException e) {
+					logger.severe("Unable to retrieve " + this.topologies.get(i) + "." + component + " pl because " + e);
+				}
+			}
+		}
+		return alldata;
+	}
+
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getTopologyLoads() {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		int nbTopologies = topologies.size();
+		for(int i = 0; i < nbTopologies; i++){
+			Path topologyLoads = Paths.get(this.datasetDirectories.get(i) + "/" + TOPO_DIR 
+					+ "/" + TOPOLOGY_LOAD + "_" + this.rootDirectories.get(i) + ".csv");
+			if(Files.exists(topologyLoads)){
+				try {
+					HashMap<Integer, Double> dataset = new HashMap<>();
+					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(topologyLoads, Charset.defaultCharset());
+					for(int j = 1; j < data.size(); j++){
+						String[] line = data.get(j).split(";");
+						dataset.put(Integer.parseInt(line[0]), Double.parseDouble(line[1]));
+					}
+					alldata.put(this.topologies.get(i), dataset);
+				} catch (IOException e) {
+					logger.severe("Unable to retrieve "+ this.topologies.get(i) + " loads because " + e);
 				}
 			}
 		}
