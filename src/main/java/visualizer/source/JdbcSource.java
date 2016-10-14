@@ -29,8 +29,8 @@ public class JdbcSource implements ISource {
 	private final static String TABLE_SPOUT = "all_time_spouts_stats";
 	private final static String TABLE_BOLT = "all_time_bolts_stats";
 	private final static String TABLE_STATUS = "topologies_status";
-	private final static String TABLE_CR = "operators_cr";
-	private final static String TABLE_PL = "operators_pl";
+	private final static String TABLE_ACTIVITY = "operators_activity";
+	private final static String TABLE_LOADS = "operators_loads";
 	//private final static String TABLE_SCALE = "scales";
 	
 	private final static String COL_TIMESTAMP = "timestamp";
@@ -45,10 +45,10 @@ public class JdbcSource implements ISource {
 	private final static String COL_UPDT_LOSS = "update_losses";
 	private final static String COL_AVG_LATENCY = "execute_ms_avg";
 	private final static String COL_AVG_COMPLETE_LATENCY = "complete_ms_avg";
-	private final static String COL_CR = "cr";
-	private final static String COL_PL = "pl";
-	private final static String COL_LOAD = "incoming_load";
-	private final static String COL_PROC_RATE = "processing_rate";
+	private final static String COL_ACTIVTY = "activity_level";
+	private final static String COL_PROCRATE = "processing_ratio";
+	private final static String COL_LOAD = "current_load";
+	private final static String COL_CAPACITY = "capacity_per_second";
 	private final static String COL_STATUS = "status";
 	//private final static String COL_CURRENT = "current_parallelism";
 	//private final static String COL_NEW = "new_parallelism";
@@ -646,8 +646,8 @@ public class JdbcSource implements ISource {
 	public HashMap<String, HashMap<Integer, Double>> getBoltProcessingRate(String component) {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		HashMap<Integer, Double> dataSet = new HashMap<>();
-		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_PROC_RATE +
-				" FROM " + TABLE_CR + 
+		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_CAPACITY +
+				" FROM " + TABLE_ACTIVITY + 
 				" WHERE " + COL_COMPONENT + " = '" + component + "'";
 		Statement statement;
 		try {
@@ -655,7 +655,7 @@ public class JdbcSource implements ISource {
 			ResultSet result = statement.executeQuery(query);
 			while(result.next()){
 				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
-				Double boltProcRate = result.getDouble(COL_PROC_RATE);
+				Double boltProcRate = result.getDouble(COL_CAPACITY);
 				dataSet.put(timestamp, boltProcRate);
 			}
 		} catch (SQLException e) {
@@ -672,8 +672,8 @@ public class JdbcSource implements ISource {
 	public HashMap<String, HashMap<Integer, Double>> getBoltCR(String component) {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		HashMap<Integer, Double> dataSet = new HashMap<>();
-		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_CR +
-				" FROM " + TABLE_CR + 
+		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_ACTIVTY +
+				" FROM " + TABLE_ACTIVITY + 
 				" WHERE " + COL_COMPONENT + " = '" + component + "'"; 
 		Statement statement;
 		try {
@@ -681,7 +681,7 @@ public class JdbcSource implements ISource {
 			ResultSet result = statement.executeQuery(query);
 			while(result.next()){
 				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
-				Double boltCR = result.getDouble(COL_CR);
+				Double boltCR = result.getDouble(COL_ACTIVTY);
 				dataSet.put(timestamp, boltCR);
 			}
 		} catch (SQLException e) {
@@ -698,8 +698,8 @@ public class JdbcSource implements ISource {
 	public HashMap<String, HashMap<Integer, Double>> getBoltPL(String component) {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		HashMap<Integer, Double> dataSet = new HashMap<>();
-		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_PL +
-				" FROM " + TABLE_PL + 
+		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_PROCRATE +
+				" FROM " + TABLE_LOADS + 
 				" WHERE " + COL_COMPONENT + " = '" + component + "'"; 
 		Statement statement;
 		try {
@@ -707,7 +707,7 @@ public class JdbcSource implements ISource {
 			ResultSet result = statement.executeQuery(query);
 			while(result.next()){
 				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
-				Double boltPL = result.getDouble(COL_PL);
+				Double boltPL = result.getDouble(COL_PROCRATE);
 				dataSet.put(timestamp, boltPL);
 			}
 		} catch (SQLException e) {
@@ -806,7 +806,7 @@ public class JdbcSource implements ISource {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		HashMap<Integer, Double> dataSet = new HashMap<>();
 		String query = "SELECT " + COL_TIMESTAMP + ", AVG(" + COL_LOAD + ") AS avgLoad" +
-				" FROM " + TABLE_PL + 
+				" FROM " + TABLE_LOADS + 
 				" GROUP BY " + COL_TIMESTAMP + "," + COL_TOPOLOGY;
 		Statement statement;
 		try {

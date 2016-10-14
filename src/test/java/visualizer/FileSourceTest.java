@@ -169,8 +169,8 @@ public class FileSourceTest {
 			painter1.drawBoltExecuted(bolt);
 			painter1.drawBoltOutputs(bolt);
 			painter1.drawBoltLatency(bolt);
-			painter1.drawBoltProcRate(bolt);
-			painter1.drawBoltCR(bolt);
+			painter1.drawBoltCapacity(bolt);
+			painter1.drawBoltActivity(bolt);
 		}
 		
 		JdbcSource jdbcSource2 = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
@@ -191,8 +191,8 @@ public class FileSourceTest {
 			painter2.drawBoltExecuted(bolt);
 			painter2.drawBoltOutputs(bolt);
 			painter2.drawBoltLatency(bolt);
-			painter2.drawBoltProcRate(bolt);
-			painter2.drawBoltCR(bolt);
+			painter2.drawBoltCapacity(bolt);
+			painter2.drawBoltActivity(bolt);
 		}
 		
 	}
