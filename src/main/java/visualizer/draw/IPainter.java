@@ -96,17 +96,17 @@ public interface IPainter {
 	 * 
 	 * @param component
 	 */
-	public void drawBoltProcRate(String component);
+	public void drawBoltCapacity(String component);
 	
 	/**
 	 * 
 	 * @param component
 	 */
-	public void drawBoltCR(String component);
+	public void drawBoltActivity(String component);
 	
 	/**
 	 * 
 	 * @param component
 	 */
-	public void drawBoltPL(String component);
+	public void drawBoltLoad(String component);
 }
