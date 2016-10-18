@@ -203,7 +203,7 @@ public class JdbcSourceTest {
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getTopologyLosses()}.
+	 * Test method for {@link visualizer.source.JdbcSource#getTopologyDephase()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
@@ -215,7 +215,7 @@ public class JdbcSourceTest {
 		expected.put(2, 5.0);
 		expected.put(3, 1.0);
 		
-		assertEquals(expected, source.getTopologyLosses().get("topologyTest"));
+		assertEquals(expected, source.getTopologyDephase().get("topologyTest"));
 	}
 
 	/**
