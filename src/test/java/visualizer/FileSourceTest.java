@@ -81,23 +81,23 @@ public class FileSourceTest {
 		String queryStatus1 = "INSERT INTO topologies_status VALUES('1', 'topologyTest', 'ACTIVE')";
 		String queryStatus2 = "INSERT INTO topologies_status VALUES('2', 'topologyTest', 'DEACTIVATED')";
 		String queryStatus3 = "INSERT INTO topologies_status VALUES('3', 'topologyTest', 'REBALANCING')";
-		String crB1 = "INSERT INTO operators_cr VALUES('1', 'topologyTest', 'B', '0.8', '0', '3330')";
-		String crC1 = "INSERT INTO operators_cr VALUES('1', 'topologyTest', 'C', '0.75', '0', '2000')";
-		String crD1 = "INSERT INTO operators_cr VALUES('1', 'topologyTest', 'D', '1.2', '0', '1250')";
-		String crE1 = "INSERT INTO operators_cr VALUES('1', 'topologyTest', 'E', '0.8', '0', '500')";
-		String crF1 = "INSERT INTO operators_cr VALUES('1', 'topologyTest', 'F', '1.5', '0', '100')";
+		String crB1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'B', '0.8', '0', '3330')";
+		String crC1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'C', '0.75', '0', '2000')";
+		String crD1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'D', '1.2', '0', '1250')";
+		String crE1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'E', '0.8', '0', '500')";
+		String crF1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'F', '1.5', '0', '100')";
 		
-		String crB2 = "INSERT INTO operators_cr VALUES('2', 'topologyTest', 'B', '0', '0', '3330')";
-		String crC2 = "INSERT INTO operators_cr VALUES('2', 'topologyTest', 'C', '0', '0', '2000')";
-		String crD2 = "INSERT INTO operators_cr VALUES('2', 'topologyTest', 'D', '0', '0', '1250')";
-		String crE2 = "INSERT INTO operators_cr VALUES('2', 'topologyTest', 'E', '0', '0', '500')";
-		String crF2 = "INSERT INTO operators_cr VALUES('2', 'topologyTest', 'F', '0', '0', '100')";
+		String crB2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'B', '0', '0', '3330')";
+		String crC2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'C', '0', '0', '2000')";
+		String crD2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'D', '0', '0', '1250')";
+		String crE2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'E', '0', '0', '500')";
+		String crF2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'F', '0', '0', '100')";
 		
-		String crB3 = "INSERT INTO operators_cr VALUES('3', 'topologyTest', 'B', '1.5', '0', '1100')";
-		String crC3 = "INSERT INTO operators_cr VALUES('3', 'topologyTest', 'C', '2', '0', '900')";
-		String crD3 = "INSERT INTO operators_cr VALUES('3', 'topologyTest', 'D', '0.8', '0', '1550')";
-		String crE3 = "INSERT INTO operators_cr VALUES('3', 'topologyTest', 'E', '1', '0', '300')";
-		String crF3 = "INSERT INTO operators_cr VALUES('3', 'topologyTest', 'F', '0.6', '0', '600')";
+		String crB3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'B', '1.5', '0', '1100')";
+		String crC3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'C', '2', '0', '900')";
+		String crD3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'D', '0.8', '0', '1550')";
+		String crE3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'E', '1', '0', '300')";
+		String crF3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'F', '0.6', '0', '600')";
 		
 		queries.add(queryA1);
 		queries.add(queryB1);
@@ -208,7 +208,7 @@ public class FileSourceTest {
 		Connection connection = DriverManager.getConnection(dbUrl, "root", null);
 		String cleanQuery1 = "DELETE FROM all_time_spouts_stats";
 		String cleanQuery2 = "DELETE FROM all_time_bolts_stats";
-		String cleanQuery3 = "DELETE FROM operators_cr";
+		String cleanQuery3 = "DELETE FROM operators_activity";
 		String cleanQuery4 = "DELETE FROM topologies_status";
 		
 		ArrayList<String> queries = new ArrayList<>();
@@ -282,7 +282,7 @@ public class FileSourceTest {
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.FileSource#getTopologyLosses()}.
+	 * Test method for {@link visualizer.source.FileSource#getTopologyDephase()}.
 	 */
 	@Test
 	public void testGetTopologyLosses() {
@@ -299,8 +299,8 @@ public class FileSourceTest {
 		expected.put(2, 5.0);
 		expected.put(3, 1.0);
 		
-		assertEquals(expected, source.getTopologyLosses().get("topologyTest1"));
-		assertEquals(expected, source.getTopologyLosses().get("topologyTest2"));
+		assertEquals(expected, source.getTopologyDephase().get("topologyTest1"));
+		assertEquals(expected, source.getTopologyDephase().get("topologyTest2"));
 	}
 
 	/**

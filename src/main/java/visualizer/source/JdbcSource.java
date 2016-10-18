@@ -133,7 +133,7 @@ public class JdbcSource implements ISource {
 	 * @see visualizer.source.ISource#getTopologyLosses(visualizer.structure.IStructure)
 	 */
 	@Override
-	public HashMap<String, HashMap<Integer, Double>> getTopologyLosses() {
+	public HashMap<String, HashMap<Integer, Double>> getTopologyDephase() {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		HashMap<Integer, Double> dataSet = new HashMap<>();
 		String query = "SELECT " + COL_TIMESTAMP + ", SUM(" + COL_UPDT_LOSS + ") " +

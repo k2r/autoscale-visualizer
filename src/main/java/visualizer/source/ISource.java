@@ -29,7 +29,7 @@ public interface ISource {
 	 * 
 	 * @return
 	 */
-	public HashMap<String, HashMap<Integer, Double>> getTopologyLosses();
+	public HashMap<String, HashMap<Integer, Double>> getTopologyDephase();
 	
 	/**
 	 * 

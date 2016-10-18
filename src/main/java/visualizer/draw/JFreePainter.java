@@ -75,7 +75,7 @@ public class JFreePainter implements IPainter {
 	private static final boolean DRAWLINES = true;
 	private static final Integer TITLE_FONTSIZE = 28; 
 	private static final Integer AXIS_FONTSIZE = 24;
-	private static final Integer LEGEND_FONTSIZE = 24;
+	private static final Integer LEGEND_FONTSIZE = 14;
 	
 	private static final Logger logger = Logger.getLogger("JFreePainter");
 	
@@ -322,7 +322,7 @@ public class JFreePainter implements IPainter {
 	 */
 	@Override
 	public void drawTopologyLosses() {
-		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getTopologyLosses();
+		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getTopologyDephase();
 		ArrayList<String> records = new ArrayList<>();
 	
 		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
@@ -603,7 +603,7 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_INPUT, CAT_BOLT, "Flux d'entrée du bolt " + this.getTopology() + "." + component, "timestamp (en s)", "Nombre de n-uplets", component);
+		drawXYSeries(dataToPlot, records, BOLT_INPUT, CAT_BOLT, "Flux d'entrée du bolt " + component, "timestamp (en s)", "Nombre de n-uplets", component);
 	}
 
 	/* (non-Javadoc)
@@ -632,7 +632,7 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_EXEC, CAT_BOLT, "N-uplets traités par le bolt " + this.getTopology() + "." + component, "timestamp (en s)", "Nombre de n-uplets", component);
+		drawXYSeries(dataToPlot, records, BOLT_EXEC, CAT_BOLT, "N-uplets traités par le bolt " + component, "timestamp (en s)", "Nombre de n-uplets", component);
 	}
 
 	/* (non-Javadoc)
@@ -661,7 +661,7 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_OUTPUT, CAT_BOLT, "Flux en sortie du bolt " + this.getTopology() + "." + component, "timestamp (en s)", "Nombre de n-uplets", component);
+		drawXYSeries(dataToPlot, records, BOLT_OUTPUT, CAT_BOLT, "Flux en sortie du bolt " + component, "timestamp (en s)", "Nombre de n-uplets", component);
 	}
 
 	/* (non-Javadoc)
@@ -690,7 +690,7 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_LATENCY, CAT_BOLT, "Latence du bolt " + this.getTopology() + "." + component, "timestamp (en s)", "Latence moyenne par n-uplet (en ms)", component);
+		drawXYSeries(dataToPlot, records, BOLT_LATENCY, CAT_BOLT, "Latence du bolt " + component, "timestamp (en s)", "Latence moyenne par n-uplet (en ms)", component);
 	}
 
 	/* (non-Javadoc)
@@ -719,7 +719,7 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_CAPACITY, CAT_BOLT, "Capacité de traitement du bolt " + this.getTopology() + "." + component, "timestamp (en s)", "Capacité moyenne (en n-uplets/s)", component);
+		drawXYSeries(dataToPlot, records, BOLT_CAPACITY, CAT_BOLT, "Capacité de traitement du bolt " + component, "timestamp (en s)", "Capacité moyenne (en n-uplets/s)", component);
 	}
 
 	/* (non-Javadoc)
@@ -748,7 +748,7 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_ACTIVITY, CAT_BOLT, "Niveau d'activité du bolt " + this.getTopology() + "." + component, "timestamp (en s)", "Niveau d'activité", component);
+		drawXYSeries(dataToPlot, records, BOLT_ACTIVITY, CAT_BOLT, "Niveau d'activité du bolt " + component, "timestamp (en s)", "Niveau d'activité", component);
 	}
 	
 	@Override
@@ -774,6 +774,6 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_LOAD, CAT_BOLT, "Charge du bolt " + this.getTopology() + "." + component, "timestamp (en s)", "Charge", component);
+		drawXYSeries(dataToPlot, records, BOLT_LOAD, CAT_BOLT, "Charge du bolt " + component, "timestamp (en s)", "Charge", component);
 	}
 }
