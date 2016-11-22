@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import visualizer.config.LabelParser;
 import visualizer.config.XmlConfigParser;
 import visualizer.draw.JFreePainter;
 import visualizer.source.FileSource;
@@ -153,7 +154,11 @@ public class FileSourceTest {
 		
 		
 		JdbcSource jdbcSource1 = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter1 = new JFreePainter("topologyTest1", 1, jdbcSource1);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		JFreePainter painter1 = new JFreePainter("topologyTest1", 1, jdbcSource1, cp, lp);
 		painter1.drawTopologyInput();
 		painter1.drawTopologyThroughput();
 		painter1.drawTopologyLosses();
@@ -175,7 +180,7 @@ public class FileSourceTest {
 		
 		JdbcSource jdbcSource2 = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
 		
-		JFreePainter painter2 = new JFreePainter("topologyTest2", 1, jdbcSource2);
+		JFreePainter painter2 = new JFreePainter("topologyTest2", 1, jdbcSource2, cp, lp);
 		painter2.drawTopologyInput();
 		painter2.drawTopologyThroughput();
 		painter2.drawTopologyLosses();

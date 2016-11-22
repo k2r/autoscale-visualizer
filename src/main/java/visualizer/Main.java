@@ -12,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import visualizer.config.LabelParser;
 import visualizer.config.XmlConfigParser;
 import visualizer.draw.JFreePainter;
 import visualizer.source.FileSource;
@@ -31,23 +32,26 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		XmlConfigParser parser;
+		XmlConfigParser configParser;
+		LabelParser labelParser;
 		try {
-			parser = new XmlConfigParser("parameters.xml");
-			parser.initParameters();
-			String command = parser.getCommand();
+			configParser = new XmlConfigParser("parameters.xml");
+			configParser.initParameters();
+			labelParser = new LabelParser(configParser.getLanguage());
+			labelParser.initParameters();
+			String command = configParser.getCommand();
 			if(command.equalsIgnoreCase("ANALYZE")){
-				String topology = parser.getTopologies().get(0);
-				Integer varCode = parser.getStreamTypes().get(0);
-				String dbHost = parser.getDb_host();
-				String dbName = parser.getDb_name();
-				String dbUser = parser.getDb_user();
-				String dbPwd = parser.getDb_pwd();
+				String topology = configParser.getTopologies().get(0);
+				Integer varCode = configParser.getStreamTypes().get(0);
+				String dbHost = configParser.getDb_host();
+				String dbName = configParser.getDb_name();
+				String dbUser = configParser.getDb_user();
+				String dbPwd = configParser.getDb_pwd();
 				
 				try {
 					JdbcSource jdbcSource = new JdbcSource(dbHost, dbName, dbUser, dbPwd, topology);
-					IStructure structure = new TopologyStructure(parser.getEdges());
-					JFreePainter painter = new JFreePainter(topology, varCode, jdbcSource);
+					IStructure structure = new TopologyStructure(configParser.getEdges());
+					JFreePainter painter = new JFreePainter(topology, varCode, jdbcSource, configParser, labelParser);
 					
 					painter.drawTopologyInput();
 					painter.drawTopologyThroughput();
@@ -76,15 +80,15 @@ public class Main {
 				}
 			}
 			if(command.equalsIgnoreCase("COMPARE")){
-				ArrayList<String> topologies = parser.getTopologies();
+				ArrayList<String> topologies = configParser.getTopologies();
 				String topologyName = "Comparison of topologies ";
 				for(String topology : topologies){
 					topologyName += topology + " ";
 				}
-				ArrayList<Integer> varCodes = parser.getStreamTypes();
+				ArrayList<Integer> varCodes = configParser.getStreamTypes();
 				FileSource source = new FileSource(topologies, varCodes);
-				IStructure structure = new TopologyStructure(parser.getEdges());
-				JFreePainter painter = new JFreePainter(topologyName, varCodes.get(0), source);
+				IStructure structure = new TopologyStructure(configParser.getEdges());
+				JFreePainter painter = new JFreePainter(topologyName, varCodes.get(0), source, configParser, labelParser);
 				painter.drawTopologyInput();
 				painter.drawTopologyThroughput();
 				painter.drawTopologyLosses();

@@ -32,6 +32,9 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.util.ShapeUtilities;
 
+import visualizer.config.LabelNames;
+import visualizer.config.LabelParser;
+import visualizer.config.XmlConfigParser;
 import visualizer.source.ISource;
 import visualizer.structure.IStructure;
 
@@ -47,6 +50,8 @@ public class JFreePainter implements IPainter {
 	private String chartDirectory;
 	private String datasetDirectory;
 	private ISource source;
+	private XmlConfigParser configParser;
+	private LabelParser labelParser;
 	
 	private static final String TOPOLOGY_INPUT = "topology_input";
 	private static final String TOPOLOGY_THROUGHPUT = "topology_throughput";
@@ -69,17 +74,10 @@ public class JFreePainter implements IPainter {
 	
 	private static final String CAT_TOPOLOGY = "topology";
 	private static final String CAT_BOLT = "bolts";
-	private static final int CHART_WIDTH = 640;
-	private static final int CHART_HEIGHT = 480;
-	private static final boolean DRAWSHAPES = true;
-	private static final boolean DRAWLINES = true;
-	private static final Integer TITLE_FONTSIZE = 28; 
-	private static final Integer AXIS_FONTSIZE = 24;
-	private static final Integer LEGEND_FONTSIZE = 14;
 	
 	private static final Logger logger = Logger.getLogger("JFreePainter");
 	
-	public JFreePainter(String topology, Integer varCode, ISource source) {
+	public JFreePainter(String topology, Integer varCode, ISource source, XmlConfigParser cp, LabelParser lp) {
 		this.setTopology(topology);
 		switch(varCode){
 		case(1): this.setVariation("linear_increase");
@@ -127,6 +125,8 @@ public class JFreePainter implements IPainter {
 			logger.severe("Unable to initialize the painter because " + e);
 		}
 		this.source = source;
+		this.configParser = cp;
+		this.labelParser = lp;
 	}
 
 	/**
@@ -183,11 +183,20 @@ public class JFreePainter implements IPainter {
 		if(components.length > 0){
 			component = components[0];
 		}
+		Integer width = this.configParser.getWidth();
+		Integer height = this.configParser.getHeight();
+		String font = this.configParser.getFont();
+		Integer titleFontSize = this.configParser.getTitleFontSize();
+		Integer axisFontSize = this.configParser.getAxisFontSize();
+		Integer legendFontSize = this.configParser.getLegendFontSize();
+		Boolean drawShapes = this.configParser.isDraw_shapes();
+		Boolean drawLines = this.configParser.isDraw_lines();
+		
 		if(Files.exists(Paths.get(this.getChartDirectory()))){
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(chartTitle, xAxisLabel, yAxisLabel, series, PlotOrientation.VERTICAL, true, true, true);
-			Font fontAxis = new Font("Dialog", Font.PLAIN, AXIS_FONTSIZE);
-			Font fontTitle = new Font("Dialog", Font.PLAIN, TITLE_FONTSIZE);
-			Font fontLegend = new Font("Dialog", Font.PLAIN, LEGEND_FONTSIZE);
+			Font fontAxis = new Font(font, Font.PLAIN, axisFontSize);
+			Font fontTitle = new Font(font, Font.PLAIN, titleFontSize);
+			Font fontLegend = new Font(font, Font.PLAIN, legendFontSize);
 			
 			xylineChart.getTitle().setFont(fontTitle);
 			
@@ -223,8 +232,8 @@ public class JFreePainter implements IPainter {
 			for(int i = 0; i < nbSeries; i++){
 				renderer.setSeriesPaint(i, colors.get(i));
 				renderer.setSeriesShape(i, shapes.get(i));
-				renderer.setSeriesShapesVisible(i, DRAWSHAPES);
-				renderer.setSeriesLinesVisible(i, DRAWLINES);
+				renderer.setSeriesShapesVisible(i, drawShapes);
+				renderer.setSeriesLinesVisible(i, drawLines);
 			}
 			plot.setRenderer(renderer);
 			
@@ -237,14 +246,14 @@ public class JFreePainter implements IPainter {
 				item.setOutlinePaint(colors.get(serieIndex));
 				item.setFillPaint(colors.get(serieIndex));
 				item.setShape(shapes.get(serieIndex));
-				item.setShapeVisible(DRAWSHAPES);
+				item.setShapeVisible(drawShapes);
 				item.setLabelFont(fontLegend);
 			}
 			plot.setFixedLegendItems(legendItems);
 			
 			File chart = new File(this.getChartDirectory() + "/" + category + "/" + component + "_" + seriesLabel + "_" + this.getRootDirectory() + ".png");
 			try {
-				ChartUtilities.saveChartAsPNG(chart, xylineChart, CHART_WIDTH, CHART_HEIGHT);
+				ChartUtilities.saveChartAsPNG(chart, xylineChart, width, height);
 			} catch (IOException e) {
 				logger.severe("Unable to save the chart of " + seriesLabel + " because " + e);
 			}
@@ -285,7 +294,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}	
-		drawXYSeries(dataToPlot, records, TOPOLOGY_INPUT, CAT_TOPOLOGY, "Flux d'entrée", "timestamp (en s)", "Nombre de n-uplets émis");
+		String title = this.labelParser.getTitle(LabelNames.INPUT.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.INPUT.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.INPUT.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_INPUT, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
 	/* (non-Javadoc)
@@ -313,8 +325,11 @@ public class JFreePainter implements IPainter {
 				serie.add(timestamp, value);
 			}
 			dataToPlot.addSeries(serie);
-		}	
-		drawXYSeries(dataToPlot, records, TOPOLOGY_THROUGHPUT, CAT_TOPOLOGY, "Débit en sortie", "timestamp (en s)", "Nombre de n-uplets en sortie");
+		}
+		String title = this.labelParser.getTitle(LabelNames.TGHPT.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.TGHPT.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.TGHPT.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_THROUGHPUT, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
 	/* (non-Javadoc)
@@ -335,7 +350,7 @@ public class JFreePainter implements IPainter {
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
 			final XYSeries serie = new XYSeries(topology);
-			records.add("timestamp;losses");
+			records.add("timestamp;out of time");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
 				records.add(timestamp + ";" + value);
@@ -343,7 +358,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, TOPOLOGY_DEPHASE, CAT_TOPOLOGY, "N-uplets déphasés", "timestamp (en s)", "Nombre de n-uplets déphasés");
+		String title = this.labelParser.getTitle(LabelNames.DEPH.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.DEPH.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.DEPH.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_DEPHASE, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
 	/* (non-Javadoc)
@@ -372,7 +390,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, TOPOLOGY_LATENCY, CAT_TOPOLOGY, "Latence de la topologie", "timestamp (en s)", "Latence moyenne par n-uplet (en ms)");
+		String title = this.labelParser.getTitle(LabelNames.LATENCY.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.LATENCY.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.LATENCY.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_LATENCY, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
 	/* (non-Javadoc)
@@ -401,7 +422,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, TOPOLOGY_NBEXEC, CAT_TOPOLOGY, "Nombre d'executors", "timestamp (en s)", "Nombre d'executors");
+		String title = this.labelParser.getTitle(LabelNames.NBEXEC.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.NBEXEC.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.NBEXEC.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_NBEXEC, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
 	/* (non-Javadoc)
@@ -430,7 +454,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, TOPOLOGY_NBSUPER, CAT_TOPOLOGY, "Nombre de Supervisors", "timestamp (en s)", "Nombre de supervisors");
+		String title = this.labelParser.getTitle(LabelNames.NBSUPER.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.NBSUPER.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.NBSUPER.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_NBSUPER, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
 	/* (non-Javadoc)
@@ -459,7 +486,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, TOPOLOGY_NBWORK, CAT_TOPOLOGY, "Nombre de workers", "timestamp (en s)", "Nombre de workers");
+		String title = this.labelParser.getTitle(LabelNames.NBWORK.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.NBWORK.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.NBWORK.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_NBWORK, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
 	/* (non-Javadoc)
@@ -488,7 +518,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, TOPOLOGY_STATUS, CAT_TOPOLOGY, "État de la topologie", "timestamp (en s)", "État");
+		String title = this.labelParser.getTitle(LabelNames.STATUS.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.STATUS.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.STATUS.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_STATUS, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
 	/* (non-Javadoc)
@@ -517,7 +550,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, TOPOLOGY_TRAFFIC, CAT_TOPOLOGY, "Trafic réseau", "timestamp (en s)", "Trafic (en n-uplets)");
+		String title = this.labelParser.getTitle(LabelNames.TRAFFIC.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.TRAFFIC.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.TRAFFIC.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_TRAFFIC, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
 	@Override
@@ -548,7 +584,10 @@ public class JFreePainter implements IPainter {
 				dataToPlot.addSeries(serie);
 			}
 		}
-		drawXYSeries(dataToPlot, records, TOPOLOGY_REBALANCING, CAT_TOPOLOGY, "Modification des degrés de parallélisme", "timestamp (en s)", "Nombre d'executors");
+		String title = this.labelParser.getTitle(LabelNames.REBAL.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.REBAL.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.REBAL.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_REBALANCING, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 	
 	@Override
@@ -574,7 +613,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, TOPOLOGY_LOAD, CAT_TOPOLOGY, "Charge moyenne de la topologie", "timestamp (en s)", "Charge");
+		String title = this.labelParser.getTitle(LabelNames.LOAD.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.LOAD.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.LOAD.toString());
+		drawXYSeries(dataToPlot, records, TOPOLOGY_LOAD, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 	
 	/* (non-Javadoc)
@@ -603,7 +645,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_INPUT, CAT_BOLT, "Flux d'entrée du bolt " + component, "timestamp (en s)", "Nombre de n-uplets", component);
+		String title = this.labelParser.getTitle(LabelNames.BOLTIN.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTIN.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTIN.toString());
+		drawXYSeries(dataToPlot, records, BOLT_INPUT, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 
 	/* (non-Javadoc)
@@ -632,7 +677,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_EXEC, CAT_BOLT, "N-uplets traités par le bolt " + component, "timestamp (en s)", "Nombre de n-uplets", component);
+		String title = this.labelParser.getTitle(LabelNames.BOLTEXEC.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTEXEC.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTEXEC.toString());
+		drawXYSeries(dataToPlot, records, BOLT_EXEC, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 
 	/* (non-Javadoc)
@@ -661,7 +709,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_OUTPUT, CAT_BOLT, "Flux en sortie du bolt " + component, "timestamp (en s)", "Nombre de n-uplets", component);
+		String title = this.labelParser.getTitle(LabelNames.BOLTOUT.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTOUT.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTOUT.toString());
+		drawXYSeries(dataToPlot, records, BOLT_OUTPUT, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 
 	/* (non-Javadoc)
@@ -690,7 +741,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_LATENCY, CAT_BOLT, "Latence du bolt " + component, "timestamp (en s)", "Latence moyenne par n-uplet (en ms)", component);
+		String title = this.labelParser.getTitle(LabelNames.BOLTLAT.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTLAT.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTLAT.toString());
+		drawXYSeries(dataToPlot, records, BOLT_LATENCY, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 
 	/* (non-Javadoc)
@@ -719,7 +773,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_CAPACITY, CAT_BOLT, "Capacité de traitement du bolt " + component, "timestamp (en s)", "Capacité moyenne (en n-uplets/s)", component);
+		String title = this.labelParser.getTitle(LabelNames.BOLTCAP.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTCAP.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTCAP.toString());
+		drawXYSeries(dataToPlot, records, BOLT_CAPACITY, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 
 	/* (non-Javadoc)
@@ -748,7 +805,10 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_ACTIVITY, CAT_BOLT, "Niveau d'activité du bolt " + component, "timestamp (en s)", "Niveau d'activité", component);
+		String title = this.labelParser.getTitle(LabelNames.BOLTACT.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTACT.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTACT.toString());
+		drawXYSeries(dataToPlot, records, BOLT_ACTIVITY, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 	
 	@Override
@@ -774,6 +834,9 @@ public class JFreePainter implements IPainter {
 			}
 			dataToPlot.addSeries(serie);
 		}
-		drawXYSeries(dataToPlot, records, BOLT_LOAD, CAT_BOLT, "Charge du bolt " + component, "timestamp (en s)", "Charge", component);
+		String title = this.labelParser.getTitle(LabelNames.BOLTLOAD.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTLOAD.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTLOAD.toString());
+		drawXYSeries(dataToPlot, records, BOLT_LOAD, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 }

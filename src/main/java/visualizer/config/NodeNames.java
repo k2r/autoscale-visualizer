@@ -20,7 +20,16 @@ public enum NodeNames {
 	EDGES("edges"),
 	EDGE("edge"),
 	SOURCE("source"),
-	DEST("destination");
+	DEST("destination"),
+	LANG("language"),
+	DRAWSHP("draw_shapes"),
+	DRAWLN("draw_lines"),
+	WIDTH("width"),
+	HEIGHT("height"),
+	FONT("font"),
+	TTLSIZE("title_fontsize"),
+	AXSIZE("axis_fontsize"),
+	LGDSIZE("legend_fontsize");
 	
 	private String name = "";
 	

@@ -45,6 +45,17 @@ public class XmlConfigParser {
 	/*Structure parameters*/
 	private ArrayList<Edge> edges;
 	
+	/*Chart customization*/
+	private String language;
+	private boolean draw_shapes;
+	private boolean draw_lines;
+	private Integer width;
+	private Integer height;
+	private String font;
+	private Integer titleFontSize;
+	private Integer axisFontSize;
+	private Integer legendFontSize;
+	
 	public XmlConfigParser(String filename) throws ParserConfigurationException, SAXException, IOException{
 		this.filename = filename;
 		this.factory = DocumentBuilderFactory.newInstance();
@@ -188,6 +199,132 @@ public class XmlConfigParser {
 		return document;
 	}
 
+	/**
+	 * @return the language
+	 */
+	public String getLanguage() {
+		return language;
+	}
+
+	/**
+	 * @param language the language to set
+	 */
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	/**
+	 * @return the draw_shapes
+	 */
+	public boolean isDraw_shapes() {
+		return draw_shapes;
+	}
+
+	/**
+	 * @param draw_shapes the draw_shapes to set
+	 */
+	public void setDraw_shapes(boolean draw_shapes) {
+		this.draw_shapes = draw_shapes;
+	}
+
+	/**
+	 * @return the draw_lines
+	 */
+	public boolean isDraw_lines() {
+		return draw_lines;
+	}
+
+	/**
+	 * @param draw_lines the draw_lines to set
+	 */
+	public void setDraw_lines(boolean draw_lines) {
+		this.draw_lines = draw_lines;
+	}
+
+	/**
+	 * @return the width
+	 */
+	public Integer getWidth() {
+		return width;
+	}
+
+	/**
+	 * @param width the width to set
+	 */
+	public void setWidth(Integer width) {
+		this.width = width;
+	}
+
+	/**
+	 * @return the height
+	 */
+	public Integer getHeight() {
+		return height;
+	}
+
+	/**
+	 * @param height the height to set
+	 */
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	/**
+	 * @return the font
+	 */
+	public String getFont() {
+		return font;
+	}
+
+	/**
+	 * @param font the font to set
+	 */
+	public void setFont(String font) {
+		this.font = font;
+	}
+
+	/**
+	 * @return the titleFontSize
+	 */
+	public Integer getTitleFontSize() {
+		return titleFontSize;
+	}
+
+	/**
+	 * @param titleFontSize the titleFontSize to set
+	 */
+	public void setTitleFontSize(Integer titleFontSize) {
+		this.titleFontSize = titleFontSize;
+	}
+
+	/**
+	 * @return the axisFontSize
+	 */
+	public Integer getAxisFontSize() {
+		return axisFontSize;
+	}
+
+	/**
+	 * @param axisFontSize the axisFontSize to set
+	 */
+	public void setAxisFontSize(Integer axisFontSize) {
+		this.axisFontSize = axisFontSize;
+	}
+
+	/**
+	 * @return the legendFontSize
+	 */
+	public Integer getLegendFontSize() {
+		return legendFontSize;
+	}
+
+	/**
+	 * @param legendFontSize the legendFontSize to set
+	 */
+	public void setLegendFontSize(Integer legendFontSize) {
+		this.legendFontSize = legendFontSize;
+	}
+
 	public void initParameters() {
 		Document doc = this.getDocument();
 		final Element parameters = (Element) doc.getElementsByTagName(NodeNames.PARAM.toString()).item(0);
@@ -224,5 +361,23 @@ public class XmlConfigParser {
 				this.edges.add(edgeStruct);
 			}
 		}
+		final NodeList language = parameters.getElementsByTagName(NodeNames.LANG.toString());
+		this.setLanguage(language.item(0).getTextContent());
+		final NodeList drwShapes = parameters.getElementsByTagName(NodeNames.DRAWSHP.toString());
+		this.setDraw_shapes(Boolean.parseBoolean(drwShapes.item(0).getTextContent()));
+		final NodeList drwLines = parameters.getElementsByTagName(NodeNames.DRAWLN.toString());
+		this.setDraw_lines(Boolean.parseBoolean(drwLines.item(0).getTextContent()));
+		final NodeList width = parameters.getElementsByTagName(NodeNames.WIDTH.toString());
+		this.setWidth(Integer.parseInt(width.item(0).getTextContent()));
+		final NodeList height = parameters.getElementsByTagName(NodeNames.HEIGHT.toString());
+		this.setHeight(Integer.parseInt(height.item(0).getTextContent()));
+		final NodeList font = parameters.getElementsByTagName(NodeNames.FONT.toString());
+		this.setFont(font.item(0).getTextContent());
+		final NodeList titleFontSize = parameters.getElementsByTagName(NodeNames.TTLSIZE.toString());
+		this.setTitleFontSize(Integer.parseInt(titleFontSize.item(0).getTextContent()));
+		final NodeList axisFontSize = parameters.getElementsByTagName(NodeNames.AXSIZE.toString());
+		this.setAxisFontSize(Integer.parseInt(axisFontSize.item(0).getTextContent()));
+		final NodeList legendFontSize = parameters.getElementsByTagName(NodeNames.LGDSIZE.toString());
+		this.setLegendFontSize(Integer.parseInt(legendFontSize.item(0).getTextContent()));
 	}
 }
