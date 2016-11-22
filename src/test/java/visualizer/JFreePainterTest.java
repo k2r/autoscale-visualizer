@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import visualizer.config.LabelParser;
 import visualizer.config.XmlConfigParser;
 import visualizer.draw.JFreePainter;
 import visualizer.source.JdbcSource;
@@ -191,11 +192,18 @@ public class JFreePainterTest {
 	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyInput()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testDrawTopologyInput() throws ClassNotFoundException, SQLException {
+	public void testDrawTopologyInput() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		painter.drawTopologyInput();
 	}
 
@@ -203,11 +211,18 @@ public class JFreePainterTest {
 	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyThroughput()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testDrawTopologyThroughput() throws ClassNotFoundException, SQLException {
+	public void testDrawTopologyThroughput() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		painter.drawTopologyThroughput();;
 	}
 
@@ -215,11 +230,18 @@ public class JFreePainterTest {
 	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyLosses()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testDrawTopologyLosses() throws ClassNotFoundException, SQLException {
+	public void testDrawTopologyLosses() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		painter.drawTopologyLosses();
 	}
 
@@ -227,11 +249,18 @@ public class JFreePainterTest {
 	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyLatency()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testDrawTopologyLatency() throws ClassNotFoundException, SQLException {
+	public void testDrawTopologyLatency() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		painter.drawTopologyLatency();
 	}
 
@@ -239,11 +268,18 @@ public class JFreePainterTest {
 	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyNbExecutors()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testDrawTopologyNbExecutors() throws ClassNotFoundException, SQLException {
+	public void testDrawTopologyNbExecutors() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		painter.drawTopologyNbExecutors();
 	}
 
@@ -251,11 +287,18 @@ public class JFreePainterTest {
 	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyNbSupervisors()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testDrawTopologyNbSupervisors() throws ClassNotFoundException, SQLException {
+	public void testDrawTopologyNbSupervisors() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		painter.drawTopologyNbSupervisors();
 	}
 
@@ -263,11 +306,18 @@ public class JFreePainterTest {
 	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyNbWorkers()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testDrawTopologyNbWorkers() throws ClassNotFoundException, SQLException {
+	public void testDrawTopologyNbWorkers() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		painter.drawTopologyNbWorkers();
 	}
 
@@ -275,11 +325,18 @@ public class JFreePainterTest {
 	 * Test method for {@link visualizer.draw.JFreePainter#drawTopologyStatus()}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
 	@Test
-	public void testDrawTopologyStatus() throws ClassNotFoundException, SQLException {
+	public void testDrawTopologyStatus() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		painter.drawTopologyStatus();
 	}
 
@@ -293,12 +350,13 @@ public class JFreePainterTest {
 	 */
 	@Test
 	public void testDrawTopologyTraffic() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
-		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges());
-		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		TopologyStructure structure = new TopologyStructure(cp.getEdges());
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		painter.drawTopologyTraffic(structure);
 	}
 
@@ -312,12 +370,13 @@ public class JFreePainterTest {
 	 */
 	@Test
 	public void testDrawBoltInput() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
-		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
-		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges());
-		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		TopologyStructure structure = new TopologyStructure(cp.getEdges());
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		for(String bolt : structure.getBolts()){
 			painter.drawBoltInput(bolt, structure);
 		}
@@ -333,12 +392,13 @@ public class JFreePainterTest {
 	 */
 	@Test
 	public void testDrawBoltExecuted() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
-		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
-		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges());
-		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		TopologyStructure structure = new TopologyStructure(cp.getEdges());
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		for(String bolt : structure.getBolts()){
 			painter.drawBoltExecuted(bolt);
 		}
@@ -354,12 +414,13 @@ public class JFreePainterTest {
 	 */
 	@Test
 	public void testDrawBoltOutputs() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
-		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
-		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges());
-		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		TopologyStructure structure = new TopologyStructure(cp.getEdges());
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		for(String bolt : structure.getBolts()){
 			painter.drawBoltOutputs(bolt);
 		}
@@ -375,12 +436,13 @@ public class JFreePainterTest {
 	 */
 	@Test
 	public void testDrawBoltLatency() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
-		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
-		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges());
-		
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		TopologyStructure structure = new TopologyStructure(cp.getEdges());
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		for(String bolt : structure.getBolts()){
 			painter.drawBoltLatency(bolt);
 		}
@@ -395,13 +457,14 @@ public class JFreePainterTest {
 	 * @throws ClassNotFoundException 
 	 */
 	@Test
-	public void testDrawBoltProcRate() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
-		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
-		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges());
-		
+	public void testDrawBoltCapacity() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		TopologyStructure structure = new TopologyStructure(cp.getEdges());
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		for(String bolt : structure.getBolts()){
 			painter.drawBoltCapacity(bolt);
 		}
@@ -416,13 +479,14 @@ public class JFreePainterTest {
 	 * @throws ClassNotFoundException 
 	 */
 	@Test
-	public void testDrawBoltEPR() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
-		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
-		parser.initParameters();
-		TopologyStructure structure = new TopologyStructure(parser.getEdges());
-		
+	public void testDrawBoltActivity() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
 		JdbcSource source = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
-		JFreePainter painter = new JFreePainter("topologyTest", 1, source);
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		TopologyStructure structure = new TopologyStructure(cp.getEdges());
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
 		for(String bolt : structure.getBolts()){
 			painter.drawBoltActivity(bolt);
 		}

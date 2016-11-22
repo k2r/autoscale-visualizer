@@ -31,4 +31,17 @@
 	<db_name>benchmarks</db_name>
 	<db_user>root</db_user>
 	<db_password></db_password>
+	
+	<!--Language parameter(ENG/FR)-->
+	<language>FR</language>
+	
+	<!--Charts customization-->
+	<draw_shapes>true</draw_shapes>
+	<draw_lines>true</draw_lines>
+	<width>640</width>
+	<height>480</height>
+	<font>Dialog</font>
+	<title_fontsize>28</title_fontsize>
+	<axis_fontsize>24</axis_fontsize>
+	<legend_fontsize>14</legend_fontsize>
 </parameters>
