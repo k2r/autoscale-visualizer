@@ -18,14 +18,13 @@ public enum LabelNames {
 	STATUS("status"),
 	TRAFFIC("traffic"),
 	REBAL("rebalancing"),
-	LOAD("load"),
 	BOLTIN("bolt_input"),
 	BOLTEXEC("bolt_exec"),
 	BOLTOUT("bolt_output"),
 	BOLTLAT("bolt_latency"),
 	BOLTCAP("bolt_capacity"),
 	BOLTACT("bolt_activity"),
-	BOLTLOAD("bolt_load");
+	BOLTCPU("bolt_cpu");
 	
 	private String name = "";
 	
@@ -56,17 +55,16 @@ public enum LabelNames {
 		topics.add(LabelNames.STATUS.toString());
 		topics.add(LabelNames.TRAFFIC.toString());
 		topics.add(LabelNames.REBAL.toString());
-		topics.add(LabelNames.LOAD.toString());
 		topics.add(LabelNames.BOLTIN.toString());
 		topics.add(LabelNames.BOLTEXEC.toString());
 		topics.add(LabelNames.BOLTOUT.toString());
 		topics.add(LabelNames.BOLTLAT.toString());
 		topics.add(LabelNames.BOLTCAP.toString());
 		topics.add(LabelNames.BOLTACT.toString());
-		topics.add(LabelNames.BOLTLOAD.toString());
-		
+		topics.add(LabelNames.BOLTCPU.toString());
 		return topics;
 	}
+	
 	public String toString(){
 		return this.name;
 	}

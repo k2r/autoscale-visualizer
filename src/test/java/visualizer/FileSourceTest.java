@@ -51,54 +51,55 @@ public class FileSourceTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		String jdbcDriver = "com.mysql.jdbc.Driver";
-		String dbUrl = "jdbc:mysql://localhost/benchmarks";
+		String dbUrl = "jdbc:mysql://localhost/autoscale_test";
 		Class.forName(jdbcDriver);
 		Connection connection = DriverManager.getConnection(dbUrl, "root", null);
 		ArrayList<String> queries = new ArrayList<>();
 		String queryA1 = "INSERT INTO all_time_spouts_stats VALUES('1', 'host1', '10', 'topologyTest', 'A', '1', '1', '10', '10', '5', '5', '0', '0', '10')";
-		String queryB1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host1', '20', 'topologyTest', 'B', '2', '4', '10', '10', '8', '8', '3', '0.8')";
-		String queryC1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host2', '10', 'topologyTest', 'C', '5', '7', '8', '8', '6', '6', '5', '1')";
-		String queryD1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host2', '20', 'topologyTest', 'D', '8', '10', '6', '6', '0', '0', '10', '0')";
-		String queryE1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host2', '20', 'topologyTest', 'E', '11', '13', '6', '6', '5', '5', '8', '0.84')";
-		String queryF1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host3', '10', 'topologyTest', 'F', '14', '16', '5', '5', '0', '0', '20', '0')";
+		String queryB1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host1', '20', 'topologyTest', 'B', '2', '4', '10', '10', '8', '8', '3', '0.8', '20.0')";
+		String queryC1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host2', '10', 'topologyTest', 'C', '5', '7', '8', '8', '6', '6', '5', '1', '25.0')";
+		String queryD1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host2', '20', 'topologyTest', 'D', '8', '10', '6', '6', '0', '0', '10', '0', '30.0')";
+		String queryE1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host2', '20', 'topologyTest', 'E', '11', '13', '6', '6', '5', '5', '8', '0.84', '35.0')";
+		String queryF1 = "INSERT INTO all_time_bolts_stats VALUES('1', 'host3', '10', 'topologyTest', 'F', '14', '16', '5', '5', '0', '0', '20', '0', '40.0')";
 		
 		String queryA2 = "INSERT INTO all_time_spouts_stats VALUES('2', 'host1', '10', 'topologyTest', 'A', '1', '1', '20', '10', '10', '5', '5', '5', '22')";
-		String queryB21 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host1', '20', 'topologyTest', 'B', '2', '3', '30', '20', '20', '12', '2.5', '0.8')";
-		String queryB22 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host3', '30', 'topologyTest', 'B', '4', '4', '25', '15', '16', '8', '3.5', '0.8')";
-		String queryC2 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host2', '10', 'topologyTest', 'C', '5', '7', '8', '8', '6', '6', '5', '1')";
-		String queryD2 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host2', '20', 'topologyTest', 'D', '8', '10', '6', '6', '0', '0', '10', '0')";
-		String queryE2 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host2', '20', 'topologyTest', 'E', '11', '13', '6', '6', '5', '5', '8', '0.84')";
-		String queryF2 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host3', '10', 'topologyTest', 'F', '14', '16', '5', '5', '0', '0', '20', '0')";
+		String queryB21 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host1', '20', 'topologyTest', 'B', '2', '3', '30', '20', '20', '12', '2.5', '0.8', '20.0')";
+		String queryB22 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host3', '30', 'topologyTest', 'B', '4', '4', '25', '15', '16', '8', '3.5', '0.8', '20.0')";
+		String queryC2 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host2', '10', 'topologyTest', 'C', '5', '7', '8', '8', '6', '6', '5', '1', '25.0')";
+		String queryD2 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host2', '20', 'topologyTest', 'D', '8', '10', '6', '6', '0', '0', '10', '0', '30.0')";
+		String queryE2 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host2', '20', 'topologyTest', 'E', '11', '13', '6', '6', '5', '5', '8', '0.84', '35.0')";
+		String queryF2 = "INSERT INTO all_time_bolts_stats VALUES('2', 'host3', '10', 'topologyTest', 'F', '14', '16', '5', '5', '0', '0', '20', '0', '40.0')";
 		
 		String queryA3 = "INSERT INTO all_time_spouts_stats VALUES('3', 'host1', '10', 'topologyTest', 'A', '1', '1', '35', '15', '12', '2', '6', '1', '8')";
-		String queryB3 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host3', '20', 'topologyTest', 'B', '2', '4', '35', '5', '40', '4', '4.25', '0.8')";
-		String queryC3 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host2', '10', 'topologyTest', 'C', '5', '7', '8', '8', '6', '6', '5', '1')";
-		String queryD31 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host2', '20', 'topologyTest', 'D', '8', '9', '6', '6', '5', '5', '8', '0.84')";
-		String queryD32 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host3', '20', 'topologyTest', 'D', '10', '10', '6', '6', '0', '0', '10', '0')";
-		String queryE3 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host2', '30', 'topologyTest', 'E', '11', '13', '6', '6', '5', '5', '8', '0.84')";
-		String queryF31 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host3', '10', 'topologyTest', 'F', '14', '15', '5', '5', '0', '0', '20', '0')";
-		String queryF32 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host4', '10', 'topologyTest', 'F', '16', '16', '5', '5', '0', '0', '20', '0')";
+		String queryB3 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host3', '20', 'topologyTest', 'B', '2', '4', '35', '5', '40', '4', '4.25', '0.8', '20.0')";
+		String queryC3 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host2', '10', 'topologyTest', 'C', '5', '7', '8', '8', '6', '6', '5', '1', '25.0')";
+		String queryD31 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host2', '20', 'topologyTest', 'D', '8', '9', '6', '6', '5', '5', '8', '0.84', '30.0')";
+		String queryD32 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host3', '20', 'topologyTest', 'D', '10', '10', '6', '6', '0', '0', '10', '0', '30.0')";
+		String queryE3 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host2', '30', 'topologyTest', 'E', '11', '13', '6', '6', '5', '5', '8', '0.84', '35.0')";
+		String queryF31 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host3', '10', 'topologyTest', 'F', '14', '15', '5', '5', '0', '0', '20', '0', '40.0')";
+		String queryF32 = "INSERT INTO all_time_bolts_stats VALUES('3', 'host4', '10', 'topologyTest', 'F', '16', '16', '5', '5', '0', '0', '20', '0', '40.0')";
 		
 		String queryStatus1 = "INSERT INTO topologies_status VALUES('1', 'topologyTest', 'ACTIVE')";
 		String queryStatus2 = "INSERT INTO topologies_status VALUES('2', 'topologyTest', 'DEACTIVATED')";
 		String queryStatus3 = "INSERT INTO topologies_status VALUES('3', 'topologyTest', 'REBALANCING')";
-		String crB1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'B', '0.8', '0', '3330')";
-		String crC1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'C', '0.75', '0', '2000')";
-		String crD1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'D', '1.2', '0', '1250')";
-		String crE1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'E', '0.8', '0', '500')";
-		String crF1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'F', '1.5', '0', '100')";
 		
-		String crB2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'B', '0', '0', '3330')";
-		String crC2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'C', '0', '0', '2000')";
-		String crD2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'D', '0', '0', '1250')";
-		String crE2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'E', '0', '0', '500')";
-		String crF2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'F', '0', '0', '100')";
+		String crB1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'B', '0.8', '0', '200', '3330')";
+		String crC1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'C', '0.75', '0', '300', '2000')";
+		String crD1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'D', '1.2', '0', '400', '1250')";
+		String crE1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'E', '0.8', '0', '500', '500')";
+		String crF1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'F', '1.5', '0', '600','100')";
 		
-		String crB3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'B', '1.5', '0', '1100')";
-		String crC3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'C', '2', '0', '900')";
-		String crD3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'D', '0.8', '0', '1550')";
-		String crE3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'E', '1', '0', '300')";
-		String crF3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'F', '0.6', '0', '600')";
+		String crB2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'B', '0', '0', '200', '3330')";
+		String crC2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'C', '0', '0', '300', '2000')";
+		String crD2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'D', '0', '0', '400', '1250')";
+		String crE2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'E', '0', '0', '500', '500')";
+		String crF2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'F', '0', '0', '600', '100')";
+		
+		String crB3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'B', '1.5', '0', '200', '1100')";
+		String crC3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'C', '2', '0', '300', '900')";
+		String crD3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'D', '0.8', '0', '400', '1550')";
+		String crE3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'E', '1', '0', '300', '300')";
+		String crF3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'F', '0.6', '0', '400', '600')";
 		
 		queries.add(queryA1);
 		queries.add(queryB1);
@@ -153,7 +154,7 @@ public class FileSourceTest {
 		TopologyStructure structure = new TopologyStructure(parser.getEdges());
 		
 		
-		JdbcSource jdbcSource1 = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JdbcSource jdbcSource1 = new JdbcSource("localhost", "autoscale_test", "root", null, "topologyTest");
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -176,9 +177,10 @@ public class FileSourceTest {
 			painter1.drawBoltLatency(bolt);
 			painter1.drawBoltCapacity(bolt);
 			painter1.drawBoltActivity(bolt);
+			painter1.drawBoltCpuUsage(bolt);
 		}
 		
-		JdbcSource jdbcSource2 = new JdbcSource("localhost", "benchmarks", "root", null, "topologyTest");
+		JdbcSource jdbcSource2 = new JdbcSource("localhost", "autoscale_test", "root", null, "topologyTest");
 		
 		JFreePainter painter2 = new JFreePainter("topologyTest2", 1, jdbcSource2, cp, lp);
 		painter2.drawTopologyInput();
@@ -198,6 +200,7 @@ public class FileSourceTest {
 			painter2.drawBoltLatency(bolt);
 			painter2.drawBoltCapacity(bolt);
 			painter2.drawBoltActivity(bolt);
+			painter2.drawBoltCpuUsage(bolt);
 		}
 		
 	}
@@ -208,7 +211,7 @@ public class FileSourceTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		String jdbcDriver = "com.mysql.jdbc.Driver";
-		String dbUrl = "jdbc:mysql://localhost/benchmarks";
+		String dbUrl = "jdbc:mysql://localhost/autoscale_test";
 		Class.forName(jdbcDriver);
 		Connection connection = DriverManager.getConnection(dbUrl, "root", null);
 		String cleanQuery1 = "DELETE FROM all_time_spouts_stats";
@@ -548,6 +551,28 @@ public class FileSourceTest {
 		assertEquals(expectedB, source.getBoltLatency("B").get("topologyTest1"));
 		assertEquals(expectedB, source.getBoltLatency("B").get("topologyTest2"));
 	}
+	
+	/**
+	 * Test method for {@link visualizer.source.FileSource#getBoltCpuUsage(java.lang.String)}.
+	 */
+	@Test
+	public void testGetBoltCpuUsage() {
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
+		HashMap<Integer, Double> expectedB = new HashMap<>();
+		expectedB.put(1, 20.0);
+		expectedB.put(2, 40.0);
+		expectedB.put(3, 20.0);
+		
+		assertEquals(expectedB, source.getBoltCpuUsage("B").get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltCpuUsage("B").get("topologyTest2"));
+	}
 
 	/**
 	 * Test method for {@link visualizer.source.FileSource#getBoltProcessingRate(java.lang.String)}.
@@ -563,19 +588,19 @@ public class FileSourceTest {
 		
 		FileSource source = new FileSource(topologies, varCodes);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
-		expectedB.put(1, 3330.0);
-		expectedB.put(2, 3330.0);
-		expectedB.put(3, 1100.0);
+		expectedB.put(1, 200.0);
+		expectedB.put(2, 200.0);
+		expectedB.put(3, 200.0);
 		
 		assertEquals(expectedB, source.getBoltProcessingRate("B").get("topologyTest1"));
 		assertEquals(expectedB, source.getBoltProcessingRate("B").get("topologyTest2"));
 	}
 
 	/**
-	 * Test method for {@link visualizer.source.FileSource#getBoltCR(java.lang.String)}.
+	 * Test method for {@link visualizer.source.FileSource#getBoltActivity(java.lang.String)}.
 	 */
 	@Test
-	public void testGetBoltEPR() {
+	public void testGetBoltActivity() {
 		ArrayList<String> topologies = new ArrayList<>();
 		topologies.add("topologyTest1");
 		topologies.add("topologyTest2");
@@ -589,7 +614,7 @@ public class FileSourceTest {
 		expectedB.put(2, 0.0);
 		expectedB.put(3, 1.5);
 		
-		assertEquals(expectedB, source.getBoltCR("B").get("topologyTest1"));
-		assertEquals(expectedB, source.getBoltCR("B").get("topologyTest2"));
+		assertEquals(expectedB, source.getBoltActivity("B").get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltActivity("B").get("topologyTest2"));
 	}
 }

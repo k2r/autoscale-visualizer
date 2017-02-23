@@ -77,12 +77,6 @@ public interface ISource {
 	
 	/**
 	 * 
-	 * @return
-	 */
-	public HashMap<String, HashMap<Integer, Double>> getTopologyLoads();
-	
-	/**
-	 * 
 	 * @param component
 	 * @param structure
 	 * @return
@@ -122,12 +116,12 @@ public interface ISource {
 	 * @param component
 	 * @return
 	 */
-	public HashMap<String, HashMap<Integer, Double>> getBoltCR(String component);
+	public HashMap<String, HashMap<Integer, Double>> getBoltActivity(String component);
 	
 	/**
 	 * 
 	 * @param component
 	 * @return
 	 */
-	public HashMap<String, HashMap<Integer, Double>> getBoltPL(String component);
+	public HashMap<String, HashMap<Integer, Double>> getBoltCpuUsage(String component);
 }

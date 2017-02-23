@@ -64,11 +64,6 @@ public interface IPainter {
 	
 	/**
 	 * 
-	 */
-	public void drawTopologyLoad();
-	
-	/**
-	 * 
 	 * @param component
 	 * @param structure
 	 */
@@ -108,5 +103,5 @@ public interface IPainter {
 	 * 
 	 * @param component
 	 */
-	public void drawBoltLoad(String component);
+	public void drawBoltCpuUsage(String component);
 }

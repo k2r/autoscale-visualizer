@@ -35,14 +35,13 @@ public class FileSource implements ISource {
 	private static final String TOPOLOGY_STATUS = "topology_status";
 	private static final String TOPOLOGY_TRAFFIC = "topology_traffic";
 	private static final String TOPOLOGY_REBALANCING = "topology_rebalancing";
-	private static final String TOPOLOGY_LOAD = "topology_load";
 	private static final String BOLT_INPUT = "bolt_input";
 	private static final String BOLT_EXEC = "bolt_processed";
 	private static final String BOLT_OUTPUT = "bolt_output";
 	private static final String BOLT_LATENCY = "bolt_latency";
 	private static final String BOLT_CAPACITY = "bolt_capacity";
 	private static final String BOLT_ACTIVITY = "bolt_activity";
-	private static final String BOLT_LOAD = "bolt_load";
+	private static final String BOLT_CPU = "bolt_cpu";
 	
 	private static final String CAT_TOPOLOGY = "topology";
 	private static final String CAT_BOLT = "bolts";
@@ -369,30 +368,6 @@ public class FileSource implements ISource {
 		return alldata;
 	}
 	
-	@Override
-	public HashMap<String, HashMap<Integer, Double>> getTopologyLoads() {
-		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
-		int nbTopologies = topologies.size();
-		for(int i = 0; i < nbTopologies; i++){
-			Path topologyLoads = Paths.get(this.datasetDirectories.get(i) + "/" + CAT_TOPOLOGY 
-					+ "/_" + TOPOLOGY_LOAD + "_" + this.rootDirectories.get(i) + ".csv");
-			if(Files.exists(topologyLoads)){
-				try {
-					HashMap<Integer, Double> dataset = new HashMap<>();
-					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(topologyLoads, Charset.defaultCharset());
-					for(int j = 1; j < data.size(); j++){
-						String[] line = data.get(j).split(";");
-						dataset.put(Integer.parseInt(line[0]), Double.parseDouble(line[1]));
-					}
-					alldata.put(this.topologies.get(i), dataset);
-				} catch (IOException e) {
-					logger.severe("Unable to retrieve "+ this.topologies.get(i) + " loads because " + e);
-				}
-			}
-		}
-		return alldata;
-	}
-	
 	/* (non-Javadoc)
 	 * @see visualizer.source.ISource#getBoltInput(java.lang.String, visualizer.structure.IStructure)
 	 */
@@ -532,7 +507,7 @@ public class FileSource implements ISource {
 	 * @see visualizer.source.ISource#getBoltEPR(java.lang.String)
 	 */
 	@Override
-	public HashMap<String, HashMap<Integer, Double>> getBoltCR(String component) {
+	public HashMap<String, HashMap<Integer, Double>> getBoltActivity(String component) {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		int nbTopologies = topologies.size();
 		for(int i = 0; i < nbTopologies; i++){
@@ -555,30 +530,28 @@ public class FileSource implements ISource {
 		return alldata;
 	}
 
+
 	@Override
-	public HashMap<String, HashMap<Integer, Double>> getBoltPL(String component) {
+	public HashMap<String, HashMap<Integer, Double>> getBoltCpuUsage(String component) {
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		int nbTopologies = topologies.size();
 		for(int i = 0; i < nbTopologies; i++){
-			Path boltPL = Paths.get(this.datasetDirectories.get(i) + "/" + CAT_BOLT + "/" 
-					 + component + "_" + BOLT_LOAD + "_" + this.rootDirectories.get(i) + ".csv");
-			if(Files.exists(boltPL)){
+			Path boltCpu = Paths.get(this.datasetDirectories.get(i) + "/" + CAT_BOLT + "/" 
+					 + component + "_" + BOLT_CPU + "_" + this.rootDirectories.get(i) + ".csv");
+			if(Files.exists(boltCpu)){
 				try {
 					HashMap<Integer, Double> dataset = new HashMap<>();
-					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(boltPL, Charset.defaultCharset());
+					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(boltCpu, Charset.defaultCharset());
 					for(int j = 1; j < data.size(); j++){
 						String[] line = data.get(j).split(";");
 						dataset.put(Integer.parseInt(line[0]), Double.parseDouble(line[1]));
 					}
 					alldata.put(this.topologies.get(i), dataset);
 				} catch (IOException e) {
-					logger.severe("Unable to retrieve " + this.topologies.get(i) + "." + component + " pl because " + e);
+					logger.severe("Unable to retrieve " + this.topologies.get(i) + "." + component + " cpu usage because " + e);
 				}
 			}
 		}
 		return alldata;
-	}
-
-
-	
+	}	
 }
