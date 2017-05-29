@@ -70,6 +70,7 @@ public class Main {
 						painter.drawBoltLatency(bolt);
 						painter.drawBoltActivity(bolt);
 						painter.drawBoltCpuUsage(bolt);
+						painter.drawBoltRebalancing(bolt);
 					}
 					System.out.println("Benchmark extracted and prepared for visualization!");
 				} catch (ClassNotFoundException | SQLException e) {
@@ -103,6 +104,7 @@ public class Main {
 					painter.drawBoltLatency(bolt);
 					painter.drawBoltActivity(bolt);
 					painter.drawBoltCpuUsage(bolt);
+					painter.drawBoltRebalancing(bolt);
 				}
 				System.out.println("Benchmarks comparison prepared for visualization!");
 			}

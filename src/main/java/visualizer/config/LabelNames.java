@@ -24,7 +24,8 @@ public enum LabelNames {
 	BOLTLAT("bolt_latency"),
 	BOLTCAP("bolt_capacity"),
 	BOLTACT("bolt_activity"),
-	BOLTCPU("bolt_cpu");
+	BOLTCPU("bolt_cpu"),
+	BOLTREBAL("bolt_rebalancing");
 	
 	private String name = "";
 	
@@ -62,6 +63,7 @@ public enum LabelNames {
 		topics.add(LabelNames.BOLTCAP.toString());
 		topics.add(LabelNames.BOLTACT.toString());
 		topics.add(LabelNames.BOLTCPU.toString());
+		topics.add(LabelNames.BOLTREBAL.toString());
 		return topics;
 	}
 	

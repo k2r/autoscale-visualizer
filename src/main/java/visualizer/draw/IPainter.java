@@ -104,4 +104,10 @@ public interface IPainter {
 	 * @param component
 	 */
 	public void drawBoltCpuUsage(String component);
+	
+	/**
+	 * 
+	 * @param component
+	 */
+	public void drawBoltRebalancing(String component);
 }

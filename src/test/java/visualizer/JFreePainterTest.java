@@ -509,4 +509,25 @@ public class JFreePainterTest {
 		}
 	}
 
+	/**
+	 * Test method for {@link visualizer.draw.JFreePainter#drawBoltRebalancing(java.lang.String)}.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testDrawBoltRebalancing() throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
+		cp.initParameters();
+		LabelParser lp = new LabelParser(cp.getLanguage());
+		lp.initParameters();
+		TopologyStructure structure = new TopologyStructure(cp.getEdges());
+		JFreePainter painter = new JFreePainter("topologyTest", 1, source, cp, lp);
+		for(String bolt : structure.getBolts()){
+			painter.drawBoltRebalancing(bolt);
+		}
+	}
 }

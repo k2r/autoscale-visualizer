@@ -70,6 +70,7 @@ public class JFreePainter implements IPainter {
 	private static final String BOLT_CAPACITY = "bolt_capacity";
 	private static final String BOLT_ACTIVITY = "bolt_activity";
 	private static final String BOLT_CPU = "bolt_cpu";
+	private static final String BOLT_REBAL = "bolt_rebalancing";
 	
 	private static final String CAT_TOPOLOGY = "topology";
 	private static final String CAT_BOLT = "bolts";
@@ -812,5 +813,34 @@ public class JFreePainter implements IPainter {
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTCPU.toString());
 		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTCPU.toString());
 		drawXYSeries(dataToPlot, records, BOLT_CPU, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
+	}
+
+	@Override
+	public void drawBoltRebalancing(String component) {
+		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getBoltRebalancing(component);
+		ArrayList<String> records = new ArrayList<>();
+	
+		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
+		
+		ArrayList<String> topologies = new ArrayList<>();
+		for(String topology : dataset.keySet()){
+			topologies.add(topology);
+		}
+		Collections.sort(topologies);
+		for(String topology : topologies){
+			HashMap<Integer, Double> data = dataset.get(topology);
+			final XYSeries serie = new XYSeries(topology + "." + component);
+			records.add("timestamp;nb_executors");
+			for(Integer timestamp : data.keySet()){
+				Double value = data.get(timestamp);
+				records.add(timestamp + ";" + value);
+				serie.add(timestamp, value);
+			}
+			dataToPlot.addSeries(serie);
+		}
+		String title = this.labelParser.getTitle(LabelNames.BOLTREBAL.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTREBAL.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTREBAL.toString());
+		drawXYSeries(dataToPlot, records, BOLT_REBAL, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 }

@@ -178,6 +178,7 @@ public class FileSourceTest {
 			painter1.drawBoltCapacity(bolt);
 			painter1.drawBoltActivity(bolt);
 			painter1.drawBoltCpuUsage(bolt);
+			painter1.drawBoltRebalancing(bolt);
 		}
 		
 		JdbcSource jdbcSource2 = new JdbcSource("localhost", "autoscale_test", "root", null, "topologyTest");
@@ -201,6 +202,7 @@ public class FileSourceTest {
 			painter2.drawBoltCapacity(bolt);
 			painter2.drawBoltActivity(bolt);
 			painter2.drawBoltCpuUsage(bolt);
+			painter2.drawBoltRebalancing(bolt);
 		}
 		
 	}
@@ -616,5 +618,27 @@ public class FileSourceTest {
 		
 		assertEquals(expectedB, source.getBoltActivity("B").get("topologyTest1"));
 		assertEquals(expectedB, source.getBoltActivity("B").get("topologyTest2"));
+	}
+	
+	/**
+	 * Test method for {@link visualizer.source.FileSource#getBoltRebalancing(java.lang.String)}.
+	 */
+	@Test
+	public void testGetBoltRebalancing() {
+		ArrayList<String> topologies = new ArrayList<>();
+		topologies.add("topologyTest1");
+		topologies.add("topologyTest2");
+		ArrayList<Integer> varCodes = new ArrayList<>();
+		varCodes.add(1);
+		varCodes.add(1);
+		
+		FileSource source = new FileSource(topologies, varCodes);
+		HashMap<Integer, Double> expectedB = new HashMap<>();
+		expectedB.put(1, 1.0);
+		expectedB.put(2, 2.0);
+		expectedB.put(3, 1.0);
+		
+		assertEquals(expectedB, source.getBoltRebalancing("B").get("topologyTest1"));
+		assertEquals(expectedB, source.getBoltRebalancing("B").get("topologyTest2"));
 	}
 }

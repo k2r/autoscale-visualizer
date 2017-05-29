@@ -444,4 +444,19 @@ public class JdbcSourceTest {
 		assertEquals(expectedB, source.getBoltActivity("B").get("topologyTest"));
 	}
 
+	/**
+	 * Test method for {@link visualizer.source.JdbcSource#getBoltRebalancing(java.lang.String)}.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 */
+	@Test
+	public void testGetBoltRebalancing() throws ClassNotFoundException, SQLException {
+		JdbcSource source = new JdbcSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		HashMap<Integer, Double> expectedB = new HashMap<>();
+		expectedB.put(1, 1.0);
+		expectedB.put(2, 2.0);
+		expectedB.put(3, 1.0);
+		
+		assertEquals(expectedB, source.getBoltRebalancing("B").get("topologyTest"));
+	}
 }

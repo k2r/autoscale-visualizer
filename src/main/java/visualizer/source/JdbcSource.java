@@ -745,4 +745,29 @@ public class JdbcSource implements ISource {
 		alldata.put(this.topology, dataSet);
 		return alldata;
 	}
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getBoltRebalancing(String component) {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		HashMap<Integer, Double> dataSet = new HashMap<>();
+		String queryExecutors = "SELECT " + COL_TIMESTAMP + ", COUNT(DISTINCT " + COL_START_TASK + ") AS nbExecutors" +
+				" FROM " + TABLE_BOLT +
+				" WHERE " + COL_COMPONENT + " = '" + component + "' " + 
+				" GROUP BY " + COL_TIMESTAMP;
+		Statement statementExecutors;
+		try{
+			statementExecutors = this.connection.createStatement();
+			ResultSet result = statementExecutors.executeQuery(queryExecutors);
+			
+			while(result.next()){
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
+				Integer nbExecutors = result.getInt("nbExecutors");
+				dataSet.put(timestamp, nbExecutors.doubleValue());
+			}
+		}catch (SQLException e) {
+			logger.severe("Unable to recover scaling actions for bolt " + component + " because " + e);
+		}
+		alldata.put(this.topology, dataSet);
+		return alldata;
+	}
 }
