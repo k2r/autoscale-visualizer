@@ -216,6 +216,10 @@ public class JFreePainter implements IPainter {
 			colors.add(Color.PINK);
 			colors.add(Color.CYAN);
 			colors.add(Color.ORANGE);
+			colors.add(Color.YELLOW);
+			colors.add(Color.LIGHT_GRAY);
+			colors.add(Color.MAGENTA);
+			int nbColors = colors.size();
 			
 			ArrayList<Shape> shapes = new ArrayList<>();
 			shapes.add(new Rectangle2D.Double(0,0,5,5));
@@ -226,12 +230,13 @@ public class JFreePainter implements IPainter {
 			shapes.add(new Rectangle2D.Double(0,0,5,5));
 			shapes.add(new Ellipse2D.Double(0,0,5,5));
 			shapes.add(ShapeUtilities.createDiagonalCross(3, 1));
+			int nbShapes = shapes.size();
 			
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			int nbSeries = series.getSeriesCount();
 			for(int i = 0; i < nbSeries; i++){
-				renderer.setSeriesPaint(i, colors.get(i));
-				renderer.setSeriesShape(i, shapes.get(i));
+				renderer.setSeriesPaint(i, colors.get(i % nbColors));
+				renderer.setSeriesShape(i, shapes.get(i % nbShapes));
 				renderer.setSeriesShapesVisible(i, drawShapes);
 				renderer.setSeriesLinesVisible(i, drawLines);
 			}
@@ -242,10 +247,10 @@ public class JFreePainter implements IPainter {
 			for(int i = 0; i < n; i++){
 				LegendItem item = legendItems.get(i);
 				int serieIndex = item.getSeriesIndex();
-				item.setLinePaint(colors.get(serieIndex));
-				item.setOutlinePaint(colors.get(serieIndex));
-				item.setFillPaint(colors.get(serieIndex));
-				item.setShape(shapes.get(serieIndex));
+				item.setLinePaint(colors.get(serieIndex % nbColors));
+				item.setOutlinePaint(colors.get(serieIndex % nbColors));
+				item.setFillPaint(colors.get(serieIndex % nbColors));
+				item.setShape(shapes.get(serieIndex % nbShapes));
 				item.setShapeVisible(drawShapes);
 				item.setLabelFont(fontLegend);
 			}
