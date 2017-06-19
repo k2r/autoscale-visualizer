@@ -7,6 +7,8 @@
 	<command>ANALYZE</command>
 	<!--Name of the topology to visualize-->
 	<topology>topologyTest1</topology>
+	<!--Shorter name for long filenames-->
+	<short_topology>test1</short_topology>
 	<!--Type of stream variation (refer to StreamSim generator for type->variation code matching)-->
 	<stream_type>1</stream_type>
 	
@@ -21,9 +23,11 @@
 	
 	<!--To fulfill (and optionnal add other topology/stream type pairs) only for comparison with first topology-->
 	<topology>topologyTest2</topology>
+	<short_topology>test2</short_topology>
 	<stream_type>1</stream_type>
 	
 	<topology>topologyTest3</topology>
+	<short_topology>test3</short_topology>
 	<stream_type>1</stream_type>
 	
 	<!--Parameters to get a connection to the monitoring database-->

@@ -30,6 +30,7 @@ public class JdbcSource implements ISource {
 	private final static String TABLE_BOLT = "all_time_bolts_stats";
 	private final static String TABLE_STATUS = "topologies_status";
 	private final static String TABLE_ACTIVITY = "operators_activity";
+	private final static String TABLE_ESTIM = "operators_estimation";
 	//private final static String TABLE_SCALE = "scales";
 	
 	private final static String COL_TIMESTAMP = "timestamp";
@@ -48,6 +49,7 @@ public class JdbcSource implements ISource {
 	private final static String COL_CAPACITY = "capacity_per_second";
 	private final static String COL_STATUS = "status";
 	private final static String COL_CPU = "cpu_usage";
+	private final static String COL_PENDING = "pending";
 	//private final static String COL_CURRENT = "current_parallelism";
 	//private final static String COL_NEW = "new_parallelism";
 	
@@ -766,6 +768,29 @@ public class JdbcSource implements ISource {
 			}
 		}catch (SQLException e) {
 			logger.severe("Unable to recover scaling actions for bolt " + component + " because " + e);
+		}
+		alldata.put(this.topology, dataSet);
+		return alldata;
+	}
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getBoltPendings(String component) {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		HashMap<Integer, Double> dataSet = new HashMap<>();
+		String query = "SELECT " + COL_TIMESTAMP + ", " + COL_PENDING +
+				" FROM " + TABLE_ESTIM + 
+				" WHERE " + COL_COMPONENT + " = '" + component + "'"; 
+		Statement statement;
+		try {
+			statement = this.connection.createStatement();
+			ResultSet result = statement.executeQuery(query);
+			while(result.next()){
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
+				Double boltPending = result.getDouble(COL_PENDING);
+				dataSet.put(timestamp, boltPending);
+			}
+		} catch (SQLException e) {
+			logger.severe("Unable to recover pending tuples for bolt " + component + " because " + e);
 		}
 		alldata.put(this.topology, dataSet);
 		return alldata;

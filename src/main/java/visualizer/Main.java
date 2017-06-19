@@ -17,6 +17,7 @@ import visualizer.config.XmlConfigParser;
 import visualizer.draw.JFreePainter;
 import visualizer.source.FileSource;
 import visualizer.source.JdbcSource;
+import visualizer.source.MergeFileSource;
 import visualizer.structure.IStructure;
 import visualizer.structure.TopologyStructure;
 
@@ -61,7 +62,7 @@ public class Main {
 					painter.drawTopologyNbSupervisors();
 					painter.drawTopologyNbWorkers();
 					painter.drawTopologyTraffic(structure);
-					painter.drawTopologyRebalancing(structure);
+					//painter.drawTopologyRebalancing(structure); deprecated
 					ArrayList<String> bolts = structure.getBolts();
 					for(String bolt : bolts){
 						painter.drawBoltInput(bolt, structure);
@@ -71,6 +72,7 @@ public class Main {
 						painter.drawBoltActivity(bolt);
 						painter.drawBoltCpuUsage(bolt);
 						painter.drawBoltRebalancing(bolt);
+						painter.drawBoltPending(bolt);
 					}
 					System.out.println("Benchmark extracted and prepared for visualization!");
 				} catch (ClassNotFoundException | SQLException e) {
@@ -79,9 +81,10 @@ public class Main {
 			}
 			if(command.equalsIgnoreCase("COMPARE")){
 				ArrayList<String> topologies = configParser.getTopologies();
-				String topologyName = "Comparison of topologies ";
+				String topologyName = "Comparison of topologies";
 				for(String topology : topologies){
-					topologyName += topology + " ";
+					String shortName = configParser.getShortTopName(topology);
+					topologyName += " " + shortName;
 				}
 				ArrayList<Integer> varCodes = configParser.getStreamTypes();
 				FileSource source = new FileSource(topologies, varCodes);
@@ -95,7 +98,7 @@ public class Main {
 				painter.drawTopologyNbSupervisors();
 				painter.drawTopologyNbWorkers();
 				painter.drawTopologyTraffic(structure);
-				painter.drawTopologyRebalancing(structure);
+				//painter.drawTopologyRebalancing(structure); deprecated
 				ArrayList<String> bolts = structure.getBolts();
 				for(String bolt : bolts){
 					painter.drawBoltInput(bolt, structure);
@@ -105,8 +108,38 @@ public class Main {
 					painter.drawBoltActivity(bolt);
 					painter.drawBoltCpuUsage(bolt);
 					painter.drawBoltRebalancing(bolt);
+					painter.drawBoltPending(bolt);
 				}
 				System.out.println("Benchmarks comparison prepared for visualization!");
+			}
+			if(command.equalsIgnoreCase("MERGE")){
+				ArrayList<String> topologies = configParser.getTopologies();
+				String topologyName = configParser.getMergedName();
+				ArrayList<Integer> varCodes = configParser.getStreamTypes();
+				MergeFileSource source = new MergeFileSource(topologyName, topologies, varCodes);
+				IStructure structure = new TopologyStructure(configParser.getEdges());
+				JFreePainter painter = new JFreePainter(topologyName, varCodes.get(0), source, configParser, labelParser);
+				painter.drawTopologyInput();
+				painter.drawTopologyThroughput();
+				painter.drawTopologyLosses();
+				painter.drawTopologyLatency();
+				painter.drawTopologyNbExecutors();
+				painter.drawTopologyNbSupervisors();
+				painter.drawTopologyNbWorkers();
+				painter.drawTopologyTraffic(structure);
+				//painter.drawTopologyRebalancing(structure); deprecated
+				ArrayList<String> bolts = structure.getBolts();
+				for(String bolt : bolts){
+					painter.drawBoltInput(bolt, structure);
+					painter.drawBoltExecuted(bolt);
+					painter.drawBoltOutputs(bolt);
+					painter.drawBoltLatency(bolt);
+					painter.drawBoltActivity(bolt);
+					painter.drawBoltCpuUsage(bolt);
+					painter.drawBoltRebalancing(bolt);
+					painter.drawBoltPending(bolt);
+				}
+				System.out.println("Benchmarks merge prepared for visualization!");
 			}
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			logger.severe("An error occured while initializing the benchmark visualizer " + e);

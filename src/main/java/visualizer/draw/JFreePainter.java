@@ -44,7 +44,7 @@ import visualizer.structure.IStructure;
  */
 public class JFreePainter implements IPainter {
 	
-	private String topology;
+	private String benchName;
 	private String variation;
 	private String rootDirectory;
 	private String chartDirectory;
@@ -71,14 +71,15 @@ public class JFreePainter implements IPainter {
 	private static final String BOLT_ACTIVITY = "bolt_activity";
 	private static final String BOLT_CPU = "bolt_cpu";
 	private static final String BOLT_REBAL = "bolt_rebalancing";
+	private static final String BOLT_PENDING = "bolt_pending";
 	
 	private static final String CAT_TOPOLOGY = "topology";
 	private static final String CAT_BOLT = "bolts";
 	
 	private static final Logger logger = Logger.getLogger("JFreePainter");
 	
-	public JFreePainter(String topology, Integer varCode, ISource source, XmlConfigParser cp, LabelParser lp) {
-		this.setTopology(topology);
+	public JFreePainter(String benchName, Integer varCode, ISource source, XmlConfigParser cp, LabelParser lp) {
+		this.setBenchName(benchName);
 		switch(varCode){
 		case(1): this.setVariation("linear_increase");
 				break;
@@ -99,17 +100,17 @@ public class JFreePainter implements IPainter {
 		case(9): this.setVariation("no_variation");
 				break;
 		}
-		this.rootDirectory = this.getTopology() + "_" + this.getVariation();
+		this.rootDirectory = this.getBenchName() + "_" + this.getVariation();
 		this.chartDirectory = this.getRootDirectory() + "/charts";
 		this.datasetDirectory = this.getRootDirectory() + "/datasets";
 		
 		Path root = Paths.get(this.getRootDirectory());
 		Path chart = Paths.get(this.getChartDirectory());
 		Path dataset = Paths.get(this.getDatasetDirectory());
-		Path chartTopology = Paths.get(this.getChartDirectory() + "/topology");
-		Path chartBolt = Paths.get(this.getChartDirectory() + "/bolts");
-		Path datasetTopology = Paths.get(this.getDatasetDirectory() + "/topology");
-		Path datasetBolt = Paths.get(this.getDatasetDirectory() + "/bolts");
+		Path chartTopology = Paths.get(this.getChartDirectory() + "/" + CAT_TOPOLOGY);
+		Path chartBolt = Paths.get(this.getChartDirectory() + "/" + CAT_BOLT);
+		Path datasetTopology = Paths.get(this.getDatasetDirectory() + "/" + CAT_TOPOLOGY);
+		Path datasetBolt = Paths.get(this.getDatasetDirectory() + "/" + CAT_BOLT);
 		
 		try {
 			if(!Files.exists(root)){
@@ -130,17 +131,17 @@ public class JFreePainter implements IPainter {
 	}
 
 	/**
-	 * @return the topology
+	 * @return the benchName
 	 */
-	public String getTopology() {
-		return topology;
+	public String getBenchName() {
+		return this.benchName;
 	}
 
 	/**
-	 * @param topology the topology to set
+	 * @param benchName the benchName to set
 	 */
-	public void setTopology(String topology) {
-		this.topology = topology;
+	public void setBenchName(String benchName) {
+		this.benchName = benchName;
 	}
 
 	/**
@@ -847,5 +848,34 @@ public class JFreePainter implements IPainter {
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTREBAL.toString());
 		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTREBAL.toString());
 		drawXYSeries(dataToPlot, records, BOLT_REBAL, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
+	}
+
+	@Override
+	public void drawBoltPending(String component) {
+		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getBoltPendings(component);
+		ArrayList<String> records = new ArrayList<>();
+	
+		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
+		
+		ArrayList<String> topologies = new ArrayList<>();
+		for(String topology : dataset.keySet()){
+			topologies.add(topology);
+		}
+		Collections.sort(topologies);
+		for(String topology : topologies){
+			HashMap<Integer, Double> data = dataset.get(topology);
+			final XYSeries serie = new XYSeries(topology + "." + component);
+			records.add("timestamp;pending");
+			for(Integer timestamp : data.keySet()){
+				Double value = data.get(timestamp);
+				records.add(timestamp + ";" + value);
+				serie.add(timestamp, value);
+			}
+			dataToPlot.addSeries(serie);
+		}
+		String title = this.labelParser.getTitle(LabelNames.BOLTPEND.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTPEND.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTPEND.toString());
+		drawXYSeries(dataToPlot, records, BOLT_PENDING, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 }

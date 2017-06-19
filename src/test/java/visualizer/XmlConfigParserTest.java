@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -150,5 +151,17 @@ public class XmlConfigParserTest {
 		
 		assertEquals(expectedEdges, parser.getEdges());
 	}
-
+	
+	@Test
+	public void testGetShortNames() throws ParserConfigurationException, SAXException, IOException {
+		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
+		parser.initParameters();
+		
+		HashMap<String, String> expectedShortNames = new HashMap<>();
+		expectedShortNames.put("topologyTest1", "test1");
+		expectedShortNames.put("topologyTest2", "test2");
+		expectedShortNames.put("topologyTest3", "test3");
+		
+		assertEquals(expectedShortNames, parser.getShortTopNames());
+	}
 }

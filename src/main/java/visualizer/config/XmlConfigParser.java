@@ -5,6 +5,7 @@ package visualizer.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,6 +35,8 @@ public class XmlConfigParser {
 	
 	/*Visualizer global parameters*/
 	private ArrayList<String> topologies;
+	private HashMap<String, String> shortTopNames;
+	private String mergedName;
 	private ArrayList<Integer> streamTypes;
 	
 	/*Database parameters*/
@@ -62,6 +65,7 @@ public class XmlConfigParser {
 		this.builder = factory.newDocumentBuilder();
 		this.document = builder.parse(this.getFilename());
 		this.topologies = new ArrayList<>();
+		this.shortTopNames = new HashMap<>();
 		this.streamTypes = new ArrayList<>();
 		this.edges = new ArrayList<>();
 	}
@@ -106,6 +110,38 @@ public class XmlConfigParser {
 	 */
 	public void addTopology(String topology) {
 		this.topologies.add(topology);
+	}
+
+	/**
+	 * @return the shortTopNames
+	 */
+	public HashMap<String, String> getShortTopNames() {
+		return shortTopNames;
+	}
+	
+	public String getShortTopName(String topology) {
+		return this.shortTopNames.get(topology);
+	}
+
+	/**
+	 * @param shortTopNames the shortTopNames to set
+	 */
+	public void addShortTopNames(String topology, String shortName) {
+		this.shortTopNames.put(topology, shortName);
+	}
+
+	/**
+	 * @return the mergedName
+	 */
+	public String getMergedName() {
+		return mergedName;
+	}
+
+	/**
+	 * @param mergedName the mergedName to set
+	 */
+	public void setMergedName(String mergedName) {
+		this.mergedName = mergedName;
 	}
 
 	/**
@@ -331,15 +367,26 @@ public class XmlConfigParser {
 		final NodeList command = parameters.getElementsByTagName(NodeNames.COMMAND.toString());
 		this.setCommand(command.item(0).getTextContent());
 		final NodeList topologies = parameters.getElementsByTagName(NodeNames.TOPOLOGY.toString());
+		final NodeList shortTopNames = parameters.getElementsByTagName(NodeNames.SHTOPOLOGY.toString());
 		int nbTopologies = topologies.getLength();
+		int nbShortNames = shortTopNames.getLength();
+		if(nbTopologies == nbShortNames){
 		for(int i = 0; i < nbTopologies; i++){
-			this.addTopology(topologies.item(i).getTextContent());
+			String topFullName = topologies.item(i).getTextContent();
+			String topShortName = shortTopNames.item(i).getTextContent();
+			this.addTopology(topFullName);
+			this.addShortTopNames(topFullName, topShortName);
+		}
+		}else{
+			System.err.println("There is a matching error between topologies full and short names, please check parameters");
 		}
 		final NodeList streamTypes = parameters.getElementsByTagName(NodeNames.STREAMTYPE.toString());
 		int nbStreamTypes = streamTypes.getLength();
 		for(int j = 0; j < nbStreamTypes; j++){
 			this.addStreamType(Integer.parseInt(streamTypes.item(j).getTextContent()));
 		}
+		final NodeList mergedName = parameters.getElementsByTagName(NodeNames.MERGENAME.toString());
+		this.setMergedName(mergedName.item(0).getTextContent());
 		final NodeList dbHost = parameters.getElementsByTagName(NodeNames.DBHOST.toString());
 		this.setDb_host(dbHost.item(0).getTextContent());
 		final NodeList dbName = parameters.getElementsByTagName(NodeNames.DBNAME.toString());

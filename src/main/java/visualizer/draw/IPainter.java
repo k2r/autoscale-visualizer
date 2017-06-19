@@ -110,4 +110,10 @@ public interface IPainter {
 	 * @param component
 	 */
 	public void drawBoltRebalancing(String component);
+	
+	/**
+	 * 
+	 * @param component
+	 */
+	public void drawBoltPending(String component);
 }

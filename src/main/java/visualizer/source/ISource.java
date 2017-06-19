@@ -116,6 +116,13 @@ public interface ISource {
 	 * @param component
 	 * @return
 	 */
+	public HashMap<String, HashMap<Integer, Double>> getBoltPendings(String component);
+	
+	/**
+	 * 
+	 * @param component
+	 * @return
+	 */
 	public HashMap<String, HashMap<Integer, Double>> getBoltActivity(String component);
 	
 	/**
