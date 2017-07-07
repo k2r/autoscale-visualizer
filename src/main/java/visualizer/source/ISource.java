@@ -37,6 +37,7 @@ public interface ISource {
 	 */
 	public HashMap<String, HashMap<Integer, Double>> getTopologyLatency();
 	
+	@Deprecated
 	/**
 	 * 
 	 * @return
@@ -62,6 +63,7 @@ public interface ISource {
 	 */
 	public HashMap<String, HashMap<Integer, Double>> getTopologyNbWorkers();
 	
+	@Deprecated
 	/**
 	 * 
 	 * @return
@@ -118,6 +120,7 @@ public interface ISource {
 	 */
 	public HashMap<String, HashMap<Integer, Double>> getBoltPendings(String component);
 	
+	@Deprecated
 	/**
 	 * 
 	 * @param component

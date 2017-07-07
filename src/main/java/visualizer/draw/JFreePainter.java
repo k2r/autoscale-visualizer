@@ -505,6 +505,7 @@ public class JFreePainter implements IPainter {
 	/* (non-Javadoc)
 	 * @see visualizer.draw.IPainter#drawTopologyStatus()
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public void drawTopologyStatus() {
 		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getTopologyStatus();
@@ -566,6 +567,7 @@ public class JFreePainter implements IPainter {
 		drawXYSeries(dataToPlot, records, TOPOLOGY_TRAFFIC, CAT_TOPOLOGY, title, xAxisLabel, yAxisLabel);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void drawTopologyRebalancing(IStructure structure) {
 		HashMap<String, HashMap<String, HashMap<Integer, Double>>> dataset = this.source.getTopologyRebalancing(structure);
@@ -763,6 +765,7 @@ public class JFreePainter implements IPainter {
 	/* (non-Javadoc)
 	 * @see visualizer.draw.IPainter#drawBoltEPR(java.lang.String)
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public void drawBoltActivity(String component) {
 		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getBoltActivity(component);

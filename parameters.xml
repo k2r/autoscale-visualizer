@@ -5,6 +5,9 @@
 		COMPARE : after the analysis of two topologies, it creates comparison charts between topologies 1 and 2 and duplicate datasets
 	-->
 	<command>ANALYZE</command>
+	
+	<merged_topology>topologyTest</merged_topology>
+	
 	<!--Name of the topology to visualize-->
 	<topology>topologyTest1</topology>
 	<!--Shorter name for long filenames-->

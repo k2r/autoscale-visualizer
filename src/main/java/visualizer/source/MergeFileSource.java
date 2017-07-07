@@ -18,7 +18,7 @@ import visualizer.structure.IStructure;
  * @author Roland
  *
  */
-public class MergeFileSource implements ISource {
+public class MergeFileSource implements ISource {//FIXME change MergeSourceFile to process avg;min;max datasets 
 
 	private String mergeName;
 	private ArrayList<String> topologies;
@@ -118,8 +118,8 @@ public class MergeFileSource implements ISource {
 					for(int j = 1; j < data.size(); j++){
 						String[] line = data.get(j).split(";");
 						try{
-							Integer index = j - 1;
-							Double value = values.get(index);
+							Integer index = j - 1; 
+							Double value = values.get(index);//FIXME Change to avgValue and copy/paste for min/maxValue
 							value += Double.parseDouble(line[1]);
 							values.remove(index);
 							values.add(index, value);
@@ -133,7 +133,7 @@ public class MergeFileSource implements ISource {
 				}
 			}
 		}
-		int nbRecords = timestamps.size();
+		int nbRecords = timestamps.size();//FIXME remove that part
 		for(int k = 0; k < nbRecords; k++){
 			Integer avgTimestamp = timestamps.get(k);
 			Double avgValue = values.get(k) / nbTopologies;

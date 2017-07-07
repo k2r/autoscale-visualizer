@@ -57,6 +57,7 @@ public interface IPainter {
 	 */
 	public void drawTopologyTraffic(IStructure structure);
 	
+	@Deprecated
 	/**
 	 * 
 	 */
@@ -87,12 +88,14 @@ public interface IPainter {
 	 */
 	public void drawBoltLatency(String component);
 	
+	@Deprecated
 	/**
 	 * 
 	 * @param component
 	 */
 	public void drawBoltCapacity(String component);
 	
+	@Deprecated
 	/**
 	 * 
 	 * @param component
