@@ -6,8 +6,6 @@
 	-->
 	<command>ANALYZE</command>
 	
-	<merged_topology>topologyTest</merged_topology>
-	
 	<!--Name of the topology to visualize-->
 	<topology>topologyTest1</topology>
 	<!--Shorter name for long filenames-->

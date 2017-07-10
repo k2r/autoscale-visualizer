@@ -18,9 +18,8 @@ import visualizer.structure.IStructure;
  * @author Roland
  *
  */
-public class MergeFileSource implements ISource {//FIXME change MergeSourceFile to process avg;min;max datasets 
+public class FileMergeSource implements ISource { 
 
-	private String mergeName;
 	private ArrayList<String> topologies;
 	private ArrayList<String> variations;
 	private ArrayList<String> rootDirectories;
@@ -49,10 +48,9 @@ public class MergeFileSource implements ISource {//FIXME change MergeSourceFile 
 	private static final String CAT_TOPOLOGY = "topology";
 	private static final String CAT_BOLT = "bolts";
 	
-	private static final Logger logger = Logger.getLogger("MergeFileSource");
+	private static final Logger logger = Logger.getLogger("FileMergeSource");
 	
-	public MergeFileSource(String mergeName, ArrayList<String> topologies, ArrayList<Integer> varCodes) {
-		this.mergeName = mergeName;
+	public FileMergeSource(ArrayList<String> topologies, ArrayList<Integer> varCodes) {
 		this.topologies = topologies;
 		this.variations = new ArrayList<>();
 		for(int i = 0; i < varCodes.size(); i++){
@@ -90,26 +88,12 @@ public class MergeFileSource implements ISource {//FIXME change MergeSourceFile 
 	public HashMap<String, HashMap<Integer, Double>> getMergedSeries(String category, String dimension, String errorMsg, String component){
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
 		int nbTopologies = topologies.size();
-		HashMap<Integer, Double> dataset = new HashMap<>();
-		ArrayList<Integer> timestamps = new ArrayList<>();
-		Path pathRef = Paths.get(this.datasetDirectories.get(0) + "/" + category + "/"
-				+ component + "_" + dimension + "_" + this.rootDirectories.get(0) + ".csv");
-		if(Files.exists(pathRef)){
-			try {
-				ArrayList<String> data = (ArrayList<String>) Files.readAllLines(pathRef, Charset.defaultCharset());
-				for(int j = 1; j < data.size(); j++){
-					String[] line = data.get(j).split(";");
-					timestamps.add(Integer.parseInt(line[0]));
-				}
-				
-			}catch (IOException e) {
-				logger.severe(errorMsg + " because " + e);
-			}
-		}
-		
-		ArrayList<Double> values = new ArrayList<>();
+		HashMap<Integer, Double> avgDataset = new HashMap<>();
+		HashMap<Integer, Double> minDataset = new HashMap<>();
+		HashMap<Integer, Double> maxDataset = new HashMap<>();
 		
 		for(int i = 0; i < nbTopologies; i++){
+			String topName = this.topologies.get(i);
 			Path path = Paths.get(this.datasetDirectories.get(i) + "/" + category + "/"
 					+ component + "_" + dimension + "_" + this.rootDirectories.get(i) + ".csv");
 			if(Files.exists(path)){
@@ -117,29 +101,22 @@ public class MergeFileSource implements ISource {//FIXME change MergeSourceFile 
 					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(path, Charset.defaultCharset());
 					for(int j = 1; j < data.size(); j++){
 						String[] line = data.get(j).split(";");
-						try{
-							Integer index = j - 1; 
-							Double value = values.get(index);//FIXME Change to avgValue and copy/paste for min/maxValue
-							value += Double.parseDouble(line[1]);
-							values.remove(index);
-							values.add(index, value);
-						}catch(IndexOutOfBoundsException e){
-							Double value = Double.parseDouble(line[1]);
-							values.add(value);
-						}
+						Integer timestamp = Integer.parseInt(line[0]);
+						Double avgValue = Double.parseDouble(line[1]);
+						Double minValue = Double.parseDouble(line[2]);
+						Double maxValue = Double.parseDouble(line[3]);
+						avgDataset.put(timestamp, avgValue);
+						minDataset.put(timestamp, minValue);
+						maxDataset.put(timestamp, maxValue);
 					}
+					alldata.put(topName, avgDataset);
+					alldata.put(topName + "_MIN", minDataset);
+					alldata.put(topName + "_MAX", maxDataset);
 				} catch (IOException e) {
 					logger.severe(errorMsg + " because " + e);
 				}
 			}
 		}
-		int nbRecords = timestamps.size();//FIXME remove that part
-		for(int k = 0; k < nbRecords; k++){
-			Integer avgTimestamp = timestamps.get(k);
-			Double avgValue = values.get(k) / nbTopologies;
-			dataset.put(avgTimestamp, avgValue);
-		}
-		alldata.put(this.mergeName, dataset);
 		return alldata;
 	}
 	

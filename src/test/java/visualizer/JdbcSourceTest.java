@@ -69,24 +69,6 @@ public class JdbcSourceTest {
 		String queryStatus2 = "INSERT INTO topologies_status VALUES('2', 'topologyTest', 'DEACTIVATED')";
 		String queryStatus3 = "INSERT INTO topologies_status VALUES('3', 'topologyTest', 'REBALANCING')";
 		
-		String crB1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'B', '0.8', '0', '200', '3330')";
-		String crC1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'C', '0.75', '0', '300', '2000')";
-		String crD1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'D', '1.2', '0', '400', '1250')";
-		String crE1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'E', '0.8', '0', '500', '500')";
-		String crF1 = "INSERT INTO operators_activity VALUES('1', 'topologyTest', 'F', '1.5', '0', '600','100')";
-		
-		String crB2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'B', '0', '0', '200', '3330')";
-		String crC2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'C', '0', '0', '300', '2000')";
-		String crD2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'D', '0', '0', '400', '1250')";
-		String crE2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'E', '0', '0', '500', '500')";
-		String crF2 = "INSERT INTO operators_activity VALUES('2', 'topologyTest', 'F', '0', '0', '600', '100')";
-		
-		String crB3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'B', '1.5', '0', '200', '1100')";
-		String crC3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'C', '2', '0', '300', '900')";
-		String crD3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'D', '0.8', '0', '400', '1550')";
-		String crE3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'E', '1', '0', '300', '300')";
-		String crF3 = "INSERT INTO operators_activity VALUES('3', 'topologyTest', 'F', '0.6', '0', '400', '600')";
-		
 		queries.add(queryA1);
 		queries.add(queryB1);
 		queries.add(queryC1);
@@ -111,21 +93,6 @@ public class JdbcSourceTest {
 		queries.add(queryStatus1);
 		queries.add(queryStatus2);
 		queries.add(queryStatus3);
-		queries.add(crB1);
-		queries.add(crC1);
-		queries.add(crD1);
-		queries.add(crE1);
-		queries.add(crF1);
-		queries.add(crB2);
-		queries.add(crC2);
-		queries.add(crD2);
-		queries.add(crE2);
-		queries.add(crF2);
-		queries.add(crB3);
-		queries.add(crC3);
-		queries.add(crD3);
-		queries.add(crE3);
-		queries.add(crF3);
 		
 		for(String query : queries){
 			try {
@@ -148,13 +115,11 @@ public class JdbcSourceTest {
 		Connection connection = DriverManager.getConnection(dbUrl, "root", null);
 		String cleanQuery1 = "DELETE FROM all_time_spouts_stats";
 		String cleanQuery2 = "DELETE FROM all_time_bolts_stats";
-		String cleanQuery3 = "DELETE FROM operators_activity";
 		String cleanQuery4 = "DELETE FROM topologies_status";
 		
 		ArrayList<String> queries = new ArrayList<>();
 		queries.add(cleanQuery1);
 		queries.add(cleanQuery2);
-		queries.add(cleanQuery3);
 		queries.add(cleanQuery4);
 		
 		for(String query : queries){
@@ -410,38 +375,6 @@ public class JdbcSourceTest {
 		expectedB.put(3, 20.0);
 		
 		assertEquals(expectedB, source.getBoltCpuUsage("B").get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltProcessingRate(java.lang.String)}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	@Test
-	public void testGetBoltProcessingRate() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "autoscale_test", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedB = new HashMap<>();
-		expectedB.put(1, 200.0);
-		expectedB.put(2, 200.0);
-		expectedB.put(3, 200.0);
-		
-		assertEquals(expectedB, source.getBoltProcessingRate("B").get("topologyTest"));
-	}
-
-	/**
-	 * Test method for {@link visualizer.source.JdbcSource#getBoltActivity(java.lang.String)}.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 */
-	@Test
-	public void testGetBoltActivity() throws ClassNotFoundException, SQLException {
-		JdbcSource source = new JdbcSource("localhost", "autoscale_test", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedB = new HashMap<>();
-		expectedB.put(1, 0.8);
-		expectedB.put(2, 0.0);
-		expectedB.put(3, 1.5);
-		
-		assertEquals(expectedB, source.getBoltActivity("B").get("topologyTest"));
 	}
 
 	/**

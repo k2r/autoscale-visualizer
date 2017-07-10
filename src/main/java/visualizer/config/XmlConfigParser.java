@@ -385,8 +385,6 @@ public class XmlConfigParser {
 		for(int j = 0; j < nbStreamTypes; j++){
 			this.addStreamType(Integer.parseInt(streamTypes.item(j).getTextContent()));
 		}
-		final NodeList mergedName = parameters.getElementsByTagName(NodeNames.MERGENAME.toString());
-		this.setMergedName(mergedName.item(0).getTextContent());
 		final NodeList dbHost = parameters.getElementsByTagName(NodeNames.DBHOST.toString());
 		this.setDb_host(dbHost.item(0).getTextContent());
 		final NodeList dbName = parameters.getElementsByTagName(NodeNames.DBNAME.toString());

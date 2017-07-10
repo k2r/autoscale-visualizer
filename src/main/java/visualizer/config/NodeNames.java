@@ -13,7 +13,6 @@ public enum NodeNames {
 	COMMAND("command"),
 	TOPOLOGY("topology"),
 	SHTOPOLOGY("short_topology"),
-	MERGENAME("merged_topology"),
 	STREAMTYPE("stream_type"),
 	DBHOST("db_host"),
 	DBNAME("db_name"),

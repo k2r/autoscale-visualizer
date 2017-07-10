@@ -108,7 +108,10 @@ public class JdbcMergeSource implements ISource {
 		for(Integer recTimestamp : timestamps){
 			ArrayList<Double> values = new ArrayList<>();
 			for(String topology : topologies){
-				values.add(iterations.get(topology).get(recTimestamp));
+				Double value = iterations.get(topology).get(recTimestamp);
+				if(value != null){
+					values.add(value);
+				}
 			}
 			minSerie.put(recTimestamp, Utils.getMinValue(values));
 			avgSerie.put(recTimestamp, Utils.getAvgValue(values));
@@ -161,7 +164,10 @@ public class JdbcMergeSource implements ISource {
 		for(Integer recTimestamp : timestamps){
 			ArrayList<Double> values = new ArrayList<>();
 			for(String topology : topologies){
-				values.add(iterations.get(topology).get(recTimestamp));
+				Double value = iterations.get(topology).get(recTimestamp);
+				if(value != null){
+					values.add(value);
+				}
 			}
 			minSerie.put(recTimestamp, Utils.getMinValue(values));
 			avgSerie.put(recTimestamp, Utils.getAvgValue(values));
@@ -290,7 +296,10 @@ public class JdbcMergeSource implements ISource {
 		for(Integer recTimestamp : timestamps){
 			ArrayList<Double> values = new ArrayList<>();
 			for(String topology : topologies){
-				values.add(iterations.get(topology).get(recTimestamp));
+				Double value = iterations.get(topology).get(recTimestamp);
+				if(value != null){
+					values.add(value);
+				}
 			}
 			minSerie.put(recTimestamp, Utils.getMinValue(values));
 			avgSerie.put(recTimestamp, Utils.getAvgValue(values));
@@ -352,7 +361,10 @@ public class JdbcMergeSource implements ISource {
 		for(Integer recTimestamp : timestamps){
 			ArrayList<Double> values = new ArrayList<>();
 			for(String topology : topologies){
-				values.add(iterations.get(topology).get(recTimestamp));
+				Double value = iterations.get(topology).get(recTimestamp);
+				if(value != null){
+					values.add(value);
+				}
 			}
 			minSerie.put(recTimestamp, Utils.getMinValue(values));
 			avgSerie.put(recTimestamp, Utils.getAvgValue(values));
@@ -417,7 +429,10 @@ public class JdbcMergeSource implements ISource {
 		for(Integer recTimestamp : timestamps){
 			ArrayList<Double> values = new ArrayList<>();
 			for(String topology : topologies){
-				values.add(iterations.get(topology).get(recTimestamp));
+				Double value = iterations.get(topology).get(recTimestamp);
+				if(value != null){
+					values.add(value);
+				}
 			}
 			minSerie.put(recTimestamp, Utils.getMinValue(values));
 			avgSerie.put(recTimestamp, Utils.getAvgValue(values));
@@ -663,7 +678,10 @@ public class JdbcMergeSource implements ISource {
 		for(Integer recTimestamp : timestamps){
 			ArrayList<Double> values = new ArrayList<>();
 			for(String topology : topologies){
-				values.add(iterations.get(topology).get(recTimestamp));
+				Double value = iterations.get(topology).get(recTimestamp);
+				if(value != null){
+					values.add(value);
+				}
 			}
 			minSerie.put(recTimestamp, Utils.getMinValue(values));
 			avgSerie.put(recTimestamp, Utils.getAvgValue(values));
@@ -780,7 +798,10 @@ public class JdbcMergeSource implements ISource {
 		for(Integer recTimestamp : timestamps){
 			ArrayList<Double> values = new ArrayList<>();
 			for(String topology : topologies){
-				values.add(iterations.get(topology).get(recTimestamp));
+				Double value = iterations.get(topology).get(recTimestamp);
+				if(value != null){
+					values.add(value);
+				}
 			}
 			minSerie.put(recTimestamp, Utils.getMinValue(values));
 			avgSerie.put(recTimestamp, Utils.getAvgValue(values));
