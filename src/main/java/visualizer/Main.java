@@ -156,9 +156,9 @@ public class Main {
 					topologyName += " " + shortName;
 				}
 				ArrayList<Integer> varCodes = configParser.getStreamTypes();
-				FileMergeSource source = new FileMergeSource(topologies, varCodes);
+				FileMergeSource fileMergeSource = new FileMergeSource(topologies, varCodes);
 				IStructure structure = new TopologyStructure(configParser.getEdges());
-				JFreeMergePainter painter = new JFreeMergePainter(topologyName, varCodes.get(0), source, configParser, labelParser);
+				JFreeMergePainter painter = new JFreeMergePainter(topologyName, varCodes.get(0), fileMergeSource, configParser, labelParser);
 				painter.drawTopologyInput();
 				painter.drawTopologyThroughput();
 				painter.drawTopologyLosses();

@@ -49,4 +49,9 @@
 	<title_fontsize>28</title_fontsize>
 	<axis_fontsize>24</axis_fontsize>
 	<legend_fontsize>14</legend_fontsize>
+	
+	<!--Merged sub-charts selection-->
+	<show_average>true</show_average>
+	<show_min>false</show_min>
+	<show_max>true</show_max>
 </parameters>

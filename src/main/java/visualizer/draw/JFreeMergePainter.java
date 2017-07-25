@@ -294,6 +294,8 @@ public class JFreeMergePainter implements IPainter {
 			HashMap<Integer, Shape> serieShapes = new HashMap<>();
 			HashMap<Integer, Boolean> serieLineVisible = new HashMap<>();
 			HashMap<Integer, Boolean> serieShapeVisible = new HashMap<>();
+			
+			
 			int i = 0;
 			int serieSet = 0;
 			while(i < nbSeries){
@@ -380,7 +382,9 @@ public class JFreeMergePainter implements IPainter {
 			}
 		}
 		Collections.sort(topologies);
+		
 		for(String topology : topologies){
+			System.out.println("Topology: " + topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
@@ -398,9 +402,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}		
 		}
 		String title = this.labelParser.getTitle(LabelNames.INPUT.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.INPUT.toString());
@@ -441,9 +455,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.TGHPT.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.TGHPT.toString());
@@ -484,9 +508,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.DEPH.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.DEPH.toString());
@@ -527,9 +561,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.LATENCY.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.LATENCY.toString());
@@ -571,9 +615,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.NBEXEC.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.NBEXEC.toString());
@@ -614,9 +668,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.NBSUPER.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.NBSUPER.toString());
@@ -657,9 +721,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.NBWORK.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.NBWORK.toString());
@@ -708,9 +782,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.TRAFFIC.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.TRAFFIC.toString());
@@ -759,9 +843,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.BOLTIN.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTIN.toString());
@@ -802,9 +896,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.BOLTEXEC.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTEXEC.toString());
@@ -845,9 +949,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.BOLTOUT.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTOUT.toString());
@@ -888,9 +1002,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.BOLTLAT.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTLAT.toString());
@@ -947,9 +1071,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.BOLTCPU.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTCPU.toString());
@@ -990,9 +1124,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.BOLTREBAL.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTREBAL.toString());
@@ -1033,9 +1177,19 @@ public class JFreeMergePainter implements IPainter {
 				avgSerie.add(timestamp, avgValue);
 				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
 			}
-			dataToPlot.addSeries(minSerie);
-			dataToPlot.addSeries(maxSerie);
-			dataToPlot.addSeries(avgSerie);
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
 		}
 		String title = this.labelParser.getTitle(LabelNames.BOLTPEND.toString());
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTPEND.toString());

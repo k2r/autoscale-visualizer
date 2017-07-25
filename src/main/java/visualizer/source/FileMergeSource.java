@@ -87,12 +87,13 @@ public class FileMergeSource implements ISource {
 	
 	public HashMap<String, HashMap<Integer, Double>> getMergedSeries(String category, String dimension, String errorMsg, String component){
 		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
-		int nbTopologies = topologies.size();
-		HashMap<Integer, Double> avgDataset = new HashMap<>();
-		HashMap<Integer, Double> minDataset = new HashMap<>();
-		HashMap<Integer, Double> maxDataset = new HashMap<>();
+		int nbTopologies = topologies.size();	
 		
 		for(int i = 0; i < nbTopologies; i++){
+			HashMap<Integer, Double> avgDataset = new HashMap<>();
+			HashMap<Integer, Double> minDataset = new HashMap<>();
+			HashMap<Integer, Double> maxDataset = new HashMap<>();
+			
 			String topName = this.topologies.get(i);
 			Path path = Paths.get(this.datasetDirectories.get(i) + "/" + category + "/"
 					+ component + "_" + dimension + "_" + this.rootDirectories.get(i) + ".csv");

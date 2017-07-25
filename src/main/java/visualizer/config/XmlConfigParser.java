@@ -59,6 +59,11 @@ public class XmlConfigParser {
 	private Integer axisFontSize;
 	private Integer legendFontSize;
 	
+	/*Chart selection*/
+	private boolean showAvg;
+	private boolean showMax;
+	private boolean showMin;
+	
 	public XmlConfigParser(String filename) throws ParserConfigurationException, SAXException, IOException{
 		this.filename = filename;
 		this.factory = DocumentBuilderFactory.newInstance();
@@ -361,6 +366,48 @@ public class XmlConfigParser {
 		this.legendFontSize = legendFontSize;
 	}
 
+	/**
+	 * @return the showAvg
+	 */
+	public boolean isShowAvg() {
+		return showAvg;
+	}
+
+	/**
+	 * @param showAvg the showAvg to set
+	 */
+	public void setShowAvg(boolean showAvg) {
+		this.showAvg = showAvg;
+	}
+
+	/**
+	 * @return the showMax
+	 */
+	public boolean isShowMax() {
+		return showMax;
+	}
+
+	/**
+	 * @param showMax the showMax to set
+	 */
+	public void setShowMax(boolean showMax) {
+		this.showMax = showMax;
+	}
+
+	/**
+	 * @return the showMin
+	 */
+	public boolean isShowMin() {
+		return showMin;
+	}
+
+	/**
+	 * @param showMin the showMin to set
+	 */
+	public void setShowMin(boolean showMin) {
+		this.showMin = showMin;
+	}
+
 	public void initParameters() {
 		Document doc = this.getDocument();
 		final Element parameters = (Element) doc.getElementsByTagName(NodeNames.PARAM.toString()).item(0);
@@ -424,5 +471,11 @@ public class XmlConfigParser {
 		this.setAxisFontSize(Integer.parseInt(axisFontSize.item(0).getTextContent()));
 		final NodeList legendFontSize = parameters.getElementsByTagName(NodeNames.LGDSIZE.toString());
 		this.setLegendFontSize(Integer.parseInt(legendFontSize.item(0).getTextContent()));
+		final NodeList showAvg = parameters.getElementsByTagName(NodeNames.SHOWAVG.toString());
+		this.setShowAvg(Boolean.parseBoolean(showAvg.item(0).getTextContent()));
+		final NodeList showMin = parameters.getElementsByTagName(NodeNames.SHOWMIN.toString());
+		this.setShowMin(Boolean.parseBoolean(showMin.item(0).getTextContent()));
+		final NodeList showMax = parameters.getElementsByTagName(NodeNames.SHOWMAX.toString());
+		this.setShowMax(Boolean.parseBoolean(showMax.item(0).getTextContent()));
 	}
 }

@@ -30,7 +30,10 @@ public enum NodeNames {
 	FONT("font"),
 	TTLSIZE("title_fontsize"),
 	AXSIZE("axis_fontsize"),
-	LGDSIZE("legend_fontsize");
+	LGDSIZE("legend_fontsize"),
+	SHOWAVG("show_average"),
+	SHOWMIN("show_min"),
+	SHOWMAX("show_max");
 	
 	private String name = "";
 	
