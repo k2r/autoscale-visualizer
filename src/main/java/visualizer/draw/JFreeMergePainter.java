@@ -71,6 +71,7 @@ public class JFreeMergePainter implements IPainter {
 	//private static final String BOLT_CAPACITY = "bolt_capacity";
 	//private static final String BOLT_ACTIVITY = "bolt_activity";
 	private static final String BOLT_CPU = "bolt_cpu";
+	private static final String BOLT_STD_CPU = "bolt_stdDev_cpu";
 	private static final String BOLT_REBAL = "bolt_rebalancing";
 	private static final String BOLT_PENDING = "bolt_pending";
 	
@@ -1195,6 +1196,56 @@ public class JFreeMergePainter implements IPainter {
 		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTPEND.toString());
 		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTPEND.toString());
 		drawXYSeries(dataToPlot, records, BOLT_PENDING, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
+	}
+
+	@Override
+	public void drawBoltStdDevCpuUsage(String component) {
+		HashMap<String, HashMap<Integer, Double>> dataset = this.source.getBoltCpuStdDev(component);
+		ArrayList<String> records = new ArrayList<>();
+		final XYSeriesCollection dataToPlot = new XYSeriesCollection();
+		ArrayList<String> topologies = new ArrayList<>();
+		for(String topology : dataset.keySet()){
+			if(!topology.endsWith("_MIN") && !topology.endsWith("_MAX")){
+				topologies.add(topology);
+			}
+		}
+		Collections.sort(topologies);
+		for(String topology : topologies){
+			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
+			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
+			HashMap<Integer, Double> avgData = dataset.get(topology);
+			final XYSeries minSerie = new XYSeries(topology + "_MIN" + "." + component);
+			final XYSeries maxSerie = new XYSeries(topology + "_MAX" + "." + component);
+			final XYSeries avgSerie = new XYSeries(topology + "." + component);
+			records.add("timestamp;avg;min;max");
+			Set<Integer> timestamps = avgData.keySet();
+			for(Integer timestamp : timestamps){
+				Double minValue = minData.get(timestamp);
+				Double maxValue = maxData.get(timestamp);
+				Double avgValue = avgData.get(timestamp);
+				minSerie.add(timestamp, minValue);
+				maxSerie.add(timestamp, maxValue);
+				avgSerie.add(timestamp, avgValue);
+				records.add(timestamp + ";" + avgValue + ";" + minValue + ";" + maxValue + ";");
+			}
+			boolean showAvg = this.getConfigParser().isShowAvg();
+			boolean showMin = this.getConfigParser().isShowMin();
+			boolean showMax = this.getConfigParser().isShowMax();
+			
+			if(showAvg){
+				dataToPlot.addSeries(avgSerie);
+			}
+			if(showMin){
+				dataToPlot.addSeries(minSerie);
+			}
+			if(showMax){
+				dataToPlot.addSeries(maxSerie);			
+			}	
+		}
+		String title = this.labelParser.getTitle(LabelNames.BOLTSTDCPU.toString());
+		String xAxisLabel = this.labelParser.getXAxisLabel(LabelNames.BOLTSTDCPU.toString());
+		String yAxisLabel = this.labelParser.getYAxisLabel(LabelNames.BOLTSTDCPU.toString());
+		drawXYSeries(dataToPlot, records, BOLT_STD_CPU, CAT_BOLT, title + " " + component, xAxisLabel, yAxisLabel, component);
 	}
 
 }

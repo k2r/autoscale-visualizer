@@ -74,6 +74,7 @@ public class Main {
 						painter.drawBoltCpuUsage(bolt);
 						painter.drawBoltRebalancing(bolt);
 						painter.drawBoltPending(bolt);
+						painter.drawBoltStdDevCpuUsage(bolt);
 					}
 					System.out.println("Benchmark extracted and prepared for visualization!");
 				} catch (ClassNotFoundException | SQLException e) {
@@ -109,6 +110,7 @@ public class Main {
 					painter.drawBoltCpuUsage(bolt);
 					painter.drawBoltRebalancing(bolt);
 					painter.drawBoltPending(bolt);
+					painter.drawBoltStdDevCpuUsage(bolt);
 				}
 				System.out.println("Benchmarks comparison prepared for visualization!");
 			}
@@ -142,6 +144,7 @@ public class Main {
 						painter.drawBoltCpuUsage(bolt);
 						painter.drawBoltRebalancing(bolt);
 						painter.drawBoltPending(bolt);
+						painter.drawBoltStdDevCpuUsage(bolt);
 					}
 					System.out.println("Benchmark extracted and prepared for visualization!");
 				} catch (ClassNotFoundException | SQLException e) {
@@ -177,6 +180,7 @@ public class Main {
 					painter.drawBoltCpuUsage(bolt);
 					painter.drawBoltRebalancing(bolt);
 					painter.drawBoltPending(bolt);
+					painter.drawBoltStdDevCpuUsage(bolt);
 				}
 				System.out.println("Benchmarks comparison prepared for visualization!");
 			}

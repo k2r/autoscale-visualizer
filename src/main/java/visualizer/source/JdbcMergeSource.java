@@ -876,4 +876,9 @@ public class JdbcMergeSource implements ISource {
 	public HashMap<String, HashMap<Integer, Double>> getBoltRebalancing(String component) {
 		return getBoltAggregatedInfo(TABLE_BOLT, component, "COUNT(DISTINCT ", COL_START_TASK);
 	}
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getBoltCpuStdDev(String component) {
+		return getBoltAggregatedInfo(TABLE_BOLT, component, "STD(", COL_CPU);
+	}
 }

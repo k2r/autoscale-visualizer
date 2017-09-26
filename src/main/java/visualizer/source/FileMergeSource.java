@@ -42,6 +42,7 @@ public class FileMergeSource implements ISource {
 	private static final String BOLT_CAPACITY = "bolt_capacity";
 	private static final String BOLT_ACTIVITY = "bolt_activity";
 	private static final String BOLT_CPU = "bolt_cpu";
+	private static final String BOLT_STD_CPU = "bolt_stdDev_cpu";
 	private static final String BOLT_REBAL = "bolt_rebalancing";
 	private static final String BOLT_PENDING = "bolt_pending";
 	
@@ -272,6 +273,12 @@ public class FileMergeSource implements ISource {
 	@Override
 	public HashMap<String, HashMap<Integer, Double>> getBoltRebalancing(String component) {
 		return getMergedSeries(CAT_BOLT, BOLT_REBAL, "Unable to merge bolt " + component + " rebalancing", component);
+	}
+
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getBoltCpuStdDev(String component) {
+		return getMergedSeries(CAT_BOLT, BOLT_STD_CPU, "Unable to merge bolt " + component + " standard deviation of cpu usage", component);
 	}
 
 }

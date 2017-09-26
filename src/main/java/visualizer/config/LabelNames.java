@@ -25,6 +25,7 @@ public enum LabelNames {
 	BOLTCAP("bolt_capacity"),
 	BOLTACT("bolt_activity"),
 	BOLTCPU("bolt_cpu"),
+	BOLTSTDCPU("bolt_std_dev_cpu"),
 	BOLTREBAL("bolt_rebalancing"),
 	BOLTPEND("bolt_pending");
 	
@@ -64,6 +65,7 @@ public enum LabelNames {
 		topics.add(LabelNames.BOLTCAP.toString());
 		topics.add(LabelNames.BOLTACT.toString());
 		topics.add(LabelNames.BOLTCPU.toString());
+		topics.add(LabelNames.BOLTSTDCPU.toString());
 		topics.add(LabelNames.BOLTREBAL.toString());
 		topics.add(LabelNames.BOLTPEND.toString());
 		return topics;

@@ -795,4 +795,28 @@ public class JdbcSource implements ISource {
 		alldata.put(this.topology, dataSet);
 		return alldata;
 	}
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getBoltCpuStdDev(String component) {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		HashMap<Integer, Double> dataSet = new HashMap<>();
+		String query = "SELECT " + COL_TIMESTAMP + ", STD(" + COL_CPU + ")" +
+				" FROM " + TABLE_BOLT + 
+				" WHERE " + COL_COMPONENT + " = '" + component + "'" + 
+				" GROUP BY " + COL_TIMESTAMP + ", " + COL_TOPOLOGY + ", " + COL_COMPONENT ;
+		Statement statement;
+		try {
+			statement = this.connection.createStatement();
+			ResultSet result = statement.executeQuery(query);
+			while(result.next()){
+				Integer timestamp = result.getInt(COL_TIMESTAMP) - this.referenceTimestamp;
+				Double boltStdCPU = result.getDouble("STD(" + COL_CPU + ")");
+				dataSet.put(timestamp, boltStdCPU);
+			}
+		} catch (SQLException e) {
+			logger.severe("Unable to recover standard deviation of cpu usage for bolt " + component + " because " + e);
+		}
+		alldata.put(this.topology, dataSet);
+		return alldata;
+	}
 }

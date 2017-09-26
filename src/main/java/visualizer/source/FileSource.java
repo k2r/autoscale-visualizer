@@ -42,6 +42,7 @@ public class FileSource implements ISource {
 	private static final String BOLT_CAPACITY = "bolt_capacity";
 	private static final String BOLT_ACTIVITY = "bolt_activity";
 	private static final String BOLT_CPU = "bolt_cpu";
+	private static final String BOLT_STD_CPU = "bolt_stdDev_cpu";
 	private static final String BOLT_REBAL = "bolt_rebalancing";
 	private static final String BOLT_PENDING = "bolt_pending";
 	
@@ -601,6 +602,31 @@ public class FileSource implements ISource {
 					alldata.put(this.topologies.get(i), dataset);
 				} catch (IOException e) {
 					logger.severe("Unable to retrieve " + this.topologies.get(i) + "." + component + " pending tuples because " + e);
+				}
+			}
+		}
+		return alldata;
+	}
+
+
+	@Override
+	public HashMap<String, HashMap<Integer, Double>> getBoltCpuStdDev(String component) {
+		HashMap<String, HashMap<Integer, Double>> alldata = new HashMap<>();
+		int nbTopologies = topologies.size();
+		for(int i = 0; i < nbTopologies; i++){
+			Path boltStdCpu = Paths.get(this.datasetDirectories.get(i) + "/" + CAT_BOLT + "/" 
+					 + component + "_" + BOLT_STD_CPU + "_" + this.rootDirectories.get(i) + ".csv");
+			if(Files.exists(boltStdCpu)){
+				try {
+					HashMap<Integer, Double> dataset = new HashMap<>();
+					ArrayList<String> data = (ArrayList<String>) Files.readAllLines(boltStdCpu, Charset.defaultCharset());
+					for(int j = 1; j < data.size(); j++){
+						String[] line = data.get(j).split(";");
+						dataset.put(Integer.parseInt(line[0]), Double.parseDouble(line[1]));
+					}
+					alldata.put(this.topologies.get(i), dataset);
+				} catch (IOException e) {
+					logger.severe("Unable to retrieve " + this.topologies.get(i) + "." + component + " standard deviation of cpu usage because " + e);
 				}
 			}
 		}

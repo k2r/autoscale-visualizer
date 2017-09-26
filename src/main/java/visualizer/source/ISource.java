@@ -141,4 +141,11 @@ public interface ISource {
 	 * @return
 	 */
 	public HashMap<String, HashMap<Integer, Double>> getBoltRebalancing(String component);
+	
+	/**
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public HashMap<String, HashMap<Integer, Double>> getBoltCpuStdDev(String component);
 }

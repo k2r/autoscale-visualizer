@@ -119,4 +119,10 @@ public interface IPainter {
 	 * @param component
 	 */
 	public void drawBoltPending(String component);
+	
+	/**
+	 * 
+	 * @param component
+	 */
+	public void drawBoltStdDevCpuUsage(String component);
 }
