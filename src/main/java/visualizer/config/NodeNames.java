@@ -33,7 +33,9 @@ public enum NodeNames {
 	LGDSIZE("legend_fontsize"),
 	SHOWAVG("show_average"),
 	SHOWMIN("show_min"),
-	SHOWMAX("show_max");
+	SHOWMAX("show_max"),
+	MINTIME("min_timestamp"),
+	MAXTIME("max_timestamp");
 	
 	private String name = "";
 	

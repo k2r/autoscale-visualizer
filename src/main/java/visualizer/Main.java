@@ -42,6 +42,8 @@ public class Main {
 			configParser.initParameters();
 			labelParser = new LabelParser(configParser.getLanguage());
 			labelParser.initParameters();
+			Integer minTimestamp = configParser.getMinTimestamp();
+			Integer maxTimestamp = configParser.getMaxTimestamp();
 			String command = configParser.getCommand();
 			if(command.equalsIgnoreCase("ANALYZE")){
 				String topology = configParser.getTopologies().get(0);
@@ -89,7 +91,7 @@ public class Main {
 					topologyName += " " + shortName;
 				}
 				ArrayList<Integer> varCodes = configParser.getStreamTypes();
-				FileSource source = new FileSource(topologies, varCodes);
+				FileSource source = new FileSource(topologies, varCodes, minTimestamp, maxTimestamp);
 				IStructure structure = new TopologyStructure(configParser.getEdges());
 				JFreePainter painter = new JFreePainter(topologyName, varCodes.get(0), source, configParser, labelParser);
 				painter.drawTopologyInput();
@@ -122,7 +124,7 @@ public class Main {
 				String dbUser = configParser.getDb_user();
 				String dbPwd = configParser.getDb_pwd();
 				try {
-					JdbcMergeSource jdbcMergeSource = new JdbcMergeSource(dbHost, dbName, dbUser, dbPwd, topology);
+					JdbcMergeSource jdbcMergeSource = new JdbcMergeSource(dbHost, dbName, dbUser, dbPwd, topology, minTimestamp, maxTimestamp);
 					IStructure structure = new TopologyStructure(configParser.getEdges());
 					JFreeMergePainter painter = new JFreeMergePainter(topology, varCode, jdbcMergeSource, configParser, labelParser);
 
@@ -159,7 +161,7 @@ public class Main {
 					topologyName += " " + shortName;
 				}
 				ArrayList<Integer> varCodes = configParser.getStreamTypes();
-				FileMergeSource fileMergeSource = new FileMergeSource(topologies, varCodes);
+				FileMergeSource fileMergeSource = new FileMergeSource(topologies, varCodes, minTimestamp, maxTimestamp);
 				IStructure structure = new TopologyStructure(configParser.getEdges());
 				JFreeMergePainter painter = new JFreeMergePainter(topologyName, varCodes.get(0), fileMergeSource, configParser, labelParser);
 				painter.drawTopologyInput();

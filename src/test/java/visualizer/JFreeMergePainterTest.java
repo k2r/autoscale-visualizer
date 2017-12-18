@@ -174,7 +174,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawTopologyInput() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -193,7 +193,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawTopologyThroughput() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -212,7 +212,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawTopologyLosses() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -231,7 +231,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawTopologyLatency() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -250,7 +250,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawTopologyNbExecutors() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -269,7 +269,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawTopologyNbSupervisors() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -288,7 +288,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawTopologyNbWorkers() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -307,7 +307,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawTopologyTraffic() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -327,7 +327,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawBoltInput() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -349,7 +349,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawBoltExecuted() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -371,7 +371,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawBoltOutputs() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -393,7 +393,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawBoltLatency() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -415,7 +415,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawBoltCpuUsage() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -437,7 +437,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawBoltRebalancing() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());
@@ -459,7 +459,7 @@ public class JFreeMergePainterTest {
 	 */
 	@Test
 	public void testDrawBoltPending() throws ClassNotFoundException, SQLException, ParserConfigurationException, SAXException, IOException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		XmlConfigParser cp = new XmlConfigParser("parameters.xml");
 		cp.initParameters();
 		LabelParser lp = new LabelParser(cp.getLanguage());

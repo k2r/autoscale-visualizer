@@ -25,6 +25,9 @@ public class FileMergeSource implements ISource {
 	private ArrayList<String> rootDirectories;
 	private ArrayList<String> datasetDirectories;
 	
+	private Integer minTimestamp;
+	private Integer maxTimestamp;
+	
 	private static final String TOPOLOGY_INPUT = "topology_input";
 	private static final String TOPOLOGY_THROUGHPUT = "topology_throughput";
 	private static final String TOPOLOGY_DEPHASE = "topology_dephase";
@@ -51,7 +54,7 @@ public class FileMergeSource implements ISource {
 	
 	private static final Logger logger = Logger.getLogger("FileMergeSource");
 	
-	public FileMergeSource(ArrayList<String> topologies, ArrayList<Integer> varCodes) {
+	public FileMergeSource(ArrayList<String> topologies, ArrayList<Integer> varCodes, Integer minTimestamp, Integer maxTimestamp) {
 		this.topologies = topologies;
 		this.variations = new ArrayList<>();
 		for(int i = 0; i < varCodes.size(); i++){
@@ -83,6 +86,8 @@ public class FileMergeSource implements ISource {
 			this.rootDirectories.add(this.topologies.get(i) + "_" + this.variations.get(0));
 			this.datasetDirectories.add(this.rootDirectories.get(i) + "/datasets");
 		}
+		this.minTimestamp = minTimestamp;
+		this.maxTimestamp = maxTimestamp;
 	}
 	
 	
@@ -107,9 +112,11 @@ public class FileMergeSource implements ISource {
 						Double avgValue = Double.parseDouble(line[1]);
 						Double minValue = Double.parseDouble(line[2]);
 						Double maxValue = Double.parseDouble(line[3]);
-						avgDataset.put(timestamp, avgValue);
-						minDataset.put(timestamp, minValue);
-						maxDataset.put(timestamp, maxValue);
+						if(this.minTimestamp <= timestamp && this.maxTimestamp > timestamp){
+							avgDataset.put(timestamp, avgValue);
+							minDataset.put(timestamp, minValue);
+							maxDataset.put(timestamp, maxValue);
+						}
 					}
 					alldata.put(topName, avgDataset);
 					alldata.put(topName + "_MIN", minDataset);

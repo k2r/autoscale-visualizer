@@ -217,7 +217,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 10.0);
 		expected.put(2, 10.0);
@@ -241,7 +241,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 5.0);
 		expected.put(2, 5.0);
@@ -264,7 +264,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 0.0);
 		expected.put(2, 5.0);
@@ -286,7 +286,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 10.0);
 		expected.put(2, 22.0);
@@ -308,7 +308,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 6.0);
 		expected.put(2, 7.0);
@@ -330,7 +330,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 3.0);
 		expected.put(2, 3.0);
@@ -352,7 +352,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 5.0);
 		expected.put(2, 6.0);
@@ -374,7 +374,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 2.0);
 		expected.put(2, 0.0);
@@ -403,7 +403,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expected = new HashMap<>();
 		expected.put(1, 13.0);
 		expected.put(2, 25.0);
@@ -428,7 +428,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
 		TopologyStructure structure = new TopologyStructure(parser.getEdges());
@@ -461,7 +461,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 10.0);
 		expectedB.put(2, 35.0);
@@ -483,7 +483,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 8.0);
 		expectedB.put(2, 20.0);
@@ -505,7 +505,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 3.0);
 		expectedB.put(2, 3.5);
@@ -527,7 +527,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 20.0);
 		expectedB.put(2, 40.0);
@@ -549,7 +549,7 @@ public class FileSourceTest {
 		varCodes.add(1);
 		varCodes.add(1);
 		
-		FileSource source = new FileSource(topologies, varCodes);
+		FileSource source = new FileSource(topologies, varCodes, 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedB = new HashMap<>();
 		expectedB.put(1, 1.0);
 		expectedB.put(2, 2.0);

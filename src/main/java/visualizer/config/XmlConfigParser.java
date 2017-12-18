@@ -59,10 +59,12 @@ public class XmlConfigParser {
 	private Integer axisFontSize;
 	private Integer legendFontSize;
 	
-	/*Chart selection*/
+	/*Chart selection and filtering*/
 	private boolean showAvg;
 	private boolean showMax;
 	private boolean showMin;
+	private Integer minTimestamp;
+	private Integer maxTimestamp;
 	
 	public XmlConfigParser(String filename) throws ParserConfigurationException, SAXException, IOException{
 		this.filename = filename;
@@ -408,6 +410,34 @@ public class XmlConfigParser {
 		this.showMin = showMin;
 	}
 
+	/**
+	 * @return the minTimestamp
+	 */
+	public Integer getMinTimestamp() {
+		return minTimestamp;
+	}
+
+	/**
+	 * @param minTimestamp the minTimestamp to set
+	 */
+	public void setMinTimestamp(Integer minTimestamp) {
+		this.minTimestamp = minTimestamp;
+	}
+
+	/**
+	 * @return the maxTimestamp
+	 */
+	public Integer getMaxTimestamp() {
+		return maxTimestamp;
+	}
+
+	/**
+	 * @param maxTimestamp the maxTimestamp to set
+	 */
+	public void setMaxTimestamp(Integer maxTimestamp) {
+		this.maxTimestamp = maxTimestamp;
+	}
+
 	public void initParameters() {
 		Document doc = this.getDocument();
 		final Element parameters = (Element) doc.getElementsByTagName(NodeNames.PARAM.toString()).item(0);
@@ -477,5 +507,9 @@ public class XmlConfigParser {
 		this.setShowMin(Boolean.parseBoolean(showMin.item(0).getTextContent()));
 		final NodeList showMax = parameters.getElementsByTagName(NodeNames.SHOWMAX.toString());
 		this.setShowMax(Boolean.parseBoolean(showMax.item(0).getTextContent()));
+		final NodeList minTime = parameters.getElementsByTagName(NodeNames.MINTIME.toString());
+		this.setMinTimestamp(Integer.parseInt(minTime.item(0).getTextContent()));
+		final NodeList maxTime = parameters.getElementsByTagName(NodeNames.MAXTIME.toString());
+		this.setMaxTimestamp(Integer.parseInt(maxTime.item(0).getTextContent()));
 	}
 }

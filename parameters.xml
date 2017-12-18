@@ -50,8 +50,10 @@
 	<axis_fontsize>24</axis_fontsize>
 	<legend_fontsize>14</legend_fontsize>
 	
-	<!--Merged sub-charts selection-->
+	<!--Merged sub-charts selection and filtering-->
 	<show_average>true</show_average>
 	<show_min>false</show_min>
 	<show_max>true</show_max>
+	<min_timestamp>0</min_timestamp>
+	<max_timestamp>15</max_timestamp>
 </parameters>

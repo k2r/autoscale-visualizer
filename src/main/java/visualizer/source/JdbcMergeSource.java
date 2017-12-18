@@ -27,6 +27,8 @@ public class JdbcMergeSource implements ISource {
 	private String topology;
 	private final Connection connection;
 	 
+	private Integer minTimestamp;
+	private Integer maxTimestamp;
 	private final static Integer STEP = 10;
 	
 	private final static String TABLE_SPOUT = "all_time_spouts_stats";
@@ -53,8 +55,11 @@ public class JdbcMergeSource implements ISource {
 	
 	private static final Logger logger = Logger.getLogger("JdbcMergeSource");
 	
-	public JdbcMergeSource(String dbHost, String dbName, String dbUser, String dbPwd, String topology) throws ClassNotFoundException, SQLException {
+	public JdbcMergeSource(String dbHost, String dbName, String dbUser, String dbPwd, String topology, Integer minTimestamp, Integer maxTimestamp) throws ClassNotFoundException, SQLException {
 		this.topology = topology;
+		this.minTimestamp = minTimestamp;
+		this.maxTimestamp = maxTimestamp;
+		
 		String jdbcDriver = "com.mysql.jdbc.Driver";
 		String dbUrl = "jdbc:mysql://"+ dbHost +"/" + dbName;
 		Class.forName(jdbcDriver);
@@ -78,24 +83,24 @@ public class JdbcMergeSource implements ISource {
 				" GROUP BY " + COL_TOPOLOGY + ", " + COL_TIMESTAMP; 
 		Statement statement;
 		try {
-			Integer timestamp = 0;
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
 			String prevTopology = "";
 			while(result.next()){
-				String currTopology = result.getString(COL_TOPOLOGY);
-				if(!prevTopology.equalsIgnoreCase(currTopology)){
-					if(!prevTopology.equalsIgnoreCase("")){
-						iterations.put(prevTopology, iteration);
-						iteration = new HashMap<>();
+				Integer timestamp = (result.getInt(COL_TIMESTAMP) / STEP) * STEP;
+				if(this.minTimestamp <= timestamp && this.maxTimestamp > timestamp){
+					String currTopology = result.getString(COL_TOPOLOGY);
+					if(!prevTopology.equalsIgnoreCase(currTopology)){
+						if(!prevTopology.equalsIgnoreCase("")){
+							iterations.put(prevTopology, iteration);
+							iteration = new HashMap<>();
+						}
+						prevTopology = currTopology;
 					}
-					prevTopology = currTopology;
-					timestamp = 0;
+					Double targetValue = result.getDouble(aggregate + targetColumn + ")");
+					iteration.put(timestamp, targetValue);
+					timestamps.add(timestamp);
 				}
-				Double targetValue = result.getDouble(aggregate + targetColumn + ")");
-				iteration.put(timestamp, targetValue);
-				timestamps.add(timestamp);
-				timestamp += STEP;
 			}
 			iterations.put(prevTopology, iteration);
 		} catch (SQLException e) {
@@ -134,11 +139,11 @@ public class JdbcMergeSource implements ISource {
 				" GROUP BY " + COL_TOPOLOGY + ", " + COL_TIMESTAMP + ", " + COL_COMPONENT; 
 		Statement statement;
 		try {
-			Integer timestamp = 0;
 			statement = this.connection.createStatement();
 			ResultSet result = statement.executeQuery(query);
 			String prevTopology = "";
 			while(result.next()){
+				Integer timestamp = (result.getInt(COL_TIMESTAMP) / STEP) * STEP;
 				String currTopology = result.getString(COL_TOPOLOGY);
 				if(!prevTopology.equalsIgnoreCase(currTopology)){
 					if(!prevTopology.equalsIgnoreCase("")){
@@ -146,12 +151,10 @@ public class JdbcMergeSource implements ISource {
 						iteration = new HashMap<>();
 					}
 					prevTopology = currTopology;
-					timestamp = 0;
 				}
 				Double targetValue = result.getDouble(aggregate + targetColumn + ")");
 				iteration.put(timestamp, targetValue);
 				timestamps.add(timestamp);
-				timestamp += STEP;
 			}
 			iterations.put(prevTopology, iteration);
 		} catch (SQLException e) {

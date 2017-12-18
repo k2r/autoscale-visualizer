@@ -164,23 +164,26 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetTopologyInput() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedMin = new HashMap<>();
-		expectedMin.put(0, 10.0);
-		expectedMin.put(10, 10.0);
-		expectedMin.put(20, 15.0);
-		HashMap<Integer, Double> expectedAvg = new HashMap<>();
-		expectedAvg.put(0, 15.0);
-		expectedAvg.put(10, 15.0);
-		expectedAvg.put(20, 20.0);
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMax = new HashMap<>();
-		expectedMax.put(0, 20.0);
-		expectedMax.put(10, 20.0);
-		expectedMax.put(20, 25.0);
+		expectedMax.put(0, 25.0);
+		expectedMax.put(110, 15.0);
+		expectedMax.put(230, 15.0);
+		expectedMax.put(340, 20.0);
+		HashMap<Integer, Double> expectedAvg = new HashMap<>();
+		expectedAvg.put(0, 20.0);
+		expectedAvg.put(110, 15.0);
+		expectedAvg.put(230, 15.0);
+		expectedAvg.put(340, 20.0);
+		HashMap<Integer, Double> expectedMin = new HashMap<>();
+		expectedMin.put(0, 15.0);
+		expectedMin.put(110, 15.0);
+		expectedMin.put(230, 15.0);
+		expectedMin.put(340, 20.0);
 		HashMap<String, HashMap<Integer, Double>> expected = new HashMap<>();
 		expected.put("topologyTest", expectedAvg);
-		expected.put("topologyTest_MIN", expectedMin);
 		expected.put("topologyTest_MAX", expectedMax);
+		expected.put("topologyTest_MIN", expectedMin);
 		
 		assertEquals(expected, source.getTopologyInput());
 	}
@@ -192,23 +195,26 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetTopologyThroughput() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedMin = new HashMap<>();
-		expectedMin.put(0, 5.0);
-		expectedMin.put(10, 5.0);
-		expectedMin.put(20, 2.0);
-		HashMap<Integer, Double> expectedAvg = new HashMap<>();
-		expectedAvg.put(0, 10.0);
-		expectedAvg.put(10, 10.0);
-		expectedAvg.put(20, 7.0);
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMax = new HashMap<>();
-		expectedMax.put(0, 15.0);
-		expectedMax.put(10, 15.0);
-		expectedMax.put(20, 12.0);
+		expectedMax.put(0, 12.0);
+		expectedMax.put(110, 10.0);
+		expectedMax.put(230, 10.0);
+		expectedMax.put(340, 7.0);
+		HashMap<Integer, Double> expectedAvg = new HashMap<>();
+		expectedAvg.put(0, 7.0);
+		expectedAvg.put(110, 10.0);
+		expectedAvg.put(230, 10.0);
+		expectedAvg.put(340, 7.0);
+		HashMap<Integer, Double> expectedMin = new HashMap<>();
+		expectedMin.put(0, 2.0);
+		expectedMin.put(110, 10.0);
+		expectedMin.put(230, 10.0);
+		expectedMin.put(340, 7.0);
 		HashMap<String, HashMap<Integer, Double>> expected = new HashMap<>();
 		expected.put("topologyTest", expectedAvg);
-		expected.put("topologyTest_MIN", expectedMin);
 		expected.put("topologyTest_MAX", expectedMax);
+		expected.put("topologyTest_MIN", expectedMin);
 		
 		assertEquals(expected, source.getTopologyThroughput());
 	}
@@ -220,23 +226,26 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetTopologyDephase() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedMin = new HashMap<>();
-		expectedMin.put(0, 0.0);
-		expectedMin.put(10, 5.0);
-		expectedMin.put(20, 1.0);
-		HashMap<Integer, Double> expectedAvg = new HashMap<>();
-		expectedAvg.put(0, 5.0);
-		expectedAvg.put(10, 10.0);
-		expectedAvg.put(20, 6.0);
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMax = new HashMap<>();
-		expectedMax.put(0, 10.0);
-		expectedMax.put(10, 15.0);
-		expectedMax.put(20, 11.0);
+		expectedMax.put(0, 11.0);
+		expectedMax.put(110, 5.0);
+		expectedMax.put(230, 10.0);
+		expectedMax.put(340, 6.0);
+		HashMap<Integer, Double> expectedAvg = new HashMap<>();
+		expectedAvg.put(0, 6.0);
+		expectedAvg.put(110, 5.0);
+		expectedAvg.put(230, 10.0);
+		expectedAvg.put(340, 6.0);
+		HashMap<Integer, Double> expectedMin = new HashMap<>();
+		expectedMin.put(0, 1.0);
+		expectedMin.put(110, 5.0);
+		expectedMin.put(230, 10.0);
+		expectedMin.put(340, 6.0);
 		HashMap<String, HashMap<Integer, Double>> expected = new HashMap<>();
 		expected.put("topologyTest", expectedAvg);
-		expected.put("topologyTest_MIN", expectedMin);
 		expected.put("topologyTest_MAX", expectedMax);
+		expected.put("topologyTest_MIN", expectedMin);
 		
 		assertEquals(expected, source.getTopologyDephase());
 	}
@@ -248,23 +257,26 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetTopologyLatency() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
-		HashMap<Integer, Double> expectedMin = new HashMap<>();
-		expectedMin.put(0, 10.0);
-		expectedMin.put(10, 22.0);
-		expectedMin.put(20, 8.0);
-		HashMap<Integer, Double> expectedAvg = new HashMap<>();
-		expectedAvg.put(0, 15.0);
-		expectedAvg.put(10, 27.0);
-		expectedAvg.put(20, 13.0);
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMax = new HashMap<>();
-		expectedMax.put(0, 20.0);
-		expectedMax.put(10, 32.0);
-		expectedMax.put(20, 18.0);
+		expectedMax.put(0, 18.0);
+		expectedMax.put(110, 15.0);
+		expectedMax.put(230, 27.0);
+		expectedMax.put(340, 13.0);
+		HashMap<Integer, Double> expectedAvg = new HashMap<>();
+		expectedAvg.put(0, 13.0);
+		expectedAvg.put(110, 15.0);
+		expectedAvg.put(230, 27.0);
+		expectedAvg.put(340, 13.0);
+		HashMap<Integer, Double> expectedMin = new HashMap<>();
+		expectedMin.put(0, 8.0);
+		expectedMin.put(110, 15.0);
+		expectedMin.put(230, 27.0);
+		expectedMin.put(340, 13.0);
 		HashMap<String, HashMap<Integer, Double>> expected = new HashMap<>();
 		expected.put("topologyTest", expectedAvg);
-		expected.put("topologyTest_MIN", expectedMin);
 		expected.put("topologyTest_MAX", expectedMax);
+		expected.put("topologyTest_MIN", expectedMin);
 		
 		assertEquals(expected, source.getTopologyLatency());
 	}
@@ -276,7 +288,7 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetTopologyNbExecutors() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
 		expectedMin.put(0, 6.0);
 		expectedMin.put(10, 7.0);
@@ -304,7 +316,7 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetTopologyNbSupervisors() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
 		expectedMin.put(0, 3.0);
 		expectedMin.put(10, 3.0);
@@ -332,7 +344,7 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetTopologyNbWorkers() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
 		expectedMin.put(0, 5.0);
 		expectedMin.put(10, 6.0);
@@ -366,7 +378,7 @@ public class JdbcMergeSourceTest {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
 		TopologyStructure structure = new TopologyStructure(parser.getEdges());
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
 		expectedMin.put(0, 13.0);
 		expectedMin.put(10, 25.0);
@@ -400,7 +412,7 @@ public class JdbcMergeSourceTest {
 		XmlConfigParser parser = new XmlConfigParser("parameters.xml");
 		parser.initParameters();
 		TopologyStructure structure = new TopologyStructure(parser.getEdges());
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
 		expectedMin.put(0, 10.0);
 		expectedMin.put(10, 10.0);
@@ -428,19 +440,22 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetBoltExecuted() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
-		expectedMin.put(0, 10.0);
-		expectedMin.put(10, 35.0);
-		expectedMin.put(20, 5.0);
+		expectedMin.put(0, 5.0);
+		expectedMin.put(110, 15.0);
+		expectedMin.put(230, 45.0);
+		expectedMin.put(340, 10.0);
 		HashMap<Integer, Double> expectedAvg = new HashMap<>();
-		expectedAvg.put(0, 15.0);
-		expectedAvg.put(10, 45.0);
-		expectedAvg.put(20, 10.0);
+		expectedAvg.put(0, 10.0);
+		expectedAvg.put(110, 15.0);
+		expectedAvg.put(230, 45.0);
+		expectedAvg.put(340, 10.0);
 		HashMap<Integer, Double> expectedMax = new HashMap<>();
-		expectedMax.put(0, 20.0);
-		expectedMax.put(10, 55.0);
-		expectedMax.put(20, 15.0);
+		expectedMax.put(0, 15.0);
+		expectedMax.put(110, 15.0);
+		expectedMax.put(230, 45.0);
+		expectedMax.put(340, 10.0);
 		HashMap<String, HashMap<Integer, Double>> expected = new HashMap<>();
 		expected.put("topologyTest", expectedAvg);
 		expected.put("topologyTest_MIN", expectedMin);
@@ -456,19 +471,22 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetBoltOutputs() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
-		expectedMin.put(0, 8.0);
-		expectedMin.put(10, 20.0);
-		expectedMin.put(20, 4.0);
+		expectedMin.put(0, 4.0);
+		expectedMin.put(110, 13.0);
+		expectedMin.put(230, 30.0);
+		expectedMin.put(340, 9.0);
 		HashMap<Integer, Double> expectedAvg = new HashMap<>();
-		expectedAvg.put(0, 13.0);
-		expectedAvg.put(10, 30.0);
-		expectedAvg.put(20, 9.0);
+		expectedAvg.put(0, 9.0);
+		expectedAvg.put(110, 13.0);
+		expectedAvg.put(230, 30.0);
+		expectedAvg.put(340, 9.0);
 		HashMap<Integer, Double> expectedMax = new HashMap<>();
-		expectedMax.put(0, 18.0);
-		expectedMax.put(10, 40.0);
-		expectedMax.put(20, 14.0);
+		expectedMax.put(0, 14.0);
+		expectedMax.put(110, 13.0);
+		expectedMax.put(230, 30.0);
+		expectedMax.put(340, 9.0);
 		HashMap<String, HashMap<Integer, Double>> expected = new HashMap<>();
 		expected.put("topologyTest", expectedAvg);
 		expected.put("topologyTest_MIN", expectedMin);
@@ -484,19 +502,22 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetBoltLatency() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
-		expectedMin.put(0, 3.0);
-		expectedMin.put(10, 3.5);
-		expectedMin.put(20, 4.25);
+		expectedMin.put(0, 4.25);
+		expectedMin.put(110, 8.0);
+		expectedMin.put(230, 8.5);
+		expectedMin.put(340, 9.25);
 		HashMap<Integer, Double> expectedAvg = new HashMap<>();
-		expectedAvg.put(0, 8.0);
-		expectedAvg.put(10, 8.5);
-		expectedAvg.put(20, 9.25);
+		expectedAvg.put(0, 9.25);
+		expectedAvg.put(110, 8.0);
+		expectedAvg.put(230, 8.5);
+		expectedAvg.put(340, 9.25);
 		HashMap<Integer, Double> expectedMax = new HashMap<>();
-		expectedMax.put(0, 13.0);
-		expectedMax.put(10, 13.5);
-		expectedMax.put(20, 14.25);
+		expectedMax.put(0, 14.25);
+		expectedMax.put(110, 8.0);
+		expectedMax.put(230, 8.5);
+		expectedMax.put(340, 9.25);
 		HashMap<String, HashMap<Integer, Double>> expected = new HashMap<>();
 		expected.put("topologyTest", expectedAvg);
 		expected.put("topologyTest_MIN", expectedMin);
@@ -512,19 +533,22 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetBoltCpuUsage() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
 		expectedMin.put(0, 20.0);
-		expectedMin.put(10, 40.0);
-		expectedMin.put(20, 20.0);
+		expectedMin.put(110, 25.0);
+		expectedMin.put(230, 50.0);
+		expectedMin.put(340, 25.0);
 		HashMap<Integer, Double> expectedAvg = new HashMap<>();
 		expectedAvg.put(0, 25.0);
-		expectedAvg.put(10, 50.0);
-		expectedAvg.put(20, 25.0);
+		expectedAvg.put(110, 25.0);
+		expectedAvg.put(230, 50.0);
+		expectedAvg.put(340, 25.0);
 		HashMap<Integer, Double> expectedMax = new HashMap<>();
 		expectedMax.put(0, 30.0);
-		expectedMax.put(10, 60.0);
-		expectedMax.put(20, 30.0);
+		expectedMax.put(110, 25.0);
+		expectedMax.put(230, 50.0);
+		expectedMax.put(340, 25.0);
 		HashMap<String, HashMap<Integer, Double>> expected = new HashMap<>();
 		expected.put("topologyTest", expectedAvg);
 		expected.put("topologyTest_MIN", expectedMin);
@@ -540,19 +564,22 @@ public class JdbcMergeSourceTest {
 	 */
 	@Test
 	public void testGetBoltRebalancing() throws ClassNotFoundException, SQLException {
-		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest");
+		JdbcMergeSource source = new JdbcMergeSource("localhost", "autoscale_test", "root", null, "topologyTest", 0, Integer.MAX_VALUE);
 		HashMap<Integer, Double> expectedMin = new HashMap<>();
 		expectedMin.put(0, 1.0);
-		expectedMin.put(10, 2.0);
-		expectedMin.put(20, 1.0);
+		expectedMin.put(110, 1.0);
+		expectedMin.put(230, 2.0);
+		expectedMin.put(340, 1.0);
 		HashMap<Integer, Double> expectedAvg = new HashMap<>();
 		expectedAvg.put(0, 1.0);
-		expectedAvg.put(10, 2.0);
-		expectedAvg.put(20, 1.0);
+		expectedAvg.put(110, 1.0);
+		expectedAvg.put(230, 2.0);
+		expectedAvg.put(340, 1.0);
 		HashMap<Integer, Double> expectedMax = new HashMap<>();
 		expectedMax.put(0, 1.0);
-		expectedMax.put(10, 2.0);
-		expectedMax.put(20, 1.0);
+		expectedMax.put(110, 1.0);
+		expectedMax.put(230, 2.0);
+		expectedMax.put(340, 1.0);
 		HashMap<String, HashMap<Integer, Double>> expected = new HashMap<>();
 		expected.put("topologyTest", expectedAvg);
 		expected.put("topologyTest_MIN", expectedMin);

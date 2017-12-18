@@ -26,6 +26,7 @@ public class JdbcSource implements ISource {
 	private final Connection connection;
 	private int referenceTimestamp;
 	
+	
 	private final static String TABLE_SPOUT = "all_time_spouts_stats";
 	private final static String TABLE_BOLT = "all_time_bolts_stats";
 	private final static String TABLE_STATUS = "topologies_status";
