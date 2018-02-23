@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<parameters>
+	<!--Two possible commands:
+		ANALYZE : it retrieves monitoring from the database for the given topology1
+		COMPARE : after the analysis of two topologies, it creates comparison charts between topologies 1 and 2 and duplicate datasets
+	-->
+	<command>ANALYZE</command>
+	<!--Name of the topology to visualize-->
+	<topology>topologyTest1</topology>
+	<!--Type of stream variation (refer to StreamSim generator for type->variation code matching)-->
+	<stream_type>1</stream_type>
+	
+	<!--Structure of the topology to compute values like network traffic-->
+	<edges>
+		<edge source="A" destination="B"></edge>
+		<edge source="B" destination="C"></edge>
+		<edge source="C" destination="D"></edge>
+		<edge source="C" destination="E"></edge>
+		<edge source="E" destination="F"></edge>
+	</edges>
+	
+	<!--To fulfill (and optionnal add other topology/stream type pairs) only for comparison with first topology-->
+	<topology>topologyTest2</topology>
+	<stream_type>1</stream_type>
+	
+	<topology>topologyTest3</topology>
+	<stream_type>1</stream_type>
+	
+	<!--Parameters to get a connection to the monitoring database-->
+	<db_host>localhost</db_host>
+	<db_name>benchmarks</db_name>
+	<db_user>root</db_user>
+	<db_password></db_password>
+	
+	<!--Language parameter(ENG/FR)-->
+	<language>FR</language>
+	
+	<!--Charts customization-->
+	<draw_shapes>true</draw_shapes>
+	<draw_lines>true</draw_lines>
+	<width>640</width>
+	<height>480</height>
+	<font>Dialog</font>
+	<title_fontsize>28</title_fontsize>
+	<axis_fontsize>24</axis_fontsize>
+	<legend_fontsize>14</legend_fontsize>
+</parameters>
