@@ -36,6 +36,7 @@ public class XmlConfigParser {
 	/*Visualizer global parameters*/
 	private ArrayList<String> topologies;
 	private HashMap<String, String> shortTopNames;
+	private HashMap<String, String> lgdTopNames;
 	private String mergedName;
 	private ArrayList<Integer> streamTypes;
 	
@@ -57,6 +58,7 @@ public class XmlConfigParser {
 	private String font;
 	private Integer titleFontSize;
 	private Integer axisFontSize;
+	private Integer tickFontSize;
 	private Integer legendFontSize;
 	
 	/*Chart selection and filtering*/
@@ -73,6 +75,7 @@ public class XmlConfigParser {
 		this.document = builder.parse(this.getFilename());
 		this.topologies = new ArrayList<>();
 		this.shortTopNames = new HashMap<>();
+		this.lgdTopNames = new HashMap<>();
 		this.streamTypes = new ArrayList<>();
 		this.edges = new ArrayList<>();
 	}
@@ -135,6 +138,20 @@ public class XmlConfigParser {
 	 */
 	public void addShortTopNames(String topology, String shortName) {
 		this.shortTopNames.put(topology, shortName);
+	}
+
+	/**
+	 * @return the lgdTopNames
+	 */
+	public String getLgdTopNames(String topology) {
+		return this.lgdTopNames.get(topology);
+	}
+
+	/**
+	 * @param lgdTopNames the lgdTopNames to set
+	 */
+	public void addLgdTopNames(String topology, String lgdName) {
+		this.lgdTopNames.put(topology, lgdName);
 	}
 
 	/**
@@ -355,6 +372,20 @@ public class XmlConfigParser {
 	}
 
 	/**
+	 * @return the tickFontSize
+	 */
+	public Integer getTickFontSize() {
+		return tickFontSize;
+	}
+
+	/**
+	 * @param tickFontSize the tickFontSize to set
+	 */
+	public void setTickFontSize(Integer tickFontSize) {
+		this.tickFontSize = tickFontSize;
+	}
+
+	/**
 	 * @return the legendFontSize
 	 */
 	public Integer getLegendFontSize() {
@@ -445,17 +476,21 @@ public class XmlConfigParser {
 		this.setCommand(command.item(0).getTextContent());
 		final NodeList topologies = parameters.getElementsByTagName(NodeNames.TOPOLOGY.toString());
 		final NodeList shortTopNames = parameters.getElementsByTagName(NodeNames.SHTOPOLOGY.toString());
+		final NodeList lgdTopNames = parameters.getElementsByTagName(NodeNames.LGDTOPOLOGY.toString());
 		int nbTopologies = topologies.getLength();
 		int nbShortNames = shortTopNames.getLength();
-		if(nbTopologies == nbShortNames){
+		int nbLgdNames = lgdTopNames.getLength();
+		if(nbTopologies == nbShortNames && nbShortNames == nbLgdNames){
 		for(int i = 0; i < nbTopologies; i++){
 			String topFullName = topologies.item(i).getTextContent();
 			String topShortName = shortTopNames.item(i).getTextContent();
+			String topLgdName = lgdTopNames.item(i).getTextContent();
 			this.addTopology(topFullName);
 			this.addShortTopNames(topFullName, topShortName);
+			this.addLgdTopNames(topFullName, topLgdName);
 		}
 		}else{
-			System.err.println("There is a matching error between topologies full and short names, please check parameters");
+			System.err.println("There is a matching error between topologies full, short names and legend names, please check parameters");
 		}
 		final NodeList streamTypes = parameters.getElementsByTagName(NodeNames.STREAMTYPE.toString());
 		int nbStreamTypes = streamTypes.getLength();
@@ -499,6 +534,8 @@ public class XmlConfigParser {
 		this.setTitleFontSize(Integer.parseInt(titleFontSize.item(0).getTextContent()));
 		final NodeList axisFontSize = parameters.getElementsByTagName(NodeNames.AXSIZE.toString());
 		this.setAxisFontSize(Integer.parseInt(axisFontSize.item(0).getTextContent()));
+		final NodeList tickFontSize = parameters.getElementsByTagName(NodeNames.TICKSIZE.toString());
+		this.setTickFontSize(Integer.parseInt(tickFontSize.item(0).getTextContent()));
 		final NodeList legendFontSize = parameters.getElementsByTagName(NodeNames.LGDSIZE.toString());
 		this.setLegendFontSize(Integer.parseInt(legendFontSize.item(0).getTextContent()));
 		final NodeList showAvg = parameters.getElementsByTagName(NodeNames.SHOWAVG.toString());

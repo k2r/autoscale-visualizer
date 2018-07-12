@@ -239,44 +239,49 @@ public class JFreeMergePainter implements IPainter {
 		String font = this.configParser.getFont();
 		Integer titleFontSize = this.configParser.getTitleFontSize();
 		Integer axisFontSize = this.configParser.getAxisFontSize();
+		Integer tickFontSize = this.configParser.getTickFontSize();
 		Integer legendFontSize = this.configParser.getLegendFontSize();
 		
 		if(Files.exists(Paths.get(this.getChartDirectory()))){
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(chartTitle, xAxisLabel, yAxisLabel, series, PlotOrientation.VERTICAL, true, true, true);
 			Font fontAxis = new Font(font, Font.PLAIN, axisFontSize);
+			Font fontTick = new Font(font, Font.PLAIN, tickFontSize);
 			Font fontTitle = new Font(font, Font.PLAIN, titleFontSize);
 			Font fontLegend = new Font(font, Font.PLAIN, legendFontSize);
 			
 			xylineChart.getTitle().setFont(fontTitle);
 			
 			final XYPlot plot = xylineChart.getXYPlot();
-			
 			plot.setBackgroundPaint(Color.WHITE);
 			
 			plot.getDomainAxis().setLabelFont(fontAxis);
+			plot.getDomainAxis().setTickLabelFont(fontTick);
 			plot.getRangeAxis().setLabelFont(fontAxis);
+			plot.getRangeAxis().setTickLabelFont(fontTick);
 			
 			ArrayList<Color> avgColors = new ArrayList<>();
 			avgColors.add(Color.RED);
 			avgColors.add(Color.BLUE);
 			avgColors.add(Color.BLACK);
-			avgColors.add(Color.MAGENTA);
 			avgColors.add(Color.GREEN);
+			avgColors.add(Color.MAGENTA);
+			
 			int nbColors = avgColors.size();
 			
 			ArrayList<Color> minColors = new ArrayList<>();
 			minColors.add(Color.ORANGE);
 			minColors.add(Color.CYAN);
+			minColors.add(Color.getHSBColor(79, 66, 73));
 			minColors.add(Color.GRAY);
 			minColors.add(Color.PINK);
-			minColors.add(Color.getHSBColor(79, 66, 73));
+			
 			
 			ArrayList<Color> maxColors = new ArrayList<>();
 			maxColors.add(Color.RED);
 			maxColors.add(Color.BLUE);
-			maxColors.add(Color.BLACK);
-			maxColors.add(Color.MAGENTA);
 			maxColors.add(Color.GREEN);
+			maxColors.add(Color.ORANGE);
+			maxColors.add(Color.MAGENTA);
 			
 			ArrayList<Shape> shapes = new ArrayList<>();
 			shapes.add(new Rectangle2D.Double(0,0,5,5));
@@ -386,12 +391,13 @@ public class JFreeMergePainter implements IPainter {
 		
 		for(String topology : topologies){
 			System.out.println("Topology: " + topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN");
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX");
-			final XYSeries avgSerie = new XYSeries(topology);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN");
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX");
+			final XYSeries avgSerie = new XYSeries(lgdName);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -439,12 +445,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN");
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX");
-			final XYSeries avgSerie = new XYSeries(topology);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN");
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX");
+			final XYSeries avgSerie = new XYSeries(lgdName);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -492,12 +499,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN");
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX");
-			final XYSeries avgSerie = new XYSeries(topology);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN");
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX");
+			final XYSeries avgSerie = new XYSeries(lgdName);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -545,12 +553,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN");
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX");
-			final XYSeries avgSerie = new XYSeries(topology);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN");
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX");
+			final XYSeries avgSerie = new XYSeries(lgdName);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -599,12 +608,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN");
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX");
-			final XYSeries avgSerie = new XYSeries(topology);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN");
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX");
+			final XYSeries avgSerie = new XYSeries(lgdName);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -652,12 +662,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN");
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX");
-			final XYSeries avgSerie = new XYSeries(topology);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN");
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX");
+			final XYSeries avgSerie = new XYSeries(lgdName);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -705,12 +716,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN");
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX");
-			final XYSeries avgSerie = new XYSeries(topology);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN");
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX");
+			final XYSeries avgSerie = new XYSeries(lgdName);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -766,12 +778,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN");
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX");
-			final XYSeries avgSerie = new XYSeries(topology);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN");
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX");
+			final XYSeries avgSerie = new XYSeries(lgdName);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -827,12 +840,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN" + "." + component);
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX" + "." + component);
-			final XYSeries avgSerie = new XYSeries(topology + "." + component);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN" + "." + component);
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX" + "." + component);
+			final XYSeries avgSerie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -880,12 +894,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN" + "." + component);
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX" + "." + component);
-			final XYSeries avgSerie = new XYSeries(topology + "." + component);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN" + "." + component);
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX" + "." + component);
+			final XYSeries avgSerie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -933,12 +948,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN" + "." + component);
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX" + "." + component);
-			final XYSeries avgSerie = new XYSeries(topology + "." + component);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN" + "." + component);
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX" + "." + component);
+			final XYSeries avgSerie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -986,12 +1002,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN" + "." + component);
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX" + "." + component);
-			final XYSeries avgSerie = new XYSeries(topology + "." + component);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN" + "." + component);
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX" + "." + component);
+			final XYSeries avgSerie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -1055,12 +1072,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN" + "." + component);
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX" + "." + component);
-			final XYSeries avgSerie = new XYSeries(topology + "." + component);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN" + "." + component);
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX" + "." + component);
+			final XYSeries avgSerie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -1108,12 +1126,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN" + "." + component);
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX" + "." + component);
-			final XYSeries avgSerie = new XYSeries(topology + "." + component);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN" + "." + component);
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX" + "." + component);
+			final XYSeries avgSerie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -1161,12 +1180,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN" + "." + component);
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX" + "." + component);
-			final XYSeries avgSerie = new XYSeries(topology + "." + component);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN" + "." + component);
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX" + "." + component);
+			final XYSeries avgSerie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){
@@ -1211,12 +1231,13 @@ public class JFreeMergePainter implements IPainter {
 		}
 		Collections.sort(topologies);
 		for(String topology : topologies){
+			String lgdName = this.configParser.getLgdTopNames(topology);
 			HashMap<Integer, Double> minData = dataset.get(topology + "_MIN");
 			HashMap<Integer, Double> maxData = dataset.get(topology + "_MAX");
 			HashMap<Integer, Double> avgData = dataset.get(topology);
-			final XYSeries minSerie = new XYSeries(topology + "_MIN" + "." + component);
-			final XYSeries maxSerie = new XYSeries(topology + "_MAX" + "." + component);
-			final XYSeries avgSerie = new XYSeries(topology + "." + component);
+			final XYSeries minSerie = new XYSeries(lgdName + "_MIN" + "." + component);
+			final XYSeries maxSerie = new XYSeries(lgdName + "_MAX" + "." + component);
+			final XYSeries avgSerie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;avg;min;max");
 			Set<Integer> timestamps = avgData.keySet();
 			for(Integer timestamp : timestamps){

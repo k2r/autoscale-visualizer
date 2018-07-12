@@ -190,6 +190,7 @@ public class JFreePainter implements IPainter {
 		String font = this.configParser.getFont();
 		Integer titleFontSize = this.configParser.getTitleFontSize();
 		Integer axisFontSize = this.configParser.getAxisFontSize();
+		Integer tickFontSize = this.configParser.getTickFontSize();
 		Integer legendFontSize = this.configParser.getLegendFontSize();
 		Boolean drawShapes = this.configParser.isDraw_shapes();
 		Boolean drawLines = this.configParser.isDraw_lines();
@@ -197,6 +198,7 @@ public class JFreePainter implements IPainter {
 		if(Files.exists(Paths.get(this.getChartDirectory()))){
 			JFreeChart xylineChart = ChartFactory.createXYLineChart(chartTitle, xAxisLabel, yAxisLabel, series, PlotOrientation.VERTICAL, true, true, true);
 			Font fontAxis = new Font(font, Font.PLAIN, axisFontSize);
+			Font fontTick = new Font(font, Font.PLAIN, tickFontSize);
 			Font fontTitle = new Font(font, Font.PLAIN, titleFontSize);
 			Font fontLegend = new Font(font, Font.PLAIN, legendFontSize);
 			
@@ -207,17 +209,19 @@ public class JFreePainter implements IPainter {
 			plot.setBackgroundPaint(Color.WHITE);
 			
 			plot.getDomainAxis().setLabelFont(fontAxis);
+			plot.getDomainAxis().setTickLabelFont(fontTick);
 			plot.getRangeAxis().setLabelFont(fontAxis);
+			plot.getRangeAxis().setTickLabelFont(fontTick);
 			
 			ArrayList<Color> colors = new ArrayList<>();
 			colors.add(Color.RED);
 			colors.add(Color.BLUE);
+			colors.add(Color.GREEN);
+			colors.add(Color.ORANGE);
 			colors.add(Color.GRAY);
 			colors.add(Color.BLACK);
-			colors.add(Color.GREEN);
 			colors.add(Color.PINK);
 			colors.add(Color.CYAN);
-			colors.add(Color.ORANGE);
 			colors.add(Color.YELLOW);
 			colors.add(Color.LIGHT_GRAY);
 			colors.add(Color.MAGENTA);
@@ -292,7 +296,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName);
 			records.add("timestamp;input");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -324,7 +329,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName);
 			records.add("timestamp;throughput");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -356,7 +362,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName);
 			records.add("timestamp;out of time");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -388,7 +395,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName);
 			records.add("timestamp;throughput");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -424,7 +432,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName);
 			records.add("timestamp;nbExecutors");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -456,7 +465,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName);
 			records.add("timestamp;nbSupervisors");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -488,7 +498,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName);
 			records.add("timestamp;nbWorkers");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -521,7 +532,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName);
 			records.add("timestamp;status");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -553,7 +565,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName);
 			records.add("timestamp;traffic");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -586,7 +599,8 @@ public class JFreePainter implements IPainter {
 			
 			records.add("timestamp;actions");
 			for(String bolt : boltData.keySet()){
-				XYSeries serie = new XYSeries(topology + "." + bolt);
+				String lgdName = this.configParser.getLgdTopNames(topology);
+				XYSeries serie = new XYSeries(lgdName + "." + bolt);
 				HashMap<Integer, Double> actions = boltData.get(bolt);
 				for(Integer timestamp : actions.keySet()){
 					Double nbExecutors = actions.get(timestamp);
@@ -620,7 +634,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;input");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -652,7 +667,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;executed");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -684,7 +700,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;outputs");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -716,7 +733,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;latency");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -748,7 +766,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;processing_rate");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -781,7 +800,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;activity_level");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -810,7 +830,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;cpu_usage");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -839,7 +860,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;nb_executors");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -868,7 +890,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;pending");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
@@ -897,7 +920,8 @@ public class JFreePainter implements IPainter {
 		Collections.sort(topologies);
 		for(String topology : topologies){
 			HashMap<Integer, Double> data = dataset.get(topology);
-			final XYSeries serie = new XYSeries(topology + "." + component);
+			String lgdName = this.configParser.getLgdTopNames(topology);
+			final XYSeries serie = new XYSeries(lgdName + "." + component);
 			records.add("timestamp;std_dev_cpu");
 			for(Integer timestamp : data.keySet()){
 				Double value = data.get(timestamp);
